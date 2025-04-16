@@ -29,9 +29,9 @@ export default function AdminPage() {
 
             <Link className={`${styles.navlink} nav-link`} to="/admin/statisztika">Statisztika</Link>
           </li>
-          <li className={`nav-item ${location.pathname === "/userpage" ? styles.active : ""}`}>
+          <li className={`nav-item ${location.pathname === "/" ? styles.active : ""}`}>
 
-            <Link className={`${styles.navlink} nav-link`} to="/userpage">Kijelentkezés</Link>
+            <Link className={`${styles.navlink} nav-link`} to="/">Kijelentkezés</Link>
           </li>
           
         </ul>
