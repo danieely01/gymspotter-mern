@@ -1,8 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
+const bcrypt = require("bcrypt");
+const { hash } = require('bcryptjs');
 
 
 app.use(cors());
@@ -15,25 +19,43 @@ let users = [
         _id: '1', 
         username: 'user1', 
         email: 'user1@example.com', 
-        password: 'password123', // Fontos: valós esetekben hashelni kell a jelszót
+        password: bcrypt.hashSync('password123', 10), // Hash-elt jelszó!
         favorites: ['101', '102'], 
         reviews: ['201', '202'],
         type: 'user' // Felhasználó típusa
     },
     { 
         _id: '2', 
+        username: 'user2', 
+        email: 'user2@example.com', 
+        password: bcrypt.hashSync('password123', 10), // Hash-elt jelszó!
+        favorites: ['103'], 
+        reviews: ['203'],
+        type: 'user' // Felhasználó típusa
+    },
+    { 
+        _id: '3', 
+        username: 'user3', 
+        email: 'user3@example.com', 
+        password: bcrypt.hashSync('password123', 10), // Hash-elt jelszó!
+        favorites: ['103', '101'], 
+        reviews: [],
+        type: 'user' // Felhasználó típusa
+    },
+    { 
+        _id: '4', 
         username: 'admin', 
         email: 'admin@example.com', 
-        password: 'admin123',
+        password: bcrypt.hashSync('admin', 10), // Hash-elt jelszó!
         favorites: [],
         reviews: [],
         type: 'admin' // Admin felhasználó
     },
     { 
-        _id: '3', 
+        _id: '5', 
         username: 'provider', 
         email: 'provider@example.com', 
-        password: 'provider123',
+        password: bcrypt.hashSync('provider', 10), // Hash-elt jelszó!
         favorites: [],
         reviews: [],
         type: 'provider' // provider felhasználó
@@ -42,22 +64,23 @@ let users = [
 
 
 let gyms = [
-    { _id: '101', name: 'Power Gym', location: 'Szeged', services: ['Yoga', 'Cardio'], rating: 4.5,"price": 17000, status: 'approved' },
+    { _id: '101', providerId: '5', name: 'Power Gym', location: 'Szeged', services: ['Yoga', 'Cardio'], rating: 4.5,"price": 17000, status: 'approved' },
     { _id: '102', name: 'Fitness 5 Skála', location: 'Budapest', services: ['Strength', 'HIIT'], rating: 4.2, "price": 14500, status: 'approved' },
+    { _id: '103', name: 'Johnny Lantos Fitness', location: 'Budapest', services: ['Powerlifting', 'HIIT'], rating: 3.8, "price": 18500, status: 'pending' },
 ];
 
 let reviews = [
     { _id: '201', gym: '101', user: '1', rating: 5, comment: 'Great gym!' },
     { _id: '202', gym: '102', user: '1', rating: 4, comment: 'Good but could improve.' },
+    { _id: '203', gym: '101', user: '2', rating: 3, comment: "It wasn't so bad." },
+    { _id: '204', gym: '102', user: '3', rating: 2, comment: "I didn't like it." },
+    { _id: '205', gym: '103', user: '2', rating: 2, comment: 'Worst gym ever' }
 ];
 
 
 
-
-
-
 // Felhasználói API-k
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
     const { username, password } = req.body;
     
     // Felhasználó keresése
@@ -67,8 +90,9 @@ app.post('/login', (req, res) => {
     }
 
     // Jelszó ellenőrzése (simple check for mock)
-    if (user.password !== password) {
-        return res.status(401).send('Hibás felhasználónév vagy jelszó');
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) {
+        return res.status(400).send('Hibás bejelentkezési adatok');
     }
 
      // Token generálása
@@ -77,31 +101,36 @@ app.post('/login', (req, res) => {
      res.json({ token, userType: user.type });
  });
 
- // Regisztrációs végpont (alap példa)
-app.post('/register', (req, res) => {
+ // Regisztrációs végpont 
+
+ app.post("/register", async (req, res) => {
     const { username, email, password, type } = req.body;
-
-    // Ellenőrizzük, hogy létezik-e már felhasználó a megadott felhasználónévvel
-    const existingUser = users.find(u => u.username === username);
-    if (existingUser) {
-        return res.status(400).send('Felhasználónév már létezik');
+  
+    // Ellenőrizzük, hogy létezik-e már a felhasználónév vagy az e-mail
+    if (users.find(u => u.username === username)) {
+      return res.status(400).json({ error: "Felhasználónév már létezik" });
     }
-
-    // Új felhasználó hozzáadása
+    if (users.find(u => u.email === email)) {
+      return res.status(400).json({ error: "E-mail már használatban van" });
+    }
+  
+    // Jelszó hash-elése
+    const hashedPassword = await hash(password, 10);
+  
+    // Új felhasználó létrehozása
     const newUser = {
-        _id: (users.length + 1).toString(),
-        username,
-        email,
-        password, // Valós alkalmazásban a jelszót hashelni kellene
-        favorites: [],
-        reviews: [],
-        type: type // Alapértelmezett felhasználói típus
+      _id: (users.length + 1).toString(),
+      username,
+      email,
+      password: hashedPassword, 
+      favorites: [],
+      reviews: [],
+      type
     };
-
+  
     users.push(newUser);
-    res.status(201).send('Felhasználó sikeresen regisztrálva!');
-});
-
+    res.status(201).json({ message: "Sikeres regisztráció!" });
+  });
 
 
 app.get('/konditermek', (req, res) => {
@@ -170,12 +199,12 @@ app.put('/:userid/profilom', (req, res) => {
 });
 
 // Admin API-k
-app.get('/admin/edzotermek_kezelese', (req, res) => {
+app.get('/admin/konditermek_kezelese', (req, res) => {
     const pendingGyms = gyms.filter(gym => gym.status === 'pending');
     res.json(pendingGyms);
 });
 
-app.patch('/admin/edzotermek_kezelese/:id', (req, res) => {
+app.patch('/admin/konditermek_kezelese/:id', (req, res) => {
     const gym = gyms.find(g => g._id === req.params.id);
     if (gym) {
         gym.status = req.body.status;
@@ -185,13 +214,67 @@ app.patch('/admin/edzotermek_kezelese/:id', (req, res) => {
     }
 });
 
+// Admin API - Összes konditerem listázása
+app.get('/admin/osszes_edzoterem', (req, res) => {
+    res.json(gyms);
+});
+
+// Admin API - Konditerem törlése
+app.delete('/admin/edzoterem_torles/:id', (req, res) => {
+    const gymIndex = gyms.findIndex(g => g._id === req.params.id);
+    if (gymIndex !== -1) {
+        gyms.splice(gymIndex, 1);
+        res.send('Konditerem törölve');
+    } else {
+        res.status(404).send('Gym not found');
+    }
+});
+
+
 app.get('/admin/felhasznalok_kezelese', (req, res) => {
     res.json(users);
 });
 
-app.get('/admin/ertekelesek_kezelese', (req, res) => {
-    res.json(reviews);
+app.delete('/admin/felhasznalo_torles/:id', (req, res) => {
+    const userIndex = users.findIndex(u => u._id === req.params.id);
+    if (userIndex !== -1) {
+        users.splice(userIndex, 1);
+        res.send('Felhasználó törölve');
+    } else {
+        res.status(404).send('Felhasználó nem található');
+    }
 });
+
+app.get('/admin/ertekelesek_kezelese', (req, res) => {
+    const reviews2 = reviews.map(review => {
+        const gym = gyms.find(g => g._id === review.gym); // Megkeressük a gym nevét
+        const user = users.find(u => u._id === review.user); // Megkeressük a felhasználót a review user ID-ja alapján
+
+        return {
+            ...review,
+            gymName: gym ? gym.name : 'Ismeretlen gym', // Ha van megfelelő gym, hozzáadjuk a nevét, ha nem, 'Ismeretlen gym'
+            userName: user ? user.username : 'Ismeretlen felhasználó' // Ha van megfelelő felhasználó, hozzáadjuk a nevét, ha nem, 'Ismeretlen felhasználó'
+        };
+    });
+
+    res.json(reviews2); // Visszaküldjük a módosított reviews listát
+});
+
+
+
+app.delete('/admin/ertekeles_torles/:id', (req, res) => {
+    const reviewIndex = reviews.findIndex(r => r._id === req.params.id);
+    if (reviewIndex !== -1) {
+        reviews.splice(reviewIndex, 1);
+        res.json({ message: 'Értékelés törölve' });
+
+    } else {
+        res.status(404).send('Értékelés nem található');
+    }
+});
+
+
+
 
 app.get('/admin/statisztika', (req, res) => {
     res.json({ gyms: gyms.length, users: users.length });

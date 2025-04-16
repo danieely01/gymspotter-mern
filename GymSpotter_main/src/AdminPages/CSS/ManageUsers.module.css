@@ -1,0 +1,107 @@
+.Komponens {
+    color: white;
+    background-image: url("../../../adminwp.jpg");
+    background-size: 100%;
+    padding: 20px;
+    min-height: 100vh;
+    position: relative; /* ez kell */
+    z-index: 1; /*ez is */
+  }
+  
+
+  /* Jobb olvashatóság miatt, sötétebb háttért tükrözünk rá */
+  .Komponens::before {
+    content: ""; /* pseudo elem  */
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* sötétítés mértéke */
+    z-index: -1;
+  }
+  
+  .content {
+    margin-top: 30px;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+    color: #f0f0f0;
+}
+
+
+
+.userstable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.userstable th, .userstable td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.userstable td button {
+  margin: 0;
+}
+.userstable th {
+    background-color: rgb(7, 38, 141);
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.userstable td {
+  height: 80px; 
+  vertical-align: middle; 
+  box-sizing: border-box; 
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #f0f0f0;
+    font-size: 1rem;
+    font-weight: bolder;
+}
+
+.userstable tr:hover {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+button {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  height: 100%; /* Ez fontos */
+  align-items: center; /* Középre igazítja a gombokat */
+}
+
+
+
+
+
+@media (max-width: 768px) {
+    .userstable {
+        font-size: 0.9rem;
+    }
+    .userstable th, .userstable td {
+        padding: 8px;
+    }
+}
