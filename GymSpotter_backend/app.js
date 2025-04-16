@@ -439,13 +439,18 @@ app.get('/konditermek', async (req, res) => {
       // Konditermekhez kapcsolódó vélemények és értékelések hozzáadása
       const gymsWithReviews = await Promise.all(approvedGyms.map(async (gym) => {
         // Vélemények lekérése ehhez a kondihoz (feltételezve hogy gym._id-t használunk)
-        const reviews = await reviewsCollection.find({ gymId: gym._id.toString() }).toArray();
-  
+        const reviews = await reviewsCollection.find({ gym_id: gym._id }).toArray();
+        
+        //ÜRES A REVIEWS TÖMB  !!MEGOLDVA ! 04_12
+        console.log(reviews);
+        console.log(gym._id);
+        
         // Véleményekhez felhasználónevek hozzácsatolása
         const enrichedReviews = await Promise.all(reviews.map(async (review) => {
 
             
-          const user = await usersCollection.findOne({ _id: new ObjectId(review.userId) });
+          const user = await usersCollection.findOne({ _id: review._id });
+
           return {
             ...review,
             user: user ? user.username : 'Ismeretlen'
@@ -508,6 +513,7 @@ app.post('/konditermek/:gymId/ertekeles', async (req, res) => {
   
       // Vélemény hozzáadása az adatbázishoz
       const result = await reviewsCollection.insertOne(newReview);
+      console.log(newReview);
   
       // Felhasználó véleményeinek frissítése
       await usersCollection.updateOne(
@@ -515,8 +521,8 @@ app.post('/konditermek/:gymId/ertekeles', async (req, res) => {
         { $push: { reviews: result.insertedId } }
       );
   
-      // Átlagértékelés újraszámítása az adott konditeremhez
-      const gymReviews = await reviewsCollection.find({ gymId: gymId }).toArray();
+      // Átlagértékelés újraszámítása az adott konditeremhez MEGOLDVA 0412
+      const gymReviews = await reviewsCollection.find({ gym_id: gymId }).toArray();
       const avgRating = gymReviews.reduce((acc, review) => acc + review.rating, 0) / gymReviews.length;
   
       // Konditerem értékelésének frissítése

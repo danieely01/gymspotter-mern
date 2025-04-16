@@ -25,10 +25,18 @@ export default function Gyms() {
     navigate("/loginpage");
   };
 
+
+  useEffect(() => {
+    if (selectedGym) {
+      console.log("Selected gym (modal):", selectedGym);
+    }
+  }, [selectedGym]);
+
   useEffect(() => {
     fetch('http://localhost:3000/konditermek')
       .then((response) => response.json())
       .then((data) => {
+        console.log("Kapott konditermek:", data); // EZT ADD HOZZÁ
         setGyms(data);
         setFilteredGyms(data);
       })
@@ -273,13 +281,23 @@ export default function Gyms() {
       </tr>
     </thead>
     <tbody>
-      {selectedGym.reviews.map((review, index) => (
+
+    {selectedGym.reviews && selectedGym.reviews.length > 0 ? 
+    (
+      selectedGym.reviews.map((review, index) => (
         <tr key={index}>
           <td><strong>{review.user}</strong></td>
           <td>{review.comment}</td>
           <td>⭐ {review.rating}</td>
         </tr>
-      ))}
+      )
+      )) : (
+          <tr><td colSpan="3">Nincsenek vélemények.</td></tr>
+        )
+    }
+
+
+     
     </tbody>
   </table>
 </div>
