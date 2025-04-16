@@ -48,9 +48,9 @@ export default function MyReviews() {
   }, [userId]); // Az üres tömb biztosítja, hogy csak egyszer fusson le a lekérés
 
   return (
-    <div className={`${styles.Komponens}`}>
+    <div className={styles.Komponens}>
       <NavigationForUsers />
-      <div className={`container justify-content-center align-items-center p-3 min-vh-100 ${styles.content}`}>
+      <div className={styles.content}>
         <h1 className={`${styles.cim} text-center mb-4`}>Értékeléseim 🤷‍♂️</h1>
         <div className={`${styles.content}`}>
           {userReviews.length > 0 ? (

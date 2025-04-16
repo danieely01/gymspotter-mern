@@ -214,27 +214,36 @@ export default function Gyms() {
 
       {reviewModalOpen && (
         <div className={styles.modalOverlay}>
-          <div className={styles.modal}>
-            <div className={styles.modalHeader}>Írj egy értékelést</div>
-            <div className={styles.modalContent}>
-              <label>Értékelés (1-5):</label>
-              <input
-                type="number"
-                min="1"
-                max="5"
-                value={reviewRating}
-                onChange={(e) => setReviewRating(Number(e.target.value))}
-              />
-              <label>Vélemény:</label>
-              <textarea
-                value={reviewText}
-                onChange={(e) => setReviewText(e.target.value)}
-              ></textarea>
-              <button onClick={submitReview}>Beküldés</button>
-              <button onClick={closeReviewModal}>Mégse</button>
+        <div className={styles.modal}>
+          <div className={styles.modalHeader}>Írj egy értékelést</div>
+          <div className={styles.modalContent}>
+            <label className={styles.label}>Értékelés (1-5):</label>
+            <input
+              type="number"
+              min="1"
+              max="5"
+              value={reviewRating}
+              onChange={(e) => setReviewRating(Number(e.target.value))}
+              className={styles.input}
+            />
+            <label className={styles.label}>Vélemény:</label>
+            <textarea
+              value={reviewText}
+              onChange={(e) => setReviewText(e.target.value)}
+              className={styles.textarea}
+            ></textarea>
+            <div className={styles.buttonContainer}>
+              <button onClick={submitReview} className={styles.modalButtonPrimary}>
+                Beküldés
+              </button>
+              <button onClick={closeReviewModal} className={styles.modalButtonSecondary}>
+                Mégse
+              </button>
             </div>
           </div>
         </div>
+      </div>
+      
       )}
 
       {/* Modal */}
