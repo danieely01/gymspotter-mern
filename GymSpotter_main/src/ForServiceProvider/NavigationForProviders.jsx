@@ -27,8 +27,8 @@ export default function NavigationForProviders() {
             </li>)}
 
             {/* KAPCSOLAT FÜL        */}
-          {auth.isLoggedIn && (<li className={`nav-item ${location.pathname === "serviceprovider/kapcsolat" ? styles.active : ""}`}>
-            <Link className={`${styles.navlink} nav-link`} to="serviceprovider/kapcsolat">Kapcsolat</Link>
+          {auth.isLoggedIn && (<li className={`nav-item ${location.pathname === "/serviceprovider/kapcsolat" ? styles.active : ""}`}>
+            <Link className={`${styles.navlink} nav-link`} to="/serviceprovider/kapcsolat">Kapcsolat</Link>
             </li>)}
 
             {/* KIJELENTKEZÉS */}

@@ -28,7 +28,7 @@
 .profileCard {
     width: 100%;
     max-width: 500px;
-    background: rgb(59, 59, 59);
+    background: rgba(95, 93, 93, 0.5); 
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;

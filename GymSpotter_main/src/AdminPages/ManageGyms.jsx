@@ -55,7 +55,7 @@ function ManageGyms() {
     <div className={`${styles.Komponens}`}>
     <div className={`container p-3 ${styles.content}`}>
       <NavigationForAdmin />
-      <h1 className="text-center mb-4">Konditermek kezelése</h1>
+      <h1 className="text-center mb-4">Konditermek kezelése🏋️‍♀️</h1>
   
       <div className="table-responsive">
       {gyms.length > 0 ? (

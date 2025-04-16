@@ -1,14 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext  } from 'react';
 import styles from "./CSS/MyReviews.module.css"; // Moduloknál változót kell használni
 import NavigationForUsers from './NavigationForUsers';
+import { AuthContext } from "../context/auth-context";
 
 export default function MyReviews() {
+  const { userId } = useContext(AuthContext); // userId lekérése a contextből
+  console.log("📌 MyReviews - userId a contextből:", userId); 
   const [userReviews, setReviews] = useState([]);
   const [gyms, setGyms] = useState([]);
 
   useEffect(() => {
-    // Feltételezve, hogy a felhasználó ID-je elérhető, pl. session-ből
-    const userId = 1; // Cseréld ki a felhasználó ID-jével
+    console.log(userId);
+    if (!userId) return; // Ha nincs bejelentkezve, ne próbáljuk lekérni az adatoka
+
+    console.log("Lekérjük az értékeléseket a userId-vel:", userId); // Debug log
 
     // API hívás az értékelések lekéréséhez
     fetch(`http://localhost:3000/${userId}/ertekeleseim`)
@@ -19,6 +24,7 @@ export default function MyReviews() {
         return response.json();
       })
       .then(data => {
+        console.log("📌 Értékelések sikeresen betöltve:", data);
         setReviews(data); // Az értékelések állapotba mentése
       })
       .catch(error => {
@@ -42,10 +48,10 @@ export default function MyReviews() {
 
   return (
     <div className={`${styles.Komponens}`}>
-    <div className={`container justify-content-center align-items-center p-3 min-vh-100 ${styles.content}`}>
       <NavigationForUsers />
+    <div className={`container justify-content-center align-items-center p-3 min-vh-100 ${styles.content}`}>
+        <h1 className={`${styles.cim} text-center mb-4`}>Értékeléseim 🤷‍♂️</h1>
       <div className={`${styles.content}`}>
-        <h1>Értékeléseim</h1>
         {userReviews.length > 0 ? (
           <div className="row">
             {userReviews.map((review, index) => {
@@ -71,7 +77,7 @@ export default function MyReviews() {
             })}
           </div>
         ) : (
-          <p>Nincs értékelésed.</p>
+          <p>Nincs meglévő értékelésed.</p>
         )}
       </div>
     </div>

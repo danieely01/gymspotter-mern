@@ -6,6 +6,7 @@
   min-height: 100vh;
   position: relative; /* ez kell */
   z-index: 1; /*ez is */
+  overflow: hidden;
 }
 
 
@@ -26,6 +27,7 @@
     margin-top: 60px;  
     text-align: center;
     
+    
   }
   
   .szoveg {
@@ -35,6 +37,9 @@
     text-shadow: 2px 1px #030303;
     
   }
+
+ 
+  
   
   .cim {
     font-weight: 900;
@@ -62,3 +67,4 @@
             
           }
         }
+

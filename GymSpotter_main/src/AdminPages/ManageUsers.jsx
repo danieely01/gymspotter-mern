@@ -29,7 +29,7 @@ function ManageUsers() {
         <div className={`${styles.Komponens}`}>
             <div className={`container justify-content-center align-items-center p-3 min-vh-100 ${styles.content}`}>
                 <NavigationForAdmin />
-                <h1>Felhasználók kezelése</h1>
+                <h1>Felhasználók kezelése👥</h1>
                 <div className="table-responsive">
                 {users.length > 0 ? (
                     <table className={`table table-striped table-hover ${styles.userstable}`}>

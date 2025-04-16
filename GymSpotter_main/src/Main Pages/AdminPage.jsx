@@ -12,10 +12,9 @@ export default function AdminPage() {
      <div className={`${styles.Komponens}`}>
           <NavigationForAdmin/>
               
-              <div className={`container justify-content-center align-items-center p-3 min-vh-100 ${styles.content}`}>
-                          <h1 className={`${styles.cim}`}>Üdvözöllek a GymSpotter főoldalán!</h1>
-                          <p className={`${styles.szoveg}`}>Ez egy átfogó platform, amely segít azoknak, akik edzőterembe szeretnének járni, de nem tudják, melyik lenne a számukra legmegfelelőbb. A weboldal lehetőséget kínál a felhasználóknak arra, hogy egy helyen áttekintsék a különböző konditermeket.</p>
-                        <p className={`${styles.szoveg}`}>A bejelentkezett felhasználók elmenthetik kedvenc edzőtermeiket, írhatnak értékeléseket.</p>
+              <div className={`container justify-content-center align-items-center p-3 min-vh-100 ${styles.content} `}>
+                          <h1 className={`${styles.cim}`}>Üdvözlünk az Admin Felületen! 🐱‍💻</h1>
+                          <p className={`${styles.szoveg}`}>Ez a GymSpotter adminisztrációs felülete, ahol teljes körű hozzáférést kapsz a rendszer kezeléséhez. Itt lehetőséged van a felhasználók, edzőtermek és értékelések kezelésére, valamint statisztikák megtekintésére.</p>
                         
                       </div>
               </div>

@@ -1,6 +1,21 @@
 .Komponens {
   background-image: url("../../../userpage_background.jpg");
   background-size: 100%;
+  padding: 20px;
+  min-height: 100vh;
+  position: relative; /* ez kell */
+  z-index: 1; /*ez is */
+}
+
+.Komponens::before {
+  content: ""; /* pseudo elem  */
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.3); /* sötétítés mértéke */
+  z-index: -1;
 }
 
 
@@ -44,3 +59,10 @@
           
         }
       }
+
+      @media (max-height: 350px) {
+        .content {
+          padding-top: 1000px; /* Extra hely kis képernyőn */
+        }
+      }
+      

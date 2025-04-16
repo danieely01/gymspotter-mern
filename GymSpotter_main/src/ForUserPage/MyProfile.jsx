@@ -87,7 +87,7 @@ export default function MyProfile() {
       <div className={`container justify-content-center align-items-center p-3 min-vh-100 ${styles.content}`}>
         <NavigationForUsers />
         <div className={`${styles.content} card ${styles.profileCard} shadow-lg p-4`}>
-          <h1 className="text-center mb-4">Profilom</h1>
+          <h1 className="text-center mb-4">Profilom 👤</h1>
 
           {/* Hibaüzenetek doboz (ha van hiba) */}
           {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}

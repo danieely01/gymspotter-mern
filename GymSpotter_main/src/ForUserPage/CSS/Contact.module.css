@@ -2,8 +2,23 @@
     color: white;
     background-image: url("../../../fadedforcontact.jpg");
     background-size: 100%;
+    padding: 20px;
+    min-height: 100vh;
+    position: relative; /* ez kell */
+    z-index: 1; /*ez is */
     
 }
+.Komponens::before {
+  content: ""; /* pseudo elem  */
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.2); /* sötétítés mértéke */
+  z-index: -1;
+}
+
 
 .kartyak {
   color: black !important;
@@ -12,4 +27,12 @@
   .content {
     margin-top: 60px; 
   }
+
+  .cim {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+    color: #fafafa;
+    text-shadow: 2px 3px #030303;
+}
   

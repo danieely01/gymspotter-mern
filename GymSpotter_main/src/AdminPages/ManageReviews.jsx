@@ -29,10 +29,10 @@ function ManageReviews() {
     return (
         <div className={`${styles.Komponens}`}>
             <div className={`container justify-content-center align-items-center p-3 min-vh-100 ${styles.content}`}>
-                <NavigationForAdmin />
 
+                <NavigationForAdmin />
                 <div className={`${styles.content}`}>
-                    <h1>Értékelések kezelése</h1>
+                    <h1>Értékelések kezelése✅❌</h1>
                     <div className="table-responsive">
                     {reviews.length > 0 ? (
 

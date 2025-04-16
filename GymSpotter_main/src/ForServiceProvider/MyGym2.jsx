@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import styles from "../ForUserPage/CSS/NavigationForProviders.module.css";
+import styles from "./CSS/NavigationForProviders.module.css";
+
 import NavigationForProviders from './NavigationForProviders.jsx';
 
 export default function MyGym2() {

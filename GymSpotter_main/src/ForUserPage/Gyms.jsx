@@ -4,14 +4,14 @@ import NavigationForUsers from './NavigationForUsers';
 import { AuthContext } from '../context/auth-context';  // Import the AuthContext
 
 export default function Gyms() {
-  const { isLoggedIn } = useContext(AuthContext);  // Use the AuthContext to check login status
+  const { isLoggedIn, userId } = useContext(AuthContext);  // Use the AuthContext to check login status
   const [gyms, setGyms] = useState([]);
   const [filteredGyms, setFilteredGyms] = useState([]);
   const [favorites, setFavorites] = useState([]);
   const [search, setSearch] = useState(""); 
   const [sortOption, setSortOption] = useState(""); 
   const [serviceSearch, setServiceSearch] = useState(""); 
-  const userId = 1; 
+
 
   useEffect(() => {
     fetch('http://localhost:3000/konditermek')
@@ -86,13 +86,13 @@ export default function Gyms() {
     <div className={`${styles.Komponens}`}>
       <NavigationForUsers />
       <div className={`container justify-content-center align-items-center p-3 min-vh-100 ${styles.content}`}>
-        <h1>Edzőtermek</h1>
+        <h1 className={`${styles.cim} text-center mb-4`}>Edzőtermek 🥊</h1>
 
         <input
           type="text"
           value={search}
           onChange={handleSearch}
-          placeholder="Keresés város alapján"
+          placeholder="🏙 Keresés város alapján"
           className="form-control mb-3"
         />
 
@@ -100,17 +100,17 @@ export default function Gyms() {
           type="text"
           value={serviceSearch}
           onChange={handleServiceSearch}
-          placeholder="Szolgáltatás keresése (pl. HIIT, Yoga)"
+          placeholder="🧘‍♂️ Szolgáltatás keresése (pl. HIIT, Yoga)"
           className="form-control mb-3"
         />
 
         <div className="mb-3">
           <select className="form-select" value={sortOption} onChange={handleSortChange}>
-            <option value="">Rendezés</option>
-            <option value="rating_asc">Értékelés szerint növekvő</option>
-            <option value="rating_desc">Értékelés szerint csökkenő</option>
-            <option value="price_asc">Ár szerint növekvő</option>
-            <option value="price_desc">Ár szerint csökkenő</option>
+            <option value="">📊 Rendezés</option>
+            <option value="rating_asc">📈 Értékelés szerint növekvő</option>
+            <option value="rating_desc">📉 Értékelés szerint csökkenő</option>
+            <option value="price_asc">📈 Ár szerint növekvő</option>
+            <option value="price_desc">📉 Ár szerint csökkenő</option>
           </select>
         </div>
         {filteredGyms.length === 0 ? ( <h3>Nincsenek elérhető edzőtermek.</h3>) : (
@@ -131,10 +131,10 @@ export default function Gyms() {
   </span>
 )}
                   </h5>
-                  <p className="card-text">Helyszín: {gym.location}</p>
-                  <p className="card-text">Szolgáltatások: {gym.services.join(', ')}</p>
-                  <p className="card-text">Értékelés: {gym.rating}</p>
-                  <p className="card-text">Ár: {gym.price} HUF</p>
+                  <p className="card-text">📍 Helyszín: {gym.location}</p>
+                  <p className="card-text">🤸‍♂️ Szolgáltatások: {gym.services.join(', ')}</p>
+                  <p className="card-text">🤷‍♀️ Értékelés: {gym.rating}</p>
+                  <p className="card-text">💲 Ár: {gym.price} HUF</p>
                   <a href="#" className="btn btn-primary">Tovább a részletekhez</a>
                 </div>
               </div>

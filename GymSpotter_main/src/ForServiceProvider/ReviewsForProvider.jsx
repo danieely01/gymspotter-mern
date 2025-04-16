@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 // import { Link, useLocation } from "react-router-dom";
-import styles from "../ForUserPage/CSS/NavigationForProviders.module.css";
+import styles from "./CSS/NavigationForProviders.module.css";
 import NavigationForProviders from "./NavigationForProviders";
 
 

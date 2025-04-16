@@ -31,7 +31,7 @@ function Statisztika() {
       <div className={`container justify-content-center align-items-center p-3 min-vh-100 ${styles.content}`}>
         <NavigationForAdmin />
         <div className={`${styles.content}`}>
-          <h1 className={`${styles.cim}`}>Statisztika</h1>
+          <h1 className={`${styles.cim}`}>Statisztika📊</h1>
           <p><strong>Regisztrált felhasználók:</strong> {stats.users}</p>
           <p><strong>Regisztrált edzőtermek:</strong> {stats.gyms}</p>
           <div style={{ width: "300px", margin: "auto" }}>
