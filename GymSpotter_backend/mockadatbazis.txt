@@ -1,0 +1,139 @@
+// Mock adatbázis
+// let users = [
+//     { 
+//         Id: '1', 
+//         username: 'user1', 
+//         email: 'user1@example.com', 
+//         password: bcrypt.hashSync('password123', 10), 
+//         favorites: ['101', '102'], 
+//         reviews: ['201', '202', '208', '213', '218', '225'],
+//         type: 'user' 
+//     },
+//     { 
+//         Id: '2', 
+//         username: 'user2', 
+//         email: 'user2@example.com', 
+//         password: bcrypt.hashSync('password123', 10), 
+//         favorites: ['103'], 
+//         reviews: ['203', '204', '212', '216', '219', '223', '226'],
+//         type: 'user' 
+//     },
+//     { 
+//         Id: '3', 
+//         username: 'user3', 
+//         email: 'user3@example.com', 
+//         password: bcrypt.hashSync('password123', 10), 
+//         favorites: ['101'], 
+//         reviews: ['205', '209', '217', '220', '224', '227'],
+//         type: 'user' 
+//     },
+//     { 
+//         Id: '4', 
+//         username: 'user4', 
+//         email: 'user4@example.com', 
+//         password: bcrypt.hashSync('password123', 10), 
+//         favorites: ['104', '105'], 
+//         reviews: ['206', '211', '214', '221', '228'],
+//         type: 'user' 
+//     },
+//     { 
+//         Id: '5', 
+//         username: 'user5', 
+//         email: 'user5@example.com', 
+//         password: bcrypt.hashSync('password123', 10), 
+//         favorites: ['106'], 
+//         reviews: ['207', '210', '215', '222', '229'],
+//         type: 'user' 
+//     },
+
+//     // Admin felhasználók
+//     { 
+//         Id: '6', 
+//         username: 'admin', 
+//         email: 'admin@example.com', 
+//         password: bcrypt.hashSync('admin', 10), 
+//         favorites: [],
+//         reviews: [],
+//         type: 'admin' 
+//     },
+//     { 
+//         Id: '7', 
+//         username: 'admin2', 
+//         email: 'admin2@example.com', 
+//         password: bcrypt.hashSync('secureadmin', 10), 
+//         favorites: [],
+//         reviews: [],
+//         type: 'admin' 
+//     },
+
+//     // Szolgáltatók (providerek)
+//     { Id: '8', username: 'provider1', email: 'provider1@example.com', password: bcrypt.hashSync('provider123', 10), favorites: [], reviews: [], type: 'provider' },
+//     { Id: '9', username: 'provider2', email: 'provider2@example.com', password: bcrypt.hashSync('provider123', 10), favorites: [], reviews: [], type: 'provider' },
+//     { Id: '10', username: 'provider3', email: 'provider3@example.com', password: bcrypt.hashSync('provider123', 10), favorites: [], reviews: [], type: 'provider' },
+//     { Id: '11', username: 'provider4', email: 'provider4@example.com', password: bcrypt.hashSync('provider123', 10), favorites: [], reviews: [], type: 'provider' },
+//     { Id: '12', username: 'provider5', email: 'provider5@example.com', password: bcrypt.hashSync('provider123', 10), favorites: [], reviews: [], type: 'provider' },
+//     { Id: '13', username: 'provider6', email: 'provider6@example.com', password: bcrypt.hashSync('provider123', 10), favorites: [], reviews: [], type: 'provider' },
+//     { Id: '14', username: 'provider7', email: 'provider7@example.com', password: bcrypt.hashSync('urbanfit', 10), favorites: [], reviews: [], type: 'provider' },
+//     { Id: '15', username: 'provider8', email: 'provider8@example.com', password: bcrypt.hashSync('protrainer', 10), favorites: [], reviews: [], type: 'provider' },
+//     { Id: '16', username: 'provider9', email: 'provider9@example.com', password: bcrypt.hashSync('titanmode', 10), favorites: [], reviews: [], type: 'provider' },
+//     { Id: '17', username: 'provider10', email: 'provider10@example.com', password: bcrypt.hashSync('flexfit', 10), favorites: [], reviews: [], type: 'provider' },
+//     { Id: '18', username: 'provider11', email: 'provider11@example.com', password: bcrypt.hashSync('pendingfit', 10), favorites: [], reviews: [], type: 'provider' },
+//     { Id: '19', username: 'provider12', email: 'provider12@example.com', password: bcrypt.hashSync('maxpower', 10), favorites: [], reviews: [], type: 'provider' },
+//     { Id: '20', username: 'provider13', email: 'provider13@example.com', password: bcrypt.hashSync('oldschool', 10), favorites: [], reviews: [], type: 'provider' },
+//     { Id: '21', username: 'provider14', email: 'provider14@example.com', password: bcrypt.hashSync('energyboost', 10), favorites: [], reviews: [], type: 'provider' }
+// ];
+
+
+// let gyms = [
+//     { Id: '101', providerId: '8', phonenumber:'+36 11 7685 8423',  email:"titkosmiki1@gmail.com", name: 'Power Gym', location: 'Szeged', services: ['Yoga', 'Cardio'], rating: 4.5, price: "Havi bérlet: 15.000, Napi jegy: 1200", status: 'approved' },
+//     { Id: '102', providerId: '9', phonenumber:'+36 11 7685 8424',  email:"titkosmiki2@gmail.com", name: 'Fitness 5 Skála', location: 'Budapest', services: ['Strength', 'HIIT'], rating: 4.2, price: 14500, status: 'approved' },
+//     { Id: '103', providerId: '10', phonenumber:'+36 11 7685 8425', email:"titkosmiki3@gmail.com", name: 'Johnny Lantos Fitness', location: 'Budapest', services: ['Powerlifting', 'HIIT'], rating: 3.8, price: 18500, status: 'approved' },
+//     { Id: '104', providerId: '11', phonenumber:'+36 11 7685 8426', email:"titkosmiki4@gmail.com", name: 'Elite Gym', location: 'Debrecen', services: ['Bodybuilding', 'CrossFit'], rating: 4.7, price: 16000, status: 'approved' },
+//     { Id: '105', providerId: '12', phonenumber:'+36 11 7685 8427', email:"titkosmiki5@gmail.com", name: 'Spartan Strength', location: 'Győr', services: ['Weightlifting', 'Functional Training'], rating: 4.6, price: 15500, status: 'approved' },
+//     { Id: '106', providerId: '13', phonenumber:'+36 11 7685 8428', email:"titkosmiki6@gmail.com", name: 'Iron Paradise', location: 'Pécs', services: ['Powerlifting', 'Strongman'], rating: 4.3, price: 16500, status: 'approved' },
+//     { Id: '107', providerId: '14', phonenumber:'+36 11 7685 8429', email:"titkosmiki7@gmail.com", name: 'Urban Fit', location: 'Budapest', services: ['HIIT', 'Pilates'], rating: 4.1, price: 14000, status: 'approved' },
+//     { Id: '108', providerId: '15', phonenumber:'+36 11 7685 8410', email:"titkosmiki8@gmail.com", name: 'Pro Athlete Gym', location: 'Miskolc', services: ['Strength Training', 'Personal Training'], rating: 4.8, price: 18000, status: 'approved' },
+//     { Id: '109', providerId: '16', phonenumber:'+36 11 7685 8411', email:"titkosmiki9@gmail.com", name: 'Titan Gym', location: 'Székesfehérvár', services: ['Boxing', 'MMA'], rating: 4.4, price: 15000, status: 'approved' },
+//     { Id: '110', providerId: '17', phonenumber:'+36 11 7685 8412', email:"titkosmiki10@gmail.com", name: 'Flex & Fit', location: 'Nyíregyháza', services: ['Yoga', 'Zumba'], rating: 4.0, price: 13500, status: 'approved' },
+    
+//     // Pending státuszú edzőtermek
+//     { Id: '111', providerId: '18', name: 'Future Fitness', location: 'Eger', services: ['CrossFit', 'Calisthenics'], rating: 3.9, price: 14500, status: 'pending' },
+//     { Id: '112', providerId: '19', name: 'Max Performance', location: 'Kecskemét', services: ['Bodybuilding', 'Powerlifting'], rating: 3.7, price: 15500, status: 'pending' },
+
+//     // Declined státuszú edzőtermek
+//     { Id: '113', providerId: '20', name: 'Old School Gym', location: 'Tatabánya', services: ['Strength Training', 'Weightlifting'], rating: 2.5, price: 12500, status: 'declined' },
+//     { Id: '114', providerId: '21', name: 'Energy Fit', location: 'Sopron', services: ['HIIT', 'Spinning'], rating: 3.1, price: 13500, status: 'declined' }
+// ];
+
+
+// let reviews = [
+//     { Id: '201', gym_id: '101', user_id: '1', rating: 5, comment: 'Great gym!' },
+//     { Id: '202', gym_id: '102', user_id: '1', rating: 4, comment: 'Good but could improve.' },
+//     { Id: '203', gym_id: '101', user_id: '2', rating: 3, comment: "It wasn't so bad." },
+//     { Id: '204', gym_id: '103', user_id: '2', rating: 2, comment: 'Worst gym ever' },
+//     { Id: '205', gym_id: '102', user_id: '3', rating: 2, comment: "I didn't like it." },
+//     { Id: '206', gym_id: '104', user_id: '4', rating: 4, comment: "Nice place, good machines." },
+//     { Id: '207', gym_id: '105', user_id: '5', rating: 5, comment: "Loved the atmosphere!" },
+//     { Id: '208', gym_id: '106', user_id: '1', rating: 3, comment: "Decent, but nothing special." },
+//     { Id: '209', gym_id: '101', user_id: '3', rating: 4, comment: "Friendly staff, clean place." },
+//     { Id: '210', gym_id: '102', user_id: '5', rating: 5, comment: "Best gym in town!" },
+//     { Id: '211', gym_id: '103', user_id: '4', rating: 1, comment: "Terrible experience, never again." },
+//     { Id: '212', gym_id: '105', user_id: '2', rating: 4, comment: "Good for the price." },
+//     { Id: '213', gym_id: '106', user_id: '1', rating: 3, comment: "Could use better equipment." },
+//     { Id: '214', gym_id: '107', user_id: '4', rating: 5, comment: "Awesome gym, great vibes!" },
+//     { Id: '215', gym_id: '108', user_id: '5', rating: 4, comment: "Clean and well maintained." },
+//     { Id: '216', gym_id: '109', user_id: '2', rating: 3, comment: "A bit too crowded for me." },
+//     { Id: '217', gym_id: '110', user_id: '3', rating: 2, comment: "Needs better equipment." },
+//     { Id: '218', gym_id: '111', user_id: '1', rating: 5, comment: "Highly recommend!" },
+//     { Id: '219', gym_id: '112', user_id: '2', rating: 4, comment: "Good atmosphere, friendly staff." },
+//     { Id: '220', gym_id: '113', user_id: '3', rating: 3, comment: "Not bad, but nothing special." },
+//     { Id: '221', gym_id: '114', user_id: '4', rating: 2, comment: "Wouldn't go back." },
+//     { Id: '222', gym_id: '107', user_id: '5', rating: 4, comment: "Good machines, but a bit pricey." },
+//     { Id: '223', gym_id: '108', user_id: '2', rating: 3, comment: "Could use better air conditioning." },
+//     { Id: '224', gym_id: '109', user_id: '3', rating: 5, comment: "One of the best gyms I've been to!" },
+//     { Id: '225', gym_id: '110', user_id: '1', rating: 2, comment: "Needs more free weights." },
+//     { Id: '226', gym_id: '111', user_id: '2', rating: 5, comment: "Amazing place!" },
+//     { Id: '227', gym_id: '112', user_id: '3', rating: 4, comment: "Very well equipped gym." },
+//     { Id: '228', gym_id: '113', user_id: '4', rating: 3, comment: "Decent, but overpriced." },
+//     { Id: '229', gym_id: '114', user_id: '5', rating: 1, comment: "Worst experience ever." }
+// ];

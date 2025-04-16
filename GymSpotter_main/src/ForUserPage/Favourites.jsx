@@ -29,7 +29,7 @@ export default function Favourites() {
       <div className={styles.content}>
         <h1 className={styles.cim}>Kedvenceim ❤</h1>
         {favorites.length === 0 ? (
-          <p className={styles.noFavorites}>Nincsenek elmentve edzőtermek.</p>
+          <p className={styles.noFavorites}>Nincsenek elmentve edzőtermek. 😢</p>
         ) : (
           <div className={styles.favoritesGrid}>
             {favorites.map((gym) => (

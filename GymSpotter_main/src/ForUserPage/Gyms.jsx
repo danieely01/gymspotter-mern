@@ -213,29 +213,40 @@ export default function Gyms() {
       </div>
 
       {reviewModalOpen && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modal}>
-            <div className={styles.modalHeader}>Írj egy értékelést</div>
-            <div className={styles.modalContent}>
-              <label>Értékelés (1-5):</label>
-              <input
-                type="number"
-                min="1"
-                max="5"
-                value={reviewRating}
-                onChange={(e) => setReviewRating(Number(e.target.value))}
-              />
-              <label>Vélemény:</label>
-              <textarea
-                value={reviewText}
-                onChange={(e) => setReviewText(e.target.value)}
-              ></textarea>
-              <button onClick={submitReview}>Beküldés</button>
-              <button onClick={closeReviewModal}>Mégse</button>
-            </div>
-          </div>
+  <div className={styles.modalOverlay}>
+    <div className={styles.modal}>
+      <div className={styles.modalHeader}>Írj egy értékelést</div>
+      <div className={styles.modalContent}>
+        <label>Értékelés (1-5):</label>
+        <input
+          type="number"
+          min="1"
+          max="5"
+          value={reviewRating}
+          onChange={(e) => {
+            const newValue = Number(e.target.value);
+            if (newValue >= 1 && newValue <= 5) {
+              setReviewRating(newValue);
+            } else {
+              setReviewRating(5); // Ha a szám nem érvényes, visszaállítjuk 5-re
+            }
+          }}
+          className={styles.modalInput}
+        />
+        <label>Vélemény:</label>
+        <textarea
+          value={reviewText}
+          onChange={(e) => setReviewText(e.target.value)}
+          className={styles.modalTextarea}
+        ></textarea>
+        <div className={styles.modalActions}>
+          <button onClick={submitReview} className={styles.modalButton}>Beküldés</button>
+          <button onClick={closeReviewModal} className={styles.modalCloseButton}>Mégse</button>
         </div>
-      )}
+      </div>
+    </div>
+  </div>
+)}
 
       {/* Modal */}
       {modalOpen && selectedGym && (

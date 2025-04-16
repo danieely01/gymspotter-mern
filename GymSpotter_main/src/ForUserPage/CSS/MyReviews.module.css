@@ -32,7 +32,7 @@
 .cim {
   font-size: 2.5rem;
   font-weight: 700;
-  margin-bottom: 30px;
+  margin-bottom: -30px;
   color: #fafafa;
   text-shadow: 2px 3px #030303;
   text-align: center;
@@ -45,6 +45,8 @@
   padding: 1.5rem;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease-in-out;
+  min-width: 250px;
+  max-width: 100%;
 }
 
 .reviewCard:hover {

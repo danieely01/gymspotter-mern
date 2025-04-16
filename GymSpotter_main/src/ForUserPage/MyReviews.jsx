@@ -50,9 +50,9 @@ export default function MyReviews() {
   return (
     <div className={`${styles.Komponens}`}>
       <NavigationForUsers />
-      <div className={`container justify-content-center align-items-center p-3 min-vh-100 ${styles.content}`}>
-        <h1 className={`${styles.cim} text-center mb-4`}>Értékeléseim 🤷‍♂️</h1>
-        <div className={`${styles.content}`}>
+      <div className={`${styles.content}`}>
+        <h1 className={`${styles.cim} text-center mt-4`}>Értékeléseim 🤷‍♂️</h1>
+        <div className={`${styles.content} container`}>
           {userReviews.length > 0 ? (
             <div className="row">
               {userReviews.map((review, index) => {
@@ -63,7 +63,7 @@ export default function MyReviews() {
                    if (!gym) return null;
 
                 return (
-                  <div key={index} className="col-md-4 mb-4">
+                  <div key={index} className="col-md-6 mb-4">
                     <div className={`card ${styles.reviewCard}`}> {/* Apply reviewCard class */}
                       <div className="card-body">
                         <h5 className={`${styles.cardTitle}`}>

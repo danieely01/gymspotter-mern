@@ -14,6 +14,7 @@ function ManageReviews() {
     }, []);
 
     const handleDelete = (reviewId) => {
+        console.log('Törlés előtt:', reviewId);  // Az ID naplózása
         // API hívás az értékelés törlésére
         fetch(`http://localhost:3000/admin/ertekeles_torles/${reviewId}`, {
             method: 'DELETE',
@@ -49,7 +50,7 @@ function ManageReviews() {
                             <tbody>
                                 {reviews.sort((a, b) => a.rating - b.rating) // Növekvő sorrendbe redezzük
                                 .map((review) => (
-                                    <tr key={review.Id}>
+                                    <tr key={review._id}>
                                         <td>{review.gymName}</td>
                                         <td>{review.userName}</td>
                                         <td>{review.rating}</td>
