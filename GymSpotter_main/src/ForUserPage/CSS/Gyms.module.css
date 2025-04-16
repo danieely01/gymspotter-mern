@@ -165,18 +165,15 @@
 
   /* Modal Header */
   .modalHeader {
-    font-size: 20px;
+    font-size: 1.8rem;
     font-weight: bold;
     color: white;
     text-shadow: 2px 3px #030303;
-    margin-bottom: 15px;
+    margin-bottom: 1rem;
   }
   
   /* Modal Content */
   .modalContent {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
     font-size: 1.2rem;
     line-height: 1.6;
     color: #ffffff;
@@ -208,50 +205,3 @@
     background-color: #0056b3;
   }
   
-
-  .modalButtonPrimary {
-    background: #007bff;
-    color: white;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .buttonContainer {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 15px;
-  }
-
-
-  .modalButtonSecondary {
-    background: #ccc;
-    color: black;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .modalButtonPrimary:hover {
-    background: #0056b3;
-  }
-  
-  .modalButtonSecondary:hover {
-    background: #bbb;
-  }
-
-  .input,
-.textarea {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.label {
-  font-weight: bold;
-}
-
-

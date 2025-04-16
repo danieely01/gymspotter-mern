@@ -25,7 +25,7 @@ export default function ReviewReviews() {
         ) : (
           <div className={styles.reviewGrid}>
             {reviews.map((review) => (
-              <div key={review._id} className={styles.card}>
+              <div key={review.Id} className={styles.card}>
                 <div className={styles.cardBody}>
                   <h5 className={styles.cardTitle}>Értékelés</h5>
                   <p className={styles.cardText}>⭐ {review.rating}</p>

@@ -19,9 +19,9 @@ function ManageReviews() {
             method: 'DELETE',
         })
             .then(response => response.json())
-            .then(data => {
+            .then((data) => {
                 // Frissítjük a listát a törlés után
-                setReviews(reviews.filter(review => review._id !== reviewId));
+                setReviews(reviews.filter(review => review.Id !== reviewId));
             })
             .catch(error => console.error('Error deleting review:', error));
     };
@@ -49,7 +49,7 @@ function ManageReviews() {
                             <tbody>
                                 {reviews.sort((a, b) => a.rating - b.rating) // Növekvő sorrendbe redezzük
                                 .map((review) => (
-                                    <tr key={review._id}>
+                                    <tr key={review.Id}>
                                         <td>{review.gymName}</td>
                                         <td>{review.userName}</td>
                                         <td>{review.rating}</td>
@@ -57,7 +57,7 @@ function ManageReviews() {
                                         <td>
                                             <button
                                                 className="btn btn-danger"
-                                                onClick={() => handleDelete(review._id)}
+                                                onClick={() => handleDelete(review.Id)}
                                                 >
                                                 Törlés
                                             </button>

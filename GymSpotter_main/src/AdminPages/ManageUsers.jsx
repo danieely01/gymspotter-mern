@@ -16,7 +16,7 @@ function ManageUsers() {
         fetch(`http://localhost:3000/admin/felhasznalo_torles/${userId}`, { method: 'DELETE' })
             .then(response => {
                 if (response.ok) {
-                    setUsers(users.filter(user => user._id !== userId));
+                    setUsers(users.filter(user => user.Id !== userId));
                     alert("Felhasználó sikeresen törölve!");
                 } else {
                     alert("Hiba történt a törlés során.");
@@ -43,12 +43,12 @@ function ManageUsers() {
                         </thead>
                         <tbody>
                             {users.map(user => (
-                                <tr key={user._id}>
+                                <tr key={user.Id}>
                                     <td>{user.username}</td>
                                     <td>{user.email}</td>
                                     <td>{user.type}</td>
                                     <td>
-                                        <button className="btn btn-danger" onClick={() => deleteUser(user._id)}>Törlés</button>
+                                        <button className="btn btn-danger" onClick={() => deleteUser(user.Id)}>Törlés</button>
                                     </td>
                                 </tr>
                             ))}

@@ -7,6 +7,129 @@ const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const bcrypt = require("bcrypt");
 const { hash } = require('bcryptjs');
+const { MongoClient, ServerApiVersion } = require('mongodb');
+// const connectToDB = require('./db');
+
+
+
+// Csatlakozás a MongoDD Atlas serverhez
+const uri = "mongodb+srv://user:GymSpotter-2025@gymspotter.mvpvvpz.mongodb.net/?retryWrites=true&w=majority&appName=GymSpotter";
+
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  }
+});
+
+// async function run() {
+//   try {
+//     // Connect the client to the server	(optional starting in v4.7)
+//     await client.connect();
+//     // Send a ping to confirm a successful connection
+//     await client.db("admin").command({ ping: 1 });
+//     console.log("Pinged your deployment. You successfully connected to MongoDB!");
+//   } finally {
+//     // Ensures that the client will close when you finish/error
+//     await client.close();
+//   }
+// }
+// run().catch(console.dir);
+
+
+// Csatlakozás a MongoDB-hez
+async function connectToDB() {
+    try {
+        // MongoClient inicializálása a Stable API verzióval
+        if (!client.topology || !client.topology.isConnected()){
+            await client.connect();
+            console.log("Sikeresen csatlakozott MongoDB Atlas-hoz!");
+        }
+        return client.db('GymSpotter');
+      } catch (error) {
+        console.error("Hiba történt a MongoDB csatlakozása során:", error);
+      }
+  }
+    
+  // Kollekciók létrehozása
+//   async function createCollections() {
+//     const db = await connectToDB();  // Csatlakozás
+
+  
+//     try {
+//       // Kollekciók létrehozása
+//       await db.createCollection("Users");
+//       console.log("Users collection created");
+  
+//       await db.createCollection("Gyms");
+//       console.log("Gyms collection created");
+  
+//       await db.createCollection("Reviews");
+//       console.log("Reviews collection created");
+  
+//     } catch (error) {
+//       console.error("Error creating collections:", error);
+//     } finally {
+//       await client.close();  // Kapcsolat bezárása
+//     }
+//   }
+//   createCollections();
+
+
+  // Felhasználó hozzáadása az adatbázishoz, ha még nem létezik
+//   async function addUserIfNotExists(newUser) {
+//     // Az új MongoDB driver beállításokat alkalmazva létrehozza a MongoDB-klienset
+//     const client = new MongoClient(uri, { useUnifiedTopology: true });
+    
+//     try {
+//       await client.connect();
+//       const db = client.db("GymSpotter");
+//       const usersCollection = db.collection("Users");
+  
+//       // Ellenőrizzük, hogy a felhasználó ID-ja már létezik-e
+//       const existingUser = await usersCollection.findOne({ Id: newUser.Id });
+      
+//       if (!existingUser) {
+//         // Ha nem létezik, adjuk hozzá az új felhasználót
+//         const result = await usersCollection.insertOne(newUser);
+//         console.log("Új felhasználó hozzáadva Id-val:", result.insertedId);
+        
+//       } else {
+//         console.log("Felhasználó már létezik ezzel az Id-val:", newUser.Id);
+//       }
+      
+//     } catch (error) {
+//       console.error("Error:", error);
+//     } finally {
+//       await client.close();  // Kapcsolat bezárása
+//     }
+//   }
+  
+  // Példa új felhasználóra, amit hozzá szeretnénk adni
+//   const newUser = {
+//     Id: 123456,  // Az új felhasználó egyedi ID-ja
+//     name: "John Doe",
+//     email: "john.doe@example.com",
+//     password: "password123",
+//     type: "user",
+//     favourites: [],
+//     reviews: []
+// };
+// addUserIfNotExists(newUser);
+
+
+
+reviewIds = 1000;
+gymIds = 1000;
+userIds = 1000;
+
+
+
+
+
+
 
 
 app.use(cors());
@@ -14,496 +137,944 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Mock adatbázis
-let users = [
-    { 
-        _id: '1', 
-        username: 'user1', 
-        email: 'user1@example.com', 
-        password: bcrypt.hashSync('password123', 10), 
-        favorites: ['101', '102'], 
-        reviews: ['201', '202', '208', '213', '218', '225'],
-        type: 'user' 
-    },
-    { 
-        _id: '2', 
-        username: 'user2', 
-        email: 'user2@example.com', 
-        password: bcrypt.hashSync('password123', 10), 
-        favorites: ['103'], 
-        reviews: ['203', '204', '212', '216', '219', '223', '226'],
-        type: 'user' 
-    },
-    { 
-        _id: '3', 
-        username: 'user3', 
-        email: 'user3@example.com', 
-        password: bcrypt.hashSync('password123', 10), 
-        favorites: ['101'], 
-        reviews: ['205', '209', '217', '220', '224', '227'],
-        type: 'user' 
-    },
-    { 
-        _id: '4', 
-        username: 'user4', 
-        email: 'user4@example.com', 
-        password: bcrypt.hashSync('password123', 10), 
-        favorites: ['104', '105'], 
-        reviews: ['206', '211', '214', '221', '228'],
-        type: 'user' 
-    },
-    { 
-        _id: '5', 
-        username: 'user5', 
-        email: 'user5@example.com', 
-        password: bcrypt.hashSync('password123', 10), 
-        favorites: ['106'], 
-        reviews: ['207', '210', '215', '222', '229'],
-        type: 'user' 
-    },
+// let users = [
+//     { 
+//         Id: '1', 
+//         username: 'user1', 
+//         email: 'user1@example.com', 
+//         password: bcrypt.hashSync('password123', 10), 
+//         favorites: ['101', '102'], 
+//         reviews: ['201', '202', '208', '213', '218', '225'],
+//         type: 'user' 
+//     },
+//     { 
+//         Id: '2', 
+//         username: 'user2', 
+//         email: 'user2@example.com', 
+//         password: bcrypt.hashSync('password123', 10), 
+//         favorites: ['103'], 
+//         reviews: ['203', '204', '212', '216', '219', '223', '226'],
+//         type: 'user' 
+//     },
+//     { 
+//         Id: '3', 
+//         username: 'user3', 
+//         email: 'user3@example.com', 
+//         password: bcrypt.hashSync('password123', 10), 
+//         favorites: ['101'], 
+//         reviews: ['205', '209', '217', '220', '224', '227'],
+//         type: 'user' 
+//     },
+//     { 
+//         Id: '4', 
+//         username: 'user4', 
+//         email: 'user4@example.com', 
+//         password: bcrypt.hashSync('password123', 10), 
+//         favorites: ['104', '105'], 
+//         reviews: ['206', '211', '214', '221', '228'],
+//         type: 'user' 
+//     },
+//     { 
+//         Id: '5', 
+//         username: 'user5', 
+//         email: 'user5@example.com', 
+//         password: bcrypt.hashSync('password123', 10), 
+//         favorites: ['106'], 
+//         reviews: ['207', '210', '215', '222', '229'],
+//         type: 'user' 
+//     },
 
-    // Admin felhasználók
-    { 
-        _id: '6', 
-        username: 'admin', 
-        email: 'admin@example.com', 
-        password: bcrypt.hashSync('admin', 10), 
-        favorites: [],
-        reviews: [],
-        type: 'admin' 
-    },
-    { 
-        _id: '7', 
-        username: 'admin2', 
-        email: 'admin2@example.com', 
-        password: bcrypt.hashSync('secureadmin', 10), 
-        favorites: [],
-        reviews: [],
-        type: 'admin' 
-    },
+//     // Admin felhasználók
+//     { 
+//         Id: '6', 
+//         username: 'admin', 
+//         email: 'admin@example.com', 
+//         password: bcrypt.hashSync('admin', 10), 
+//         favorites: [],
+//         reviews: [],
+//         type: 'admin' 
+//     },
+//     { 
+//         Id: '7', 
+//         username: 'admin2', 
+//         email: 'admin2@example.com', 
+//         password: bcrypt.hashSync('secureadmin', 10), 
+//         favorites: [],
+//         reviews: [],
+//         type: 'admin' 
+//     },
 
-    // Szolgáltatók (providerek)
-    { _id: '8', username: 'provider1', email: 'provider1@example.com', password: bcrypt.hashSync('provider123', 10), type: 'provider' },
-    { _id: '9', username: 'provider2', email: 'provider2@example.com', password: bcrypt.hashSync('provider123', 10), type: 'provider' },
-    { _id: '10', username: 'provider3', email: 'provider3@example.com', password: bcrypt.hashSync('provider123', 10), type: 'provider' },
-    { _id: '11', username: 'provider4', email: 'provider4@example.com', password: bcrypt.hashSync('provider123', 10), type: 'provider' },
-    { _id: '12', username: 'provider5', email: 'provider5@example.com', password: bcrypt.hashSync('provider123', 10), type: 'provider' },
-    { _id: '13', username: 'provider6', email: 'provider6@example.com', password: bcrypt.hashSync('provider123', 10), type: 'provider' },
-    { _id: '14', username: 'provider7', email: 'provider7@example.com', password: bcrypt.hashSync('urbanfit', 10), type: 'provider' },
-    { _id: '15', username: 'provider8', email: 'provider8@example.com', password: bcrypt.hashSync('protrainer', 10), type: 'provider' },
-    { _id: '16', username: 'provider9', email: 'provider9@example.com', password: bcrypt.hashSync('titanmode', 10), type: 'provider' },
-    { _id: '17', username: 'provider10', email: 'provider10@example.com', password: bcrypt.hashSync('flexfit', 10), type: 'provider' },
-    { _id: '18', username: 'provider11', email: 'provider11@example.com', password: bcrypt.hashSync('pendingfit', 10), type: 'provider' },
-    { _id: '19', username: 'provider12', email: 'provider12@example.com', password: bcrypt.hashSync('maxpower', 10), type: 'provider' },
-    { _id: '20', username: 'provider13', email: 'provider13@example.com', password: bcrypt.hashSync('oldschool', 10), type: 'provider' },
-    { _id: '21', username: 'provider14', email: 'provider14@example.com', password: bcrypt.hashSync('energyboost', 10), type: 'provider' }
-];
+//     // Szolgáltatók (providerek)
+//     { Id: '8', username: 'provider1', email: 'provider1@example.com', password: bcrypt.hashSync('provider123', 10), favorites: [], reviews: [], type: 'provider' },
+//     { Id: '9', username: 'provider2', email: 'provider2@example.com', password: bcrypt.hashSync('provider123', 10), favorites: [], reviews: [], type: 'provider' },
+//     { Id: '10', username: 'provider3', email: 'provider3@example.com', password: bcrypt.hashSync('provider123', 10), favorites: [], reviews: [], type: 'provider' },
+//     { Id: '11', username: 'provider4', email: 'provider4@example.com', password: bcrypt.hashSync('provider123', 10), favorites: [], reviews: [], type: 'provider' },
+//     { Id: '12', username: 'provider5', email: 'provider5@example.com', password: bcrypt.hashSync('provider123', 10), favorites: [], reviews: [], type: 'provider' },
+//     { Id: '13', username: 'provider6', email: 'provider6@example.com', password: bcrypt.hashSync('provider123', 10), favorites: [], reviews: [], type: 'provider' },
+//     { Id: '14', username: 'provider7', email: 'provider7@example.com', password: bcrypt.hashSync('urbanfit', 10), favorites: [], reviews: [], type: 'provider' },
+//     { Id: '15', username: 'provider8', email: 'provider8@example.com', password: bcrypt.hashSync('protrainer', 10), favorites: [], reviews: [], type: 'provider' },
+//     { Id: '16', username: 'provider9', email: 'provider9@example.com', password: bcrypt.hashSync('titanmode', 10), favorites: [], reviews: [], type: 'provider' },
+//     { Id: '17', username: 'provider10', email: 'provider10@example.com', password: bcrypt.hashSync('flexfit', 10), favorites: [], reviews: [], type: 'provider' },
+//     { Id: '18', username: 'provider11', email: 'provider11@example.com', password: bcrypt.hashSync('pendingfit', 10), favorites: [], reviews: [], type: 'provider' },
+//     { Id: '19', username: 'provider12', email: 'provider12@example.com', password: bcrypt.hashSync('maxpower', 10), favorites: [], reviews: [], type: 'provider' },
+//     { Id: '20', username: 'provider13', email: 'provider13@example.com', password: bcrypt.hashSync('oldschool', 10), favorites: [], reviews: [], type: 'provider' },
+//     { Id: '21', username: 'provider14', email: 'provider14@example.com', password: bcrypt.hashSync('energyboost', 10), favorites: [], reviews: [], type: 'provider' }
+// ];
 
 
-let gyms = [
-    { _id: '101', providerId: '8', phonenumber:'+36 11 7685 8423',  email:"titkosmiki1@gmail.com", name: 'Power Gym', location: 'Szeged', services: ['Yoga', 'Cardio'], rating: 4.5, price: "Havi bérlet: 15.000, Napi jegy: 1200", status: 'approved' },
-    { _id: '102', providerId: '9', phonenumber:'+36 11 7685 8424',  email:"titkosmiki2@gmail.com", name: 'Fitness 5 Skála', location: 'Budapest', services: ['Strength', 'HIIT'], rating: 4.2, price: 14500, status: 'approved' },
-    { _id: '103', providerId: '10', phonenumber:'+36 11 7685 8425', email:"titkosmiki3@gmail.com", name: 'Johnny Lantos Fitness', location: 'Budapest', services: ['Powerlifting', 'HIIT'], rating: 3.8, price: 18500, status: 'approved' },
-    { _id: '104', providerId: '11', phonenumber:'+36 11 7685 8426', email:"titkosmiki4@gmail.com", name: 'Elite Gym', location: 'Debrecen', services: ['Bodybuilding', 'CrossFit'], rating: 4.7, price: 16000, status: 'approved' },
-    { _id: '105', providerId: '12', phonenumber:'+36 11 7685 8427', email:"titkosmiki5@gmail.com", name: 'Spartan Strength', location: 'Győr', services: ['Weightlifting', 'Functional Training'], rating: 4.6, price: 15500, status: 'approved' },
-    { _id: '106', providerId: '13', phonenumber:'+36 11 7685 8428', email:"titkosmiki6@gmail.com", name: 'Iron Paradise', location: 'Pécs', services: ['Powerlifting', 'Strongman'], rating: 4.3, price: 16500, status: 'approved' },
-    { _id: '107', providerId: '14', phonenumber:'+36 11 7685 8429', email:"titkosmiki7@gmail.com", name: 'Urban Fit', location: 'Budapest', services: ['HIIT', 'Pilates'], rating: 4.1, price: 14000, status: 'approved' },
-    { _id: '108', providerId: '15', phonenumber:'+36 11 7685 8410', email:"titkosmiki8@gmail.com", name: 'Pro Athlete Gym', location: 'Miskolc', services: ['Strength Training', 'Personal Training'], rating: 4.8, price: 18000, status: 'approved' },
-    { _id: '109', providerId: '16', phonenumber:'+36 11 7685 8411', email:"titkosmiki9@gmail.com", name: 'Titan Gym', location: 'Székesfehérvár', services: ['Boxing', 'MMA'], rating: 4.4, price: 15000, status: 'approved' },
-    { _id: '110', providerId: '17', phonenumber:'+36 11 7685 8412', email:"titkosmiki10@gmail.com", name: 'Flex & Fit', location: 'Nyíregyháza', services: ['Yoga', 'Zumba'], rating: 4.0, price: 13500, status: 'approved' },
+// let gyms = [
+//     { Id: '101', providerId: '8', phonenumber:'+36 11 7685 8423',  email:"titkosmiki1@gmail.com", name: 'Power Gym', location: 'Szeged', services: ['Yoga', 'Cardio'], rating: 4.5, price: "Havi bérlet: 15.000, Napi jegy: 1200", status: 'approved' },
+//     { Id: '102', providerId: '9', phonenumber:'+36 11 7685 8424',  email:"titkosmiki2@gmail.com", name: 'Fitness 5 Skála', location: 'Budapest', services: ['Strength', 'HIIT'], rating: 4.2, price: 14500, status: 'approved' },
+//     { Id: '103', providerId: '10', phonenumber:'+36 11 7685 8425', email:"titkosmiki3@gmail.com", name: 'Johnny Lantos Fitness', location: 'Budapest', services: ['Powerlifting', 'HIIT'], rating: 3.8, price: 18500, status: 'approved' },
+//     { Id: '104', providerId: '11', phonenumber:'+36 11 7685 8426', email:"titkosmiki4@gmail.com", name: 'Elite Gym', location: 'Debrecen', services: ['Bodybuilding', 'CrossFit'], rating: 4.7, price: 16000, status: 'approved' },
+//     { Id: '105', providerId: '12', phonenumber:'+36 11 7685 8427', email:"titkosmiki5@gmail.com", name: 'Spartan Strength', location: 'Győr', services: ['Weightlifting', 'Functional Training'], rating: 4.6, price: 15500, status: 'approved' },
+//     { Id: '106', providerId: '13', phonenumber:'+36 11 7685 8428', email:"titkosmiki6@gmail.com", name: 'Iron Paradise', location: 'Pécs', services: ['Powerlifting', 'Strongman'], rating: 4.3, price: 16500, status: 'approved' },
+//     { Id: '107', providerId: '14', phonenumber:'+36 11 7685 8429', email:"titkosmiki7@gmail.com", name: 'Urban Fit', location: 'Budapest', services: ['HIIT', 'Pilates'], rating: 4.1, price: 14000, status: 'approved' },
+//     { Id: '108', providerId: '15', phonenumber:'+36 11 7685 8410', email:"titkosmiki8@gmail.com", name: 'Pro Athlete Gym', location: 'Miskolc', services: ['Strength Training', 'Personal Training'], rating: 4.8, price: 18000, status: 'approved' },
+//     { Id: '109', providerId: '16', phonenumber:'+36 11 7685 8411', email:"titkosmiki9@gmail.com", name: 'Titan Gym', location: 'Székesfehérvár', services: ['Boxing', 'MMA'], rating: 4.4, price: 15000, status: 'approved' },
+//     { Id: '110', providerId: '17', phonenumber:'+36 11 7685 8412', email:"titkosmiki10@gmail.com", name: 'Flex & Fit', location: 'Nyíregyháza', services: ['Yoga', 'Zumba'], rating: 4.0, price: 13500, status: 'approved' },
     
-    // Pending státuszú edzőtermek
-    { _id: '111', providerId: '18', name: 'Future Fitness', location: 'Eger', services: ['CrossFit', 'Calisthenics'], rating: 3.9, price: 14500, status: 'pending' },
-    { _id: '112', providerId: '19', name: 'Max Performance', location: 'Kecskemét', services: ['Bodybuilding', 'Powerlifting'], rating: 3.7, price: 15500, status: 'pending' },
+//     // Pending státuszú edzőtermek
+//     { Id: '111', providerId: '18', name: 'Future Fitness', location: 'Eger', services: ['CrossFit', 'Calisthenics'], rating: 3.9, price: 14500, status: 'pending' },
+//     { Id: '112', providerId: '19', name: 'Max Performance', location: 'Kecskemét', services: ['Bodybuilding', 'Powerlifting'], rating: 3.7, price: 15500, status: 'pending' },
 
-    // Declined státuszú edzőtermek
-    { _id: '113', providerId: '20', name: 'Old School Gym', location: 'Tatabánya', services: ['Strength Training', 'Weightlifting'], rating: 2.5, price: 12500, status: 'declined' },
-    { _id: '114', providerId: '21', name: 'Energy Fit', location: 'Sopron', services: ['HIIT', 'Spinning'], rating: 3.1, price: 13500, status: 'declined' }
-];
+//     // Declined státuszú edzőtermek
+//     { Id: '113', providerId: '20', name: 'Old School Gym', location: 'Tatabánya', services: ['Strength Training', 'Weightlifting'], rating: 2.5, price: 12500, status: 'declined' },
+//     { Id: '114', providerId: '21', name: 'Energy Fit', location: 'Sopron', services: ['HIIT', 'Spinning'], rating: 3.1, price: 13500, status: 'declined' }
+// ];
 
 
-let reviews = [
-    { _id: '201', gym: '101', user: '1', rating: 5, comment: 'Great gym!' },
-    { _id: '202', gym: '102', user: '1', rating: 4, comment: 'Good but could improve.' },
-    { _id: '203', gym: '101', user: '2', rating: 3, comment: "It wasn't so bad." },
-    { _id: '204', gym: '103', user: '2', rating: 2, comment: 'Worst gym ever' },
-    { _id: '205', gym: '102', user: '3', rating: 2, comment: "I didn't like it." },
-    { _id: '206', gym: '104', user: '4', rating: 4, comment: "Nice place, good machines." },
-    { _id: '207', gym: '105', user: '5', rating: 5, comment: "Loved the atmosphere!" },
-    { _id: '208', gym: '106', user: '1', rating: 3, comment: "Decent, but nothing special." },
-    { _id: '209', gym: '101', user: '3', rating: 4, comment: "Friendly staff, clean place." },
-    { _id: '210', gym: '102', user: '5', rating: 5, comment: "Best gym in town!" },
-    { _id: '211', gym: '103', user: '4', rating: 1, comment: "Terrible experience, never again." },
-    { _id: '212', gym: '105', user: '2', rating: 4, comment: "Good for the price." },
-    { _id: '213', gym: '106', user: '1', rating: 3, comment: "Could use better equipment." },
-    { _id: '214', gym: '107', user: '4', rating: 5, comment: "Awesome gym, great vibes!" },
-    { _id: '215', gym: '108', user: '5', rating: 4, comment: "Clean and well maintained." },
-    { _id: '216', gym: '109', user: '2', rating: 3, comment: "A bit too crowded for me." },
-    { _id: '217', gym: '110', user: '3', rating: 2, comment: "Needs better equipment." },
-    { _id: '218', gym: '111', user: '1', rating: 5, comment: "Highly recommend!" },
-    { _id: '219', gym: '112', user: '2', rating: 4, comment: "Good atmosphere, friendly staff." },
-    { _id: '220', gym: '113', user: '3', rating: 3, comment: "Not bad, but nothing special." },
-    { _id: '221', gym: '114', user: '4', rating: 2, comment: "Wouldn't go back." },
-    { _id: '222', gym: '107', user: '5', rating: 4, comment: "Good machines, but a bit pricey." },
-    { _id: '223', gym: '108', user: '2', rating: 3, comment: "Could use better air conditioning." },
-    { _id: '224', gym: '109', user: '3', rating: 5, comment: "One of the best gyms I've been to!" },
-    { _id: '225', gym: '110', user: '1', rating: 2, comment: "Needs more free weights." },
-    { _id: '226', gym: '111', user: '2', rating: 5, comment: "Amazing place!" },
-    { _id: '227', gym: '112', user: '3', rating: 4, comment: "Very well equipped gym." },
-    { _id: '228', gym: '113', user: '4', rating: 3, comment: "Decent, but overpriced." },
-    { _id: '229', gym: '114', user: '5', rating: 1, comment: "Worst experience ever." }
-];
+// let reviews = [
+//     { Id: '201', gym_id: '101', user_id: '1', rating: 5, comment: 'Great gym!' },
+//     { Id: '202', gym_id: '102', user_id: '1', rating: 4, comment: 'Good but could improve.' },
+//     { Id: '203', gym_id: '101', user_id: '2', rating: 3, comment: "It wasn't so bad." },
+//     { Id: '204', gym_id: '103', user_id: '2', rating: 2, comment: 'Worst gym ever' },
+//     { Id: '205', gym_id: '102', user_id: '3', rating: 2, comment: "I didn't like it." },
+//     { Id: '206', gym_id: '104', user_id: '4', rating: 4, comment: "Nice place, good machines." },
+//     { Id: '207', gym_id: '105', user_id: '5', rating: 5, comment: "Loved the atmosphere!" },
+//     { Id: '208', gym_id: '106', user_id: '1', rating: 3, comment: "Decent, but nothing special." },
+//     { Id: '209', gym_id: '101', user_id: '3', rating: 4, comment: "Friendly staff, clean place." },
+//     { Id: '210', gym_id: '102', user_id: '5', rating: 5, comment: "Best gym in town!" },
+//     { Id: '211', gym_id: '103', user_id: '4', rating: 1, comment: "Terrible experience, never again." },
+//     { Id: '212', gym_id: '105', user_id: '2', rating: 4, comment: "Good for the price." },
+//     { Id: '213', gym_id: '106', user_id: '1', rating: 3, comment: "Could use better equipment." },
+//     { Id: '214', gym_id: '107', user_id: '4', rating: 5, comment: "Awesome gym, great vibes!" },
+//     { Id: '215', gym_id: '108', user_id: '5', rating: 4, comment: "Clean and well maintained." },
+//     { Id: '216', gym_id: '109', user_id: '2', rating: 3, comment: "A bit too crowded for me." },
+//     { Id: '217', gym_id: '110', user_id: '3', rating: 2, comment: "Needs better equipment." },
+//     { Id: '218', gym_id: '111', user_id: '1', rating: 5, comment: "Highly recommend!" },
+//     { Id: '219', gym_id: '112', user_id: '2', rating: 4, comment: "Good atmosphere, friendly staff." },
+//     { Id: '220', gym_id: '113', user_id: '3', rating: 3, comment: "Not bad, but nothing special." },
+//     { Id: '221', gym_id: '114', user_id: '4', rating: 2, comment: "Wouldn't go back." },
+//     { Id: '222', gym_id: '107', user_id: '5', rating: 4, comment: "Good machines, but a bit pricey." },
+//     { Id: '223', gym_id: '108', user_id: '2', rating: 3, comment: "Could use better air conditioning." },
+//     { Id: '224', gym_id: '109', user_id: '3', rating: 5, comment: "One of the best gyms I've been to!" },
+//     { Id: '225', gym_id: '110', user_id: '1', rating: 2, comment: "Needs more free weights." },
+//     { Id: '226', gym_id: '111', user_id: '2', rating: 5, comment: "Amazing place!" },
+//     { Id: '227', gym_id: '112', user_id: '3', rating: 4, comment: "Very well equipped gym." },
+//     { Id: '228', gym_id: '113', user_id: '4', rating: 3, comment: "Decent, but overpriced." },
+//     { Id: '229', gym_id: '114', user_id: '5', rating: 1, comment: "Worst experience ever." }
+// ];
+
+// Tesztadatok feltöltése
+// Fő futtatási funkció
+// async function run() {
+//     const client = await connectToDB();  // Csatlakozás
+  
+//     const db = client.db("GymSpotter"); // Adatbázis kiválasztása
+//     const usersCollection = db.collection("Users");
+//     const gymsCollection = db.collection("Gyms");
+//     const reviewsCollection = db.collection("Reviews");
+  
+//     try {
+//       await client.connect();
+//       const db = client.db('GymSpotter'); // Cseréld ki az adatbázis nevére
+  
+//       // Felhasználók hozzáadása
+//       await usersCollection.insertMany(users);
+  
+//       // Edzőtermek hozzáadása
+//       await gymsCollection.insertMany(gyms);
+  
+//       // Vélemények hozzáadása
+//       await reviewsCollection.insertMany(reviews);
+  
+//       console.log('Adatok sikeresen hozzáadva!');
+//     } catch (error) {
+//       console.error('Hiba történt:', error);
+//     } finally {
+//       await client.close();
+//     }
+// }
+// run();
+//már hozzá lettek adva a tesztadatok
 
 
 
 
 // Felhasználói API-k
+
+
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
-    
-    // Felhasználó keresése
-    const user = users.find(u => u.username === username);
-    if (!user) {
+    const db = await connectToDB();  // MongoDB kapcsolat létrehozása
+    const usersCollection = db.collection('Users');  // A "Users" gyűjteményhez való hozzáférés
+
+    try {
+      // Felhasználó keresése
+      const user = await usersCollection.findOne({ username });
+      if (!user) {
         return res.status(401).send('Hibás felhasználónév vagy jelszó');
-    }
-
-    // Jelszó ellenőrzése (simple check for mock)
-    const match = await bcrypt.compare(password, user.password);
-    if (!match) {
+      }
+  
+      // Jelszó ellenőrzése
+      const match = await bcrypt.compare(password, user.password);
+      if (!match) {
         return res.status(400).send('Hibás bejelentkezési adatok');
+      }
+  
+      // Token generálása
+      const token = jwt.sign({ Id: user.Id, type: user.type }, 'SECRET_KEY', { expiresIn: '1h' });
+  
+      // Válasz visszaküldése
+      res.json({ token, userId: user.Id, userType: user.type, userName: user.username });
+      
+      // Az ügyfél kapcsolatot zárjuk be
+      await client.close();
+    } catch (error) {
+      console.error("Bejelentkezési hiba:", error);
+      res.status(500).send('Hiba történt a bejelentkezés során');
     }
-
-     // Token generálása
-     const token = jwt.sign({ id: user._id, type: user.type }, 'SECRET_KEY', { expiresIn: '1h' });
-    
-     res.json({ token, userId: user._id, userType: user.type, userName: user.username });
- });
-
- // Regisztrációs végpont 
-
- app.post("/register", async (req, res) => {
-    const { username, email, password, type } = req.body;
-  
-    // Ellenőrizzük, hogy létezik-e már a felhasználónév vagy az e-mail
-    if (users.find(u => u.username === username)) {
-      return res.status(400).json({ error: "Felhasználónév már létezik" });
-    }
-    if (users.find(u => u.email === email)) {
-      return res.status(400).json({ error: "E-mail már használatban van" });
-    }
-  
-    // Jelszó hash-elése
-    const hashedPassword = await hash(password, 10);
-  
-    // Új felhasználó létrehozása
-    const newUser = {
-      _id: (users.length + 1).toString(),
-      username,
-      email,
-      password: hashedPassword, 
-      favorites: [],
-      reviews: [],
-      type
-    };
-  
-    users.push(newUser);
-    res.status(201).json({ message: "Sikeres regisztráció!" });
   });
 
 
-app.get('/konditermek', (req, res) => {
-    const approvedGyms = gyms.filter(gym => gym.status === 'approved');
-     // Vélemények hozzáadása a konditermekhez
-    // Vélemények hozzáadása a konditermekhez
-    const gymsWithReviews = approvedGyms.map(gym => {
-        // Szűrjük a véleményeket a konditerem alapján
-        gym.reviews = reviews
-            .filter(review => review.gym === gym._id)  // Vélemények szűrése konditerem alapján
-            .map(review => {
-                // A véleményekhez hozzáadjuk a felhasználó nevét
-                const user = users.find(u => u._id === review.user);
+
+ // Regisztrációs végpont
+ app.post("/register", async (req, res) => {
+    const { username, email, password, type } = req.body;
+    
+    const db = await connectToDB();
+    const usersCollection = db.collection('Users');
+    
+    try {
+      // Ellenőrizzük, hogy létezik-e már a felhasználónév vagy e-mail
+      const existingUserByUsername = await usersCollection.findOne({ username });
+      const existingUserByEmail = await usersCollection.findOne({ email });
+  
+      if (existingUserByUsername) {
+        return res.status(400).json({ error: "Felhasználónév már létezik" });
+      }
+      
+      if (existingUserByEmail) {
+        return res.status(400).json({ error: "Email már regisztrálva van" });
+      }
+  
+      // Jelszó hash-elése
+      const hashedPassword = await bcrypt.hash(password, 10);
+  
+      // Új felhasználó létrehozása
+      const newUser = {
+        Id: `${userIds + 1}`,
+        username,
+        email,
+        password: hashedPassword,
+        favorites: [],
+        reviews: [],
+        type
+      };
+      userIds++;
+
+      // Felhasználó hozzáadása a Users kollekcióhoz
+      const result = await usersCollection.insertOne(newUser);
+  
+      // Visszajelzés a sikeres regisztrációról
+      res.status(201).json({ message: "Sikeres regisztráció!", userId: result.insertedId });
+      console.log("Új felhasználó sikeresen regisztrálva!");
+  
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Belső hiba történt" });
+    }
+  });
+  
+
+// User oldal konditermek kilistázása
+app.get('/konditermek', async (req, res) => {
+    // adatbázishoz kapcsolódás
+    const db = await connectToDB();
+
+    try {
+        // kollekciók tárolása
+        const gymsCollection = db.collection('Gyms');
+        const reviewsCollection = db.collection('Reviews');
+        const usersCollection = db.collection('Users');
+
+        // Konditermek lekérése, ahol a státusz 'approved'
+        const approvedGyms = await gymsCollection.find({ status: 'approved' }).toArray();
+
+        // Vélemények hozzáadása a konditermekhez
+        const gymsWithReviews = await Promise.all(approvedGyms.map(async (gym) => {
+            // Vélemények lekérése konditerem alapján
+            const reviews = await reviewsCollection.find({ gym: gym.Id }).toArray();
+
+            // Véleményekhez hozzáadjuk a felhasználó nevét
+            const gymsWithUserReviews = await Promise.all(reviews.map(async (review) => {
+                const user = await usersCollection.findOne({ Id: review.user });
                 return {
                     ...review,
-                    user: user ? user.username : 'Unknown'  // Ha nem találjuk, akkor 'Unknown' név
+                    user: user ? user.username : 'Ismeretlen'
                 };
-            });
+            }));
 
-             // Ha vannak vélemények, számoljuk ki az átlagot
-        if (gym.reviews.length > 0) {
-            const avgRating = gym.reviews.reduce((acc, review) => acc + review.rating, 0) / gym.reviews.length;
-            gym.rating = parseFloat(avgRating.toFixed(1));  // Az átlagolt értékelés
-        }
-        return gym;
-    });
+            // átlag számítás véleményekhez
+            if (gymsWithUserReviews.length > 0) {
+                const avgRating = gymsWithUserReviews.reduce((acc, review) => acc + review.rating, 0) / gymsWithUserReviews.length;
+                gym.rating = parseFloat(avgRating.toFixed(1));  // átlagolt értékelés
+            }
 
-    res.json(gymsWithReviews);
+            gym.reviews = gymsWithUserReviews;
+            return gym;
+        }));
+
+        res.json(gymsWithReviews);
+    } catch (error) {
+        console.error("Hiba történt a konditermek lekérése során:", error);
+        res.status(500).send('Hiba történt az adatbázis lekérése során');
+    }
 });
 
-app.post('/konditermek/:gymId/ertekeles', (req, res) => {
+
+
+// User oldal értékelés  írása
+app.post('/konditermek/:gymId/ertekeles', async (req, res) => {
     const { userId, rating, comment } = req.body;
     const { gymId } = req.params;
-
-    // Ellenőrizzük, hogy a felhasználó létezik-e
-    const user = users.find(u => u._id === userId);
-    console.log(userId)
-    if (!user) {
-        return res.status(404).json({ error: 'Felhasználó nem található' });
-    }
-
-    // Ellenőrizzük, hogy az edzőterem létezik-e
-    const gym = gyms.find(g => g._id === gymId);
-    if (!gym) {
-        return res.status(404).json({ error: 'Edzőterem nem található' });
-    }
-
-    // Új vélemény létrehozása
-    const newReview = {
-        _id: (reviews.length + 201).toString(), // Új ID generálása
-        gym: gymId,
-        user: userId,
-        rating: parseFloat(rating),
-        comment
-    };
-    reviews.push(newReview);
-    user.reviews.push(newReview._id);
-
-    // Frissítjük az edzőterem átlagos értékelését
-    const gymReviews = reviews.filter(r => r.gym === gymId);
-    const avgRating = gymReviews.reduce((acc, r) => acc + r.rating, 0) / gymReviews.length;
-    gym.rating = parseFloat(avgRating.toFixed(1));
-
-    res.json(gym);
-});
-
-
-app.get('/:userid/kedvencek', (req, res) => {
-    const user = users.find(u => u._id === req.params.userid);
-    if (user) {
-        const userGyms = gyms.filter(gym => user.favorites.includes(gym._id) && gym.status === 'approved');
-        res.json(userGyms);
-    } else {
-        res.status(404).send('User not found');
-    }
-});
-
-app.post('/:userid/kedvenc/:edzotermekid', (req, res) => {
-    const user = users.find(u => u._id === req.params.userid);
-    const gym = gyms.find(g => g._id === req.params.edzotermekid);
-    if (user && gym) {
-        user.favorites.push(gym._id);
-        res.status(201).send('Konditerem hozzáadva a kedvencekhez');
-    } else {
-        res.status(404).send('User or Gym not found');
-    }
-});
-
-app.delete('/:userid/kedvenc/:edzotermekid', (req, res) => {
-    const user = users.find(u => u._id === req.params.userid);
-    if (user) {
-        user.favorites = user.favorites.filter(gymId => gymId !== req.params.edzotermekid);
-        res.status(200).send('Konditerem eltávolítva a kedvencekből');
-    } else {
-        res.status(404).send('User not found');
-    }
-});
-
-app.get('/:userid/ertekeleseim', (req, res) => {
-    const user = users.find(u => u._id === req.params.userid);
-    if (user) {
-        const userReviews = reviews.filter(review => review.user === user._id);
-        res.json(userReviews);
-    } else {
-        res.status(404).send('User not found');
-    }
-});
-
-app.get('/:userid/profilom', (req, res) => {
-    const user = users.find(u => u._id === req.params.userid);
-    if (user) {
-        res.json(user);
-    } else {
-        res.status(404).send('User not found');
-    }
-});
-
-app.put('/:userid/profilom', async (req, res) => {
-    console.log("Beérkező adatok:", req.body); // Kiírja a frontendről érkező adatokat
-    const user = users.find(u => u._id === req.params.userid);
-    if (!user) {
-        return res.status(404).send('User not found');
-    }
-
-    console.log("Felhasználó frissítés előtt:", user);
-
-    // Ha jelszót is frissít a felhasználó
-    if (req.body.newPassword && req.body.newPassword.trim() !== '') {
-        const hashedPassword = await bcrypt.hash(req.body.newPassword, 10);
-        user.password = hashedPassword;
-    }
     
-    user.email = req.body.email || user.email;  // Ha az email változott, frissítjük
-    console.log("Felhasználó frissítés után:", user);
+    // adatbázishoz kapcsolódás
+    const db = await connectToDB();
 
-    Object.assign(user, req.body); // Frissítjük a többi adatot
+    try {
+        // kollekciók tárolása
+        const gymsCollection = db.collection('Gyms');
+        const reviewsCollection = db.collection('Reviews');
+        const usersCollection = db.collection('Users');
 
-    res.json({ message: 'Profil frissítve', user });
+        // Ellenőrizzük, hogy a felhasználó létezik-e
+        const user = await usersCollection.findOne({ Id: userId });
+        if (!user) {
+            return res.status(404).json({ error: 'Felhasználó nem található' });
+        }
+
+        // Ellenőrizzük, hogy az edzőterem létezik-e
+        const gym = await gymsCollection.findOne({ Id: gymId });
+        if (!gym) {
+            return res.status(404).json({ error: 'Edzőterem nem található' });
+        }
+
+        // Új vélemény létrehozása
+        // console.log("Új Id: " + Object.keys(reviewsCollection).length + 1)
+        const newReview = {
+            Id: `${reviewIds + 1}`,
+            gym_id: gymId,
+            user_id: userId,
+            rating: parseFloat(rating),
+            comment
+        };
+        reviewIds++;
+
+        // Vélemény hozzáadása az adatbázishoz
+        const result = await reviewsCollection.insertOne(newReview);
+
+        // Frissítjük a felhasználó véleményeit
+        await usersCollection.updateOne(
+            { Id: userId },
+            { $push: { reviews: result.Id } }
+        );
+
+        // Frissítjük az edzőterem véleményeit
+        const gymReviews = await reviewsCollection.find({ gym: gymId }).toArray();
+        const avgRating = gymReviews.reduce((acc, review) => acc + review.rating, 0) / gymReviews.length;
+
+        // Frissítjük az edzőterem átlagos értékelését
+        await gymsCollection.updateOne(
+            { Id: gymId },
+            { $set: { rating: parseFloat(avgRating.toFixed(1)) } }
+        );
+
+        // Válasz visszaadása
+        const updatedGym = await gymsCollection.findOne({ Id: gymId });
+        res.json(updatedGym);
+    } catch (error) {
+        console.error("Hiba történt a vélemény hozzáadása során:", error);
+        res.status(500).json({ error: 'Hiba történt a vélemény hozzáadása során' });
+    }
+}); 
+
+
+// User oldal kedvencek fül
+app.get('/:userid/kedvencek', async (req, res) => {
+    try {
+        // adatbázishoz kapcsolódás
+        const db = await connectToDB();
+        const usersCollection = db.collection('Users');
+        const gymsCollection = db.collection('Gyms');
+        
+        // Felhasználó keresése Id alapján
+        const user = await usersCollection.findOne({ Id: req.params.userid });
+
+        if (!user) {
+            return res.status(404).send('Nem található a felhasználó!');
+        }
+
+        // Ha a favorites nem tömb, akkor hibát dobunk
+        if (!Array.isArray(user.favorites)) {
+            return res.status(400).send('A kedvencek adat nem megfelelő formátumban van!');
+        }
+
+        // Approved állapottal rendelkező termek a felhasználó kedvencei között
+        const userGymsCursor = gymsCollection.find({
+            Id: { $in: user.favorites },  
+            status: 'approved',       
+        });
+
+        // Kurzor átalakítása tömbbé
+        const userGyms = await userGymsCursor.toArray();
+
+        // Válasz visszaadása
+        res.json(userGyms);
+
+    } catch (error) {
+        console.error('Error fetching user favorites:', error);
+        res.status(500).send('Internal server error');
+    }
 });
+
+
+/*
+Kedvencekhez adom a termet
+Kedvencek fül megnyitása
+Vissza az edzőtermek fülre --> Nem piros a szív
+*/
+// User kedvencekhez adás
+app.post('/:userid/kedvenc/:edzotermekid', async (req, res) => {
+
+    // adatbázishoz kapcsolódás
+    const db = await connectToDB();
+    const usersCollection = db.collection('Users');
+    const gymsCollection = db.collection('Gyms');
+
+    // Felhasználó keresése Id alapján
+    const user = await usersCollection.findOne({ Id: req.params.userid });
+
+    // Konditerem keresése Id alapján
+    const gym = await gymsCollection.findOne({ Id: req.params.edzotermekid });
+
+    try { 
+        if (user && gym) {
+            // Ha még nem szerepel a kedvencek között, akkor hozzáadjuk
+            if (!user.favorites.includes(gym.Id)) {
+                await usersCollection.updateOne(
+                    { Id: req.params.userid },
+                    { $push: { favorites: gym.Id } }
+                );
+                res.status(201).send('Konditerem hozzáadva a kedvencekhez!');
+            } else {
+                res.status(400).send('A konditerem már a kedvencek között szerepel!');
+            }
+        } else {
+            res.status(404).send('Felhasználó vagy konditerem nem található!');
+        }
+    } catch (error) {
+        console.error('Error adding gym to favorites:', error);
+        res.status(500).send('Internal server error');
+    }
+});
+
+app.delete('/:userid/kedvenc/:edzotermekid', async (req, res) => {
+    try {
+        // Kapcsolódunk az adatbázishoz
+        const db = await connectToDB();
+        const usersCollection = db.collection('Users'); // 'Users' kollekció
+
+        // Felhasználó keresése az ID alapján
+        const user = await usersCollection.findOne({ Id: req.params.userid });
+        
+        if (!user) {
+            return res.status(404).send('Felhasználó nem található!');
+        }
+
+        // Kedvenc konditermek listájának frissítése (konditerem eltávolítása)
+        const updatedUser = await usersCollection.updateOne(
+            { Id: req.params.userid }, // Felhasználó keresése az ID alapján
+            { $pull: { favorites: req.params.edzotermekid } } // 'favorites' mezőből eltávolítjuk az edzőtermet
+        );
+
+        // Ha a frissítés sikeres, visszaküldjük a választ
+        if (updatedUser.modifiedCount > 0) {
+            res.status(200).send('Konditerem eltávolítva a kedvencekből');
+        } else {
+            res.status(400).send('Nem történt változás');
+        }
+    } catch (err) {
+        console.error('Hiba történt a kedvenc konditerem törlésénél:', err);
+        res.status(500).send('Hiba történt a kedvenc konditerem törlésénél');
+    }
+});
+
+
+// nem jeleníti meg
+app.get('/:userid/ertekeleseim', async (req, res) => {
+    try {
+        console.log(req.params.userid);  // Ellenőrizd, hogy megérkezik-e a providerId vagy userId
+        const db = await connectToDB();  // Csatlakozás az adatbázishoz
+        const usersCollection = db.collection('Users');  // Felhasználók kollekciója
+        const reviewsCollection = db.collection('Reviews');  // Vélemények kollekciója
+        
+        // Felhasználó keresése az ID alapján
+        const user = await usersCollection.findOne({ Id: req.params.userid });
+        console.log('felh id:'+user.Id);
+        if (!user) {
+            return res.status(404).send('Felhasználó nem található');
+        }
+
+        // A felhasználó értékeléseinek keresése a user_id alapján
+        const userReviews = await reviewsCollection.find({
+            user_id: user.Id  // Feltételezzük, hogy az értékelések `user_id` mezője tartalmazza a felhasználó Id-ját
+        }).toArray();
+        console.log('userreviews hossz:'+userReviews.length);
+        if (userReviews.length === 0) {
+            return res.status(404).send('Nincs értékelés a felhasználóhoz');
+        }
+
+        // Az értékelések visszaküldése
+        res.json(userReviews);
+
+    } catch (error) {
+        console.error('Hiba történt az értékelések lekérésekor:', error);
+        res.status(500).send('Belső hiba történt');
+    }
+});
+
+
+
+
+
+app.get('/:userid/profilom', async (req, res) => {
+    // adatbázishoz kapcsolódás
+    const db = await connectToDB();
+    const usersCollection = db.collection('Users');
+
+    try {
+        const user = await usersCollection.findOne({ Id: req.params.userid });
+        if (user) {
+            res.json(user);
+        } else {
+            res.status(404).send('User not found');
+        }
+    } catch (err) {
+        res.status(500).send('Error retrieving user');
+    }
+});
+
+// PUT: Profil frissítése
+app.put('/:userid/profilom', async (req, res) => {
+    // adatbázishoz kapcsolódás
+    const db = await connectToDB();
+    const usersCollection = db.collection('Users');
+
+    try {
+        console.log("Beérkező adatok:", req.body); // Kiírja a frontendről érkező adatokat
+
+        // Felhasználó keresése ID alapján
+        const user = await usersCollection.findOne({ Id: req.params.userid });
+
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        console.log("Felhasználó frissítés előtt:", user);
+
+        // Ha jelszót is frissít a felhasználó
+        if (req.body.newPassword && req.body.newPassword.trim() !== '') {
+            const hashedPassword = await bcrypt.hash(req.body.newPassword, 10);
+            user.password = hashedPassword;
+        }
+
+        // Frissítjük az emailt, ha változott
+        user.email = req.body.email || user.email;
+
+        // Frissítjük a többi adatot
+        Object.assign(user, req.body);
+
+        // Mentjük a frissített felhasználót az adatbázisba
+        await user.save();
+
+        console.log("Felhasználó frissítés után:", user);
+
+        res.json({ message: 'Profil frissítve', user });
+    } catch (err) {
+        console.error('Hiba a felhasználó frissítésekor:', err);
+        res.status(500).send('Error updating user');
+    }
+});
+
+
 
 app.post('/:userid/profilom/ellenorzes', async (req, res) => {
+    // adatbázishoz kapcsolódás
+    const db = await connectToDB();
+    const usersCollection = db.collection('Users');
+
     const { userid } = req.params;
     const { currentPassword } = req.body;
 
-    // Felhasználó keresése a mock tömbben
-    const user = users.find(u => u._id === userid);
-    if (!user) {
-        return res.status(404).json({ success: false, message: 'Felhasználó nem található!' });
-    }
+    try {
+        // Felhasználó keresése ID alapján
+        const user = await usersCollection.findOne({ Id: userid });
 
-    // Jelszó ellenőrzése bcrypt-tel
-    const isMatch = await bcrypt.compare(currentPassword, user.password);
-    if (!isMatch) {
-        return res.status(401).json({ success: false, message: 'Hibás jelszó!' });
-    }
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'Felhasználó nem található!' });
+        }
 
-    res.json({ success: true });
+        // Jelszó ellenőrzése bcrypt-tel
+        const isMatch = await bcrypt.compare(currentPassword, user.password);
+        if (!isMatch) {
+            return res.status(401).json({ success: false, message: 'Hibás jelszó!' });
+        }
+
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Hiba a jelszó ellenőrzésekor:', err);
+        res.status(500).json({ success: false, message: 'Hiba történt a jelszó ellenőrzésekor' });
+    }
 });
+
+
 
 
 
 // Admin API-k
-app.get('/admin/konditermek_kezelese', (req, res) => {
-    const pendingGyms = gyms.filter(gym => gym.status === 'pending');
-    res.json(pendingGyms);
-});
 
-app.patch('/admin/konditermek_kezelese/:id', (req, res) => {
-    const gym = gyms.find(g => g._id === req.params.id);
-    if (gym) {
-        gym.status = req.body.status;
-        res.send(`Konditerem státusza módosítva: ${gym.status}`);
-    } else {
-        res.status(404).send('Gym not found');
+// Összes edzőterem megjelenítée
+app.get('/admin/osszes_edzoterem', async (req, res) => {
+    try {
+        // adatbázishoz kapcsolódás
+        const db = await connectToDB();
+        const gymsCollection = db.collection('Gyms');
+        
+        // Az összes konditerem lekérdezése
+        const gyms = await gymsCollection.find().toArray();
+
+        res.json(gyms);  // Válasz visszaadása
+    } catch (err) {
+        console.error('Hiba történt a konditermek listázásakor:', err);
+        res.status(500).send('Hiba történt a konditermek listázásakor');
     }
 });
 
-// Admin API - Összes konditerem listázása
-app.get('/admin/osszes_edzoterem', (req, res) => {
-    res.json(gyms);
+// Konditermek kezelése fül betöltése
+app.get('/admin/konditermek_kezelese', async (req, res) => {
+        // adatbázishoz kapcsolódás
+        const db = await connectToDB();
+        const gymsCollection = db.collection('Gyms');
+
+    try {
+
+
+        // Pending státuszú konditermek lekérdezése
+        const pendingGyms = await gymsCollection.find({ status: 'pending' }).toArray();
+
+        // Ha nincs pending státuszú gym, visszaküldjük a megfelelő választ
+        if (pendingGyms.length === 0) {
+            return res.status(404).send('Nincs pending státuszú konditerem.');
+        }
+
+        res.json(pendingGyms);
+    } catch (err) {
+        console.error('Hiba történt a konditermek lekérdezésekor:', err);
+        res.status(500).send('Hiba történt a konditermek lekérdezésekor.');
+    }
 });
 
-// Admin API - Konditerem törlése
-app.delete('/admin/edzoterem_torles/:id', (req, res) => {
-    const gymIndex = gyms.findIndex(g => g._id === req.params.id);
-    if (gymIndex !== -1) {
-        gyms.splice(gymIndex, 1);
+
+app.patch('/admin/konditermek_kezelese/:id', async (req, res) => {
+    try {
+        // adatbázishoz kapcsolódás
+        const db = await connectToDB();
+        const gymsCollection = db.collection('Gyms');
+
+        // Konditerem keresése az ID alapján
+        const gym = await gymsCollection.findOne({ Id: req.params.id });  // Ha 'Id' mezőt használsz
+
+        if (!gym) {
+            return res.status(404).send('Konditerem nem található');
+        }
+
+        // Státusz frissítése
+        const updatedGym = await gymsCollection.updateOne(
+            { Id: req.params.id }, // Keresés az 'Id' mező alapján
+            { $set: { status: req.body.status } } // Státusz frissítése
+        );
+
+        if (updatedGym.modifiedCount > 0) {
+            res.send(`Konditerem státusza módosítva: ${req.body.status}`);
+        } else {
+            res.status(400).send('Hiba történt a státusz frissítésekor');
+        }
+    } catch (err) {
+        console.error('Hiba történt a konditerem státuszának frissítésekor:', err);
+        res.status(500).send('Hiba történt a konditerem státuszának frissítésekor');
+    }
+});
+
+
+
+// Edzőterem törlése gomb
+app.delete('/admin/edzoterem_torles/:id', async (req, res) => {
+    try {
+        // adatbázishoz kapcsolódás
+        const db = await connectToDB();
+        const gymsCollection = db.collection('Gyms');
+
+        // Az _id mező alapján történő keresés (MongoDB-ban az ObjectId-t kell használni)
+        const result = await gymsCollection.deleteOne({ Id: req.params.id });
+
+        // Ha nem található a konditerem, válaszolunk hibával
+        if (result.deletedCount === 0) {
+            return res.status(404).send('Konditerem nem található');
+        }
+
+        // Sikeres törlés esetén
         res.send('Konditerem törölve');
-    } else {
-        res.status(404).send('Gym not found');
+    } catch (err) {
+        console.error('Hiba történt a konditerem törlésekor:', err);
+        res.status(500).send('Hiba történt a konditerem törlésekor');
     }
 });
 
+// Admin API - Felhasználók listázása
+app.get('/admin/felhasznalok_kezelese', async (req, res) => {
+    try {
+        // adatbázishoz kapcsolódás
+        const db = await connectToDB();
+        const usersCollection = db.collection('Users');
 
-app.get('/admin/felhasznalok_kezelese', (req, res) => {
-    res.json(users);
+        // Az összes felhasználó lekérdezése
+        const users = await usersCollection.find().toArray(); // MongoDB natív módszer
+
+        res.json(users);
+    } catch (err) {
+        console.error('Hiba történt a felhasználók listázásakor:', err);
+        res.status(500).send('Hiba történt a felhasználók listázásakor');
+    }
 });
 
-app.delete('/admin/felhasznalo_torles/:id', (req, res) => {
-    const userIndex = users.findIndex(u => u._id === req.params.id);
-    if (userIndex !== -1) {
-        users.splice(userIndex, 1);
+app.delete('/admin/felhasznalo_torles/:id', async (req, res) => {
+    try {
+        // adatbázishoz kapcsolódás
+        const db = await connectToDB();
+        const usersCollection = db.collection('Users');
+
+        const userId = req.params.id; // A frontend által küldött userId
+
+        // Felhasználó törlése az 'Id' mező alapján
+        const result = await usersCollection.deleteOne({ Id: userId });
+
+        if (result.deletedCount === 0) {
+            return res.status(404).send('Felhasználó nem található');
+        }
+
         res.send('Felhasználó törölve');
-    } else {
-        res.status(404).send('Felhasználó nem található');
+    } catch (err) {
+        console.error('Hiba történt a felhasználó törlésekor:', err);
+        res.status(500).send('Hiba történt a felhasználó törlésekor');
     }
 });
 
-app.get('/admin/ertekelesek_kezelese', (req, res) => {
-    const reviews2 = reviews.map(review => {
-        const gym = gyms.find(g => g._id === review.gym); // Megkeressük a gym nevét
-        const user = users.find(u => u._id === review.user); // Megkeressük a felhasználót a review user ID-ja alapján
+// Admin API - Értékelések kezelése
+app.get('/admin/ertekelesek_kezelese', async (req, res) => {
+    try {
+        // adatbázishoz kapcsolódás
+        const db = await connectToDB();
+        const usersCollection = db.collection('Users');
+        const reviewsCollection = db.collection('Reviews');
+        const gymsCollection = db.collection('Gyms');
 
-        return {
-            ...review,
-            gymName: gym ? gym.name : 'Ismeretlen gym', // Ha van megfelelő gym, hozzáadjuk a nevét, ha nem, 'Ismeretlen gym'
-            userName: user ? user.username : 'Ismeretlen felhasználó' // Ha van megfelelő felhasználó, hozzáadjuk a nevét, ha nem, 'Ismeretlen felhasználó'
-        };
-    });
+        // Az összes értékelés lekérdezése
+        const reviewsCursor = reviewsCollection.find(); // MongoDB natív keresés
+        const reviews = await reviewsCursor.toArray(); // A kurzor átalakítása tömbbé
 
-    res.json(reviews2); // Visszaküldjük a módosított reviews listát
+        // Az értékelések részletezése (felhasználó és konditerem információ)
+        const reviewsWithDetails = await Promise.all(reviews.map(async (review) => {
+            // Megkeressük a konditermet az Id alapján
+            const gym = await gymsCollection.findOne({ Id: review.gym_id }); // MongoDB natív keresés
+            // Megkeressük a felhasználót az Id alapján
+            const user = await usersCollection.findOne({ Id: review.user_id }); // MongoDB natív keresés
+
+            return {
+                ...review,
+                gymName: gym ? gym.name : 'Ismeretlen gym',
+                userName: user ? user.username : 'Ismeretlen felhasználó',
+            };
+        }));
+
+        // Válasz visszaküldése
+        res.json(reviewsWithDetails);
+    } catch (err) {
+        console.error('Hiba történt az értékelések listázásakor:', err);
+        res.status(500).send('Hiba történt az értékelések listázásakor');
+    }
 });
 
+// Admin API - Értékelés törlése
+app.delete('/admin/ertekeles_torles/:id', async (req, res) => {
+    // adatbázishoz kapcsolódás
+    const db = await connectToDB();
+    const reviewsCollection = db.collection('Reviews');
 
+    try {
+        // Az értékelés törlése az Id alapján 
+        const result = await reviewsCollection.findOneAndDelete({ Id: req.params.id });
 
-app.delete('/admin/ertekeles_torles/:id', (req, res) => {
-    const reviewIndex = reviews.findIndex(r => r._id === req.params.id);
-    if (reviewIndex !== -1) {
-        reviews.splice(reviewIndex, 1);
+        if (!result || !result.value) {  // Ha a result null vagy nincs benne value
+            return res.status(404).send('Értékelés nem található');
+        }
+
+        // Ha sikeres volt a törlés, válasz visszaküldése
         res.json({ message: 'Értékelés törölve' });
-
-    } else {
-        res.status(404).send('Értékelés nem található');
+    } catch (err) {
+        console.error('Hiba történt az értékelés törlésekor:', err);
+        res.status(500).send('Hiba történt az értékelés törlésekor');
     }
 });
 
 
+// Admin API - Statisztika lekérése
+app.get('/admin/statisztika', async (req, res) => {
+    try {
+        // adatbázishoz kapcsolódás
+        const db = await connectToDB();
+        const usersCollection = db.collection('Users');
+        const gymsCollection = db.collection('Gyms');
 
+        // Összes konditerem
+        const gymsCount = await gymsCollection.countDocuments();
 
-app.get('/admin/statisztika', (req, res) => {
-    res.json({ gyms: gyms.length, users: users.filter(user => user.type === "user").length });
+        // Összes felhasználó, akik nem adminok
+        const usersCount = await usersCollection.countDocuments({ type: "user" });
+
+        // Válasz visszaküldése
+        res.json({ gyms: gymsCount, users: usersCount });
+    } catch (err) {
+        console.error('Hiba történt a statisztika lekérésekor:', err);
+        res.status(500).send('Hiba történt a statisztika lekérésekor');
+    }
 });
+
 
 // Szolgáltató API-k
-app.get('/:userId/check-gym', (req, res) => {
-    const { userId } = req.params;
-  
-    // Keresd meg azokat az edzőtermeket, amelyek tartalmazzák a megadott providerId-t (felhasználó ID-ja)
-    const userGyms = gyms.filter(gym => gym.providerId === userId);
-  
-    // Ellenőrizzük, hogy a felhasználónak van-e olyan edzőterme, amely "approved" vagy "pending" státuszt kapott
-    const hasApprovedOrPendingGym = userGyms.some(gym => gym.status === 'approved' || gym.status === 'pending');
-  
-    if (hasApprovedOrPendingGym) {
-      // Ha van már regisztrált edzőterme, nem engedjük új form megjelenítését
-      return res.status(200).json({ canAddGym: false });
-    } else {
-      // Ha nincs, engedjük a formot
-      return res.status(200).json({ canAddGym: true });
+app.get('/:userId/check-gym', async (req, res) => {
+    const userId  = req.params.id;
+
+    try {
+        // adatbázishoz kapcsolódás
+        const db = await connectToDB();
+        const gymsCollection = db.collection('Gyms');
+        
+        // Keresés a MongoDB-ben a providerId és a státusz alapján
+        const userGyms = await gymsCollection.find({
+            providerId: userId,
+            status: { $in: ['approved', 'pending'] }
+        }).toArray();
+
+        // Ellenőrizzük, hogy van-e olyan edzőterem, amely "approved" vagy "pending" státuszú
+        if (userGyms.length > 0) {
+            // Ha van regisztrált edzőterem
+            return res.status(200).json({ canAddGym: false });
+        } else {
+            // Ha nincs, engedjük az új edzőterem hozzáadását
+            return res.status(200).json({ canAddGym: true });
+        }
+    } catch (err) {
+        console.error('Hiba történt az edzőtermek lekérdezésekor:', err);
+        res.status(500).send('Hiba történt az edzőtermek lekérdezésekor');
     }
-  });
-
-
-app.post('/:providerid/edzotermem', (req, res) => {
-    const providerId = req.params.providerid;
-    const { name, services, price, email, phoneNumber, location } = req.body;
-
-    // Ellenőrizzük, hogy a felhasználóhoz tartozó edzőterem státusza approved vagy pending
-    const existingGym = gyms.find(gym => gym.providerId === providerId && (gym.status === 'approved' || gym.status === 'pending'));
-
-    if (existingGym) {
-        return res.status(400).json({ message: 'Már van edzőtermed!' });
-    }
-
-    // Új edzőterem hozzáadása pending státusszal
-    const newGym = {
-        _id: (gyms.length + 1).toString(),
-        providerId,
-        name,
-        services: services.split(',').map(service => service.trim()),
-        price,
-        email,
-        phoneNumber,
-        location,
-        status: 'pending',
-    };
-
-    gyms.push(newGym);
-
-    res.status(201).json(newGym);
 });
 
-app.get('/:providerid/ertekelesek_attekintese', (req, res) => {
-    const providerGyms = gyms.filter(gym => gym.providerId === req.params.providerid);
-    const providerReviews = reviews.filter(review => providerGyms.some(gym => gym._id === review.gym));
-    res.json(providerReviews);
+
+app.post('/:providerid/edzotermem', async (req, res) => {
+    const provider_Id = req.params.id;
+    const { name, services, price, email, phoneNumber, location } = req.body;
+    // console.log(provider_Id);
+    try {
+        // adatbázishoz kapcsolódás
+        const db = await connectToDB();
+        const gymsCollection = db.collection('Gyms');
+
+        // Ellenőrizzük, hogy a felhasználóhoz tartozó edzőterem státusza 'approved' vagy 'pending'
+        const existingGym = await gymsCollection.findOne({
+            providerId: provider_Id,
+            $or: [
+                { status: 'approved' },
+                { status: 'pending' }
+            ]
+        });
+
+        if (existingGym) {
+            return res.status(400).json({ message: 'Már van edzőtermed!' });
+        }
+
+        // Új edzőterem hozzáadása 'pending' státusszal
+        const newGym = {
+            Id: `${gymIds + 1}`,
+            providerId: `${provider_Id}`,
+            name,
+            services: services.split(',').map(service => service.trim()),
+            price,
+            email,
+            phoneNumber,
+            location,
+            status: 'pending',
+        };
+        gymIds++;
+        // Az új edzőterem mentése a MongoDB-be
+        const result = await gymsCollection.insertOne(newGym);
+
+        // Válasz visszaküldése
+        res.status(201).json({
+            Id: result.Id,
+            ...newGym
+        });
+    } catch (err) {
+        console.error('Hiba történt az edzőterem hozzáadása közben:', err);
+        res.status(500).send('Hiba történt az edzőterem hozzáadása közben');
+    }
+});
+
+app.get('/:providerid/ertekelesek_attekintese', async (req, res) => {
+    try {
+        console.log(req.params.providerid);  // Ellenőrizd, hogy megérkezik-e a providerId
+        const db = await connectToDB();
+        const gymsCollection = db.collection('Gyms');
+        const reviewsCollection = db.collection('Reviews');
+        
+        const providerGyms = await gymsCollection.find({ providerId: req.params.providerid }).toArray();
+        // console.log(providerGyms.length)
+        if (providerGyms.length === 0) {
+            return res.status(404).send('Nincs olyan konditerem, amelyhez tartozik ez a providerId.');
+        }
+
+        const gym_Ids = providerGyms.map(gym => gym.Id);
+        // console.log(gym_Ids)
+        const providerReviews = await reviewsCollection.find({
+            gym_id: { $in: gym_Ids }
+        }).toArray();
+
+        res.json(providerReviews);
+    } catch (err) {
+        console.error('Hiba történt az értékelések lekérésekor:', err);
+        res.status(500).send('Hiba történt az értékelések lekérésekor');
+    }
 });
 
 // Server elindítása

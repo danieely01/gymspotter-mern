@@ -36,7 +36,7 @@ export default function Gyms() {
 
     fetch(`http://localhost:3000/${userId}/kedvencek`)
       .then((response) => response.json())
-      .then((data) => setFavorites(data.map(gym => gym._id)))
+      .then((data) => setFavorites(data.map(gym => gym.Id)))
       .catch((error) => console.error('Error fetching favorites:', error));
   }, []);
 
@@ -129,9 +129,9 @@ export default function Gyms() {
       comment: reviewText,
       rating: reviewRating,
     };
-    console.log('selectedGym id-ja:', selectedGym._id);
+    console.log('selectedGym id-ja:', selectedGym.Id);
     console.log('User id-ja:', userId);
-    fetch(`http://localhost:3000/konditermek/${selectedGym._id}/ertekeles`, {
+    fetch(`http://localhost:3000/konditermek/${selectedGym.Id}/ertekeles`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newReview),
@@ -139,8 +139,8 @@ export default function Gyms() {
     .then(response => response.json())
     .then((updatedGym) => {
       console.log('Frissített edzőterem:', updatedGym);  // Debugging
-      setGyms(gyms.map(gym => gym._id === updatedGym._id ? updatedGym : gym));
-      setFilteredGyms(filteredGyms.map(gym => gym._id === updatedGym._id ? updatedGym : gym));
+      setGyms(gyms.map(gym => gym.Id === updatedGym.Id ? updatedGym : gym));
+      setFilteredGyms(filteredGyms.map(gym => gym.Id === updatedGym.Id ? updatedGym : gym));
       closeReviewModal();
       setSelectedGym(updatedGym);
     })
@@ -186,14 +186,14 @@ export default function Gyms() {
         ) : (
           <div className={styles.gymGrid}>
             {filteredGyms.map((gym) => (
-              <div key={gym._id} className={styles.card}>
+              <div key={gym.Id} className={styles.card}>
                 <div className={styles.cardBody}>
                   <h5 className={styles.cardTitle}>
                     {gym.name}
                     {isLoggedIn && (
                       <span
-                        style={{ cursor: 'pointer', marginLeft: '10px', color: isFavorite(gym._id) ? 'red' : 'grey' }}
-                        onClick={() => toggleFavorite(gym._id)}
+                        style={{ cursor: 'pointer', marginLeft: '10px', color: isFavorite(gym.Id) ? 'red' : 'grey' }}
+                        onClick={() => toggleFavorite(gym.Id)}
                       >
                         ♥
                       </span>
@@ -214,36 +214,27 @@ export default function Gyms() {
 
       {reviewModalOpen && (
         <div className={styles.modalOverlay}>
-        <div className={styles.modal}>
-          <div className={styles.modalHeader}>Írj egy értékelést</div>
-          <div className={styles.modalContent}>
-            <label className={styles.label}>Értékelés (1-5):</label>
-            <input
-              type="number"
-              min="1"
-              max="5"
-              value={reviewRating}
-              onChange={(e) => setReviewRating(Number(e.target.value))}
-              className={styles.input}
-            />
-            <label className={styles.label}>Vélemény:</label>
-            <textarea
-              value={reviewText}
-              onChange={(e) => setReviewText(e.target.value)}
-              className={styles.textarea}
-            ></textarea>
-            <div className={styles.buttonContainer}>
-              <button onClick={submitReview} className={styles.modalButtonPrimary}>
-                Beküldés
-              </button>
-              <button onClick={closeReviewModal} className={styles.modalButtonSecondary}>
-                Mégse
-              </button>
+          <div className={styles.modal}>
+            <div className={styles.modalHeader}>Írj egy értékelést</div>
+            <div className={styles.modalContent}>
+              <label>Értékelés (1-5):</label>
+              <input
+                type="number"
+                min="1"
+                max="5"
+                value={reviewRating}
+                onChange={(e) => setReviewRating(Number(e.target.value))}
+              />
+              <label>Vélemény:</label>
+              <textarea
+                value={reviewText}
+                onChange={(e) => setReviewText(e.target.value)}
+              ></textarea>
+              <button onClick={submitReview}>Beküldés</button>
+              <button onClick={closeReviewModal}>Mégse</button>
             </div>
           </div>
         </div>
-      </div>
-      
       )}
 
       {/* Modal */}

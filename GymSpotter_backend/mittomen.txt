@@ -1,0 +1,10 @@
+user
+GymSpotter-2025
+
+
+// terminálba
+mkdir myproject
+cd myproject
+npm init -y
+npm install mongoose
+npm install mongodb
