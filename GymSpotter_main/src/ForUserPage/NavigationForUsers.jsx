@@ -1,10 +1,10 @@
-import React from "react";
+import React, {useContext} from "react";
 import { Link, useLocation } from "react-router-dom";
 import styles from "./CSS/NavigationForUsers.module.css";
-
+import { AuthContext } from "../context/auth-context";
 export default function NavigationForUsers() {
   const location = useLocation(); 
-
+  const auth = useContext(AuthContext); //Újra rendereli az oldalt, ha ez változik
   return (
     <nav className={`navbar navbar-expand-md navbar-dark fw-bold fixed-top ${styles.Komponens}`}>
       <Link className={`navbar-brand ${styles.navbarlogo}`} to="/userpage">GymSpotter</Link>
@@ -16,26 +16,39 @@ export default function NavigationForUsers() {
         <li className={`nav-item ${location.pathname === "/edzotermek" ? styles.active : ""}`}>
             <Link className={`${styles.navlink} nav-link`} to="/edzotermek">Edzőtermek</Link>
           </li>
-          <li className={`nav-item ${location.pathname === "/kedvencek" ? styles.active : ""}`}>
+          {/* Csak bejelentkezett felhasználók látják a kedvencek fület */}
+          {auth.isLoggedIn && (
+              <li className={`nav-item ${location.pathname === "/kedvencek" ? styles.active : ""}`}>
 
-            <Link className={`${styles.navlink} nav-link`} to="/kedvencek">Kedvencek</Link>
-          </li>
+              <Link className={`${styles.navlink} nav-link`} to="/kedvencek">Kedvencek</Link>
+            </li>
+          )} 
           <li className={`nav-item ${location.pathname === "/kapcsolat" ? styles.active : ""}`}>
 
             <Link className={`${styles.navlink} nav-link`} to="/kapcsolat">Kapcsolat</Link>
           </li>
-          <li className={`nav-item ${location.pathname === "/ertekeleseim" ? styles.active : ""}`}>
+          {/* Csak bejelentkezett felhasználók látják a értékeléseim fület */}
+
+          {auth.isLoggedIn && (<li className={`nav-item ${location.pathname === "/ertekeleseim" ? styles.active : ""}`}>
 
             <Link className={`${styles.navlink} nav-link`} to="/ertekeleseim">Értékeléseim</Link>
-          </li>
-          <li className={`nav-item ${location.pathname === "/profilom" ? styles.active : ""}`}>
+            </li>)}
+            {/* Csak bejelentkezett felhasználók látják a profilom fület */}
+          {auth.isLoggedIn && ( <li className={`nav-item ${location.pathname === "/profilom" ? styles.active : ""}`}>
 
-            <Link className={`${styles.navlink} nav-link`} to="/profilom">Profilom</Link>
-          </li>
-          <li className={`nav-item ${location.pathname === "/loginpage" ? styles.active : ""}`}>
+              <Link className={`${styles.navlink} nav-link`} to="/profilom">Profilom</Link>
+              </li>)}
+          {/* Csak a be nem jelentkezett felhasználóknak írja ki, hogy bejelentkezés */}
+          {!auth.isLoggedIn && (<li className={`nav-item ${location.pathname === "/loginpage" ? styles.active : ""}`}>
 
             <Link className={`${styles.navlink} nav-link`} to="/loginpage">Bejelentkezés</Link>
-          </li>
+            </li>)}
+            {/* Csak a be nem jelentkezett felhasználóknak írja ki, hogy bejelentkezés */}
+          {auth.isLoggedIn && (
+            <li className={`nav-item ${location.pathname === "/loginpage" ? styles.active : ""}`}>
+              <button onClick={auth.logout} className={`${styles.navlink} nav-link`} style={{ background: "none", border: "none", padding: 0 }}>Kijelentkezés</button>
+          
+          </li>)}
         </ul>
       </div>
     </nav>

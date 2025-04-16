@@ -21,7 +21,9 @@
     border-bottom: 2px solid #ffcc00;
   }
   
-
+  .navbar-nav {
+    display: flex;
+  align-items: center; /* Vertikális középre igazítás */}
 /* Reszponzív navbar menü */
 @media (max-width: 992px) {
     .navbar-nav {
