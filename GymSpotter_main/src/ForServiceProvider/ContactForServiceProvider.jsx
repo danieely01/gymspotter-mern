@@ -1,5 +1,6 @@
 import React from "react";
-import styles from "./CSS/NavigationForProviders.module.css";
+import styles from "../Main Pages/CSS/ServiceProvider.module.css";
+
 
 import NavigationForProviders from "./NavigationForProviders";
 

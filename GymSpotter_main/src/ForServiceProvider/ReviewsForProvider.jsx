@@ -1,31 +1,40 @@
 
-import React, { useEffect, useState } from 'react';
-// import { Link, useLocation } from "react-router-dom";
-import styles from "./CSS/NavigationForProviders.module.css";
+import React, { useEffect, useState, useContext } from 'react';
+import styles from "../Main Pages/CSS/ServiceProvider.module.css";
 import NavigationForProviders from "./NavigationForProviders";
+import { AuthContext } from "../context/auth-context";
+
 
 
 export default function ReviewReviews() {
+  const { userId } = useContext(AuthContext); // userId lekérése a contextből
+  console.log("📌 Vélemények a konditermemről - providerId a contextből:", userId); 
+
   const [reviews, setReviews] = useState([]);
 
-  const providerId = 5;
+
 
    useEffect(() => {
-      fetch(`http://localhost:3000/${providerId}/ertekelesek_attekintese`)
+    console.log(userId);
+    if (!userId) return; // Ha nincs bejelentkezve, ne próbáljuk lekérni az adatoka
+      
+    console.log("Lekérjük a véleményeket a userId-vel:", userId); // Debug log
+    
+    
+    fetch(`http://localhost:3000/${userId}/ertekelesek_attekintese`)
         .then(response => response.json())
         .then(data => setReviews(data))
-        .catch(error => console.error('Error fetching favorites:', error));
-    }, []);
+        .catch(error => console.error('Hiba történt az értékelések adatainak lekérésekor:', error));
+    }, [userId]);
     
     
   return (
       <div className={`${styles.Komponens}`}>
         <NavigationForProviders/>
-
         <div className={`container justify-content-center align-items-center p-3 min-vh-100 ${styles.content}`}>
-          <h1>Értékelések</h1>
+          <h1 className={`${styles.cim}  text-center mb-4`}>Értékelések</h1>
           {reviews.length === 0 ? (
-            <p>Még nem érkeztek értékelések!.</p>
+            <p>Még nem érkeztek értékelések!</p>
           ) : (
             <div className="row">
               {reviews.map((review) => (

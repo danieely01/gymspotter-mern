@@ -100,16 +100,16 @@ let users = [
 
 
 let gyms = [
-    { _id: '101', providerId: '8', name: 'Power Gym', location: 'Szeged', services: ['Yoga', 'Cardio'], rating: 4.5, price: 17000, status: 'approved' },
-    { _id: '102', providerId: '9', name: 'Fitness 5 Skála', location: 'Budapest', services: ['Strength', 'HIIT'], rating: 4.2, price: 14500, status: 'approved' },
-    { _id: '103', providerId: '10', name: 'Johnny Lantos Fitness', location: 'Budapest', services: ['Powerlifting', 'HIIT'], rating: 3.8, price: 18500, status: 'approved' },
-    { _id: '104', providerId: '11', name: 'Elite Gym', location: 'Debrecen', services: ['Bodybuilding', 'CrossFit'], rating: 4.7, price: 16000, status: 'approved' },
-    { _id: '105', providerId: '12', name: 'Spartan Strength', location: 'Győr', services: ['Weightlifting', 'Functional Training'], rating: 4.6, price: 15500, status: 'approved' },
-    { _id: '106', providerId: '13', name: 'Iron Paradise', location: 'Pécs', services: ['Powerlifting', 'Strongman'], rating: 4.3, price: 16500, status: 'approved' },
-    { _id: '107', providerId: '14', name: 'Urban Fit', location: 'Budapest', services: ['HIIT', 'Pilates'], rating: 4.1, price: 14000, status: 'approved' },
-    { _id: '108', providerId: '15', name: 'Pro Athlete Gym', location: 'Miskolc', services: ['Strength Training', 'Personal Training'], rating: 4.8, price: 18000, status: 'approved' },
-    { _id: '109', providerId: '16', name: 'Titan Gym', location: 'Székesfehérvár', services: ['Boxing', 'MMA'], rating: 4.4, price: 15000, status: 'approved' },
-    { _id: '110', providerId: '17', name: 'Flex & Fit', location: 'Nyíregyháza', services: ['Yoga', 'Zumba'], rating: 4.0, price: 13500, status: 'approved' },
+    { _id: '101', providerId: '8', phonenumber:'+36 11 7685 8423',  email:"titkosmiki1@gmail.com", name: 'Power Gym', location: 'Szeged', services: ['Yoga', 'Cardio'], rating: 4.5, price: "Havi bérlet: 15.000, Napi jegy: 1200", status: 'approved' },
+    { _id: '102', providerId: '9', phonenumber:'+36 11 7685 8424',  email:"titkosmiki2@gmail.com", name: 'Fitness 5 Skála', location: 'Budapest', services: ['Strength', 'HIIT'], rating: 4.2, price: 14500, status: 'approved' },
+    { _id: '103', providerId: '10', phonenumber:'+36 11 7685 8425', email:"titkosmiki3@gmail.com", name: 'Johnny Lantos Fitness', location: 'Budapest', services: ['Powerlifting', 'HIIT'], rating: 3.8, price: 18500, status: 'approved' },
+    { _id: '104', providerId: '11', phonenumber:'+36 11 7685 8426', email:"titkosmiki4@gmail.com", name: 'Elite Gym', location: 'Debrecen', services: ['Bodybuilding', 'CrossFit'], rating: 4.7, price: 16000, status: 'approved' },
+    { _id: '105', providerId: '12', phonenumber:'+36 11 7685 8427', email:"titkosmiki5@gmail.com", name: 'Spartan Strength', location: 'Győr', services: ['Weightlifting', 'Functional Training'], rating: 4.6, price: 15500, status: 'approved' },
+    { _id: '106', providerId: '13', phonenumber:'+36 11 7685 8428', email:"titkosmiki6@gmail.com", name: 'Iron Paradise', location: 'Pécs', services: ['Powerlifting', 'Strongman'], rating: 4.3, price: 16500, status: 'approved' },
+    { _id: '107', providerId: '14', phonenumber:'+36 11 7685 8429', email:"titkosmiki7@gmail.com", name: 'Urban Fit', location: 'Budapest', services: ['HIIT', 'Pilates'], rating: 4.1, price: 14000, status: 'approved' },
+    { _id: '108', providerId: '15', phonenumber:'+36 11 7685 8410', email:"titkosmiki8@gmail.com", name: 'Pro Athlete Gym', location: 'Miskolc', services: ['Strength Training', 'Personal Training'], rating: 4.8, price: 18000, status: 'approved' },
+    { _id: '109', providerId: '16', phonenumber:'+36 11 7685 8411', email:"titkosmiki9@gmail.com", name: 'Titan Gym', location: 'Székesfehérvár', services: ['Boxing', 'MMA'], rating: 4.4, price: 15000, status: 'approved' },
+    { _id: '110', providerId: '17', phonenumber:'+36 11 7685 8412', email:"titkosmiki10@gmail.com", name: 'Flex & Fit', location: 'Nyíregyháza', services: ['Yoga', 'Zumba'], rating: 4.0, price: 13500, status: 'approved' },
     
     // Pending státuszú edzőtermek
     { _id: '111', providerId: '18', name: 'Future Fitness', location: 'Eger', services: ['CrossFit', 'Calisthenics'], rating: 3.9, price: 14500, status: 'pending' },
@@ -393,9 +393,19 @@ app.get('/admin/statisztika', (req, res) => {
 
 // Szolgáltató API-k
 app.post('/:providerid/edzotermem', (req, res) => {
+    // { _id: '101', providerId: '8', name: 'Power Gym', location: 'Szeged', services: ['Yoga', 'Cardio'], rating: 4.5, price: 17000, status: 'approved' },
+    const { providerId, name, email, phonenumber, location, services, price} = req.body;
+
     const newGym = { 
         _id: (gyms.length + 1).toString(), 
-        ...req.body, 
+        providerId,
+        name,
+        email,
+        phonenumber,
+        location,
+        services,
+        rating,
+        price,
         status: 'pending' // Kezdetben minden edzőterem státusza "pending"
     };
     gyms.push(newGym);

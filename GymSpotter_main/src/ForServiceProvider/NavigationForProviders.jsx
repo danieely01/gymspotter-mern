@@ -1,6 +1,6 @@
 import React, {useContext} from "react";
 import { Link, useLocation } from "react-router-dom";
-import styles from "../Main Pages/CSS/ServiceProvider.module.css";
+import styles from "./CSS/NavigationForProviders.module.css";
 import { AuthContext } from "../context/auth-context";
 export default function NavigationForProviders() {
   const location = useLocation(); 
@@ -33,8 +33,17 @@ export default function NavigationForProviders() {
 
             {/* KIJELENTKEZÉS */}
              {auth.isLoggedIn && (
-                        <li className={`nav-item ${location.pathname === "/loginpage" ? styles.active : ""}`}>
-                          <button onClick={auth.logout} className={`${styles.navlink} nav-link`} style={{ background: "none", border: "none", padding: 0 }}>Kijelentkezés</button>
+                        <li className={`nav-item`}>
+                             <Link 
+              className={`${styles.navlink} nav-link`} 
+              to="/loginpage" 
+              onClick={(e) => {
+                e.preventDefault(); // Megakadályozza az azonnali átváltást
+                auth.logout();
+              }}
+            >
+              Kijelentkezés
+            </Link>
                       
                       </li>)}
             

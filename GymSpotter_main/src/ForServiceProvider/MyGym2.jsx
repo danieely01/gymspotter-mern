@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import styles from "./CSS/NavigationForProviders.module.css";
+import styles from "../Main Pages/CSS/ServiceProvider.module.css";
 
 import NavigationForProviders from './NavigationForProviders.jsx';
 
 export default function MyGym2() {
 
-
+    
 
   return (
     <div className={`${styles.Komponens}`}>
