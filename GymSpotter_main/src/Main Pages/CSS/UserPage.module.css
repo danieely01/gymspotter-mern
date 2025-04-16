@@ -1,11 +1,17 @@
 .Komponens {
   background-image: url("../../../userpage_background.jpg");
   background-size: 100%;
+  background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
   padding: 20px;
+ 
   min-height: 100vh;
   position: relative; /* ez kell */
   z-index: 1; /*ez is */
 }
+
+
 
 .Komponens::before {
   content: ""; /* pseudo elem  */

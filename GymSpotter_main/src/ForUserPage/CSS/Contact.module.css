@@ -1,38 +1,75 @@
 .Komponens {
-    color: white;
-    background-image: url("../../../fadedforcontact.jpg");
-    background-size: 100%;
-    padding: 20px;
-    min-height: 100vh;
-    position: relative; /* ez kell */
-    z-index: 1; /*ez is */
-    
+  color: white;
+  background-image: url("../../../fadedforcontact.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  padding: 20px;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
 }
+
 .Komponens::before {
-  content: ""; /* pseudo elem  */
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.2); /* sötétítés mértéke */
+  background-color: rgba(0, 0, 0, 0.2); /* Dark overlay */
   z-index: -1;
 }
 
-
 .kartyak {
-  color: black !important;
+  color: rgb(255, 253, 253) !important;
 }
 
-  .content {
-    margin-top: 60px; 
-  }
-
-  .cim {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 30px;
-    color: #fafafa;
-    text-shadow: 2px 3px #030303;
+.content {
+  margin-top: 60px;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
 }
-  
+
+.cim {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 30px;
+  color: #fafafa;
+  text-shadow: 2px 3px #030303;
+  text-align: center;
+}
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 1000px;
+}
+
+.contactCard {
+  background: rgba(255, 255, 255, 0.1); /* Semi-transparent white for the background */
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease-in-out;
+}
+
+.contactCard:hover {
+  transform: translateY(-5px);
+}
+
+.kartyak h5 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.kartyak p {
+  font-size: 1rem;
+  color: #ffffff;
+  text-shadow: 2px 2px #030303;
+}

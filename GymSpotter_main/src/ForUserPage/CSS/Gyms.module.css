@@ -1,18 +1,207 @@
 .Komponens {
     color: white;
     background-image: url("../../../fadedforgympage.jpg");
-    background-size: 100%;
-    
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    padding: 20px;
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
 }
+
+.Komponens::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.3); /* Darken the background */
+    z-index: -1;
+}
+
 .content {
-    margin-top: 60px; 
-  }
+    margin-top: 60px;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem;
+}
 
 .cim {
     font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 30px;
-    color: #fafafa;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 2px 3px #030303;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.gymGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 1000px;
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.cardBody {
+    text-align: center;
+}
+
+.cardTitle {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: white;
     text-shadow: 2px 3px #030303;
 }
+
+.cardText {
+    font-size: 1rem;
+    color: #ffffff;
+    text-shadow: 2px 2px #030303;
+}
+
+.cardButton {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.cardButton:hover {
+    background-color: #0056b3;
+}
+
+/* Modal Overlay */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+  
+  /* Modal Content */
+  .modal {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+    
+    
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+    width: 90%;
+    max-width: 600px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    max-height: 80vh;
+  }
+  
+  .reviewsTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    margin: 12px;
+  }
+  
+  .reviewsTable th,   .reviewsTable td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+  }
+  
+  .reviewsTablee th {
+    background-color: #333;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .reviewsTable td {
+    color: #fff;
+  }
+  
+  .reviewsTable tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.05); /* Alternating row color */
+  }
+  
+  .reviewsTable tr:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Hover effect */
+  }
+  
+  .reviewsTable td strong {
+    color: #007bff; /* Felhasználó neve kék színnel */
+  }
+  
+
+  /* Modal Header */
+  .modalHeader {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: white;
+    text-shadow: 2px 3px #030303;
+    margin-bottom: 1rem;
+  }
+  
+  /* Modal Content */
+  .modalContent {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: #ffffff;
+    text-shadow: 1px 1px #030303;
+    margin-bottom: 2rem;
+  }
+
+  .modalContent p {
+    margin: 10px 0;
+  }
+
+  .modalContent ul {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  /* Modal Close Button */
+  .modalClose {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .modalClose:hover {
+    background-color: #0056b3;
+  }
   

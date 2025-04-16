@@ -8,45 +8,38 @@ export default function Favourites() {
   console.log("📌 Favourites - userId a contextből:", userId); 
   const [favorites, setFavorites] = useState([]);
   
-  
-  
   useEffect(() => {
     console.log(userId);
-    if (!userId) return; // Ha nincs bejelentkezve, ne próbáljuk lekérni az adatoka
+    if (!userId) return; // Ha nincs bejelentkezve, ne próbáljuk lekérni az adatokat
 
     console.log("Lekérjük a kedvenceket a userId-vel:", userId); // Debug log
 
-    
     fetch(`http://localhost:3000/${userId}/kedvencek`)
       .then(response => response.json())
       .then(data => {
-        
         console.log("📌 Kedvencek sikeresen betöltve:", data);
-        
-        setFavorites(data)})
-      .catch(error => console.error('Hiba történt az értékelések adatainak lekérésekor', error));
+        setFavorites(data);
+      })
+      .catch(error => console.error('Hiba történt a kedvencek adatainak lekérésekor', error));
   }, [userId]); // Csak akkor fusson le, ha az userId változik
- 
+  
   return (
-    <div className={`${styles.Komponens}`}>
+    <div className={styles.Komponens}>
       <NavigationForUsers />
-      <div className={`container justify-content-center align-items-center p-3 min-vh-100 ${styles.content}`}>
-        <h1 className={`${styles.cim} text-center mb-4`}>Kedvenceim ❤</h1>
+      <div className={styles.content}>
+        <h1 className={styles.cim}>Kedvenceim ❤</h1>
         {favorites.length === 0 ? (
-          <p>Nincsenek elmentve edzőtermek.</p>
+          <p className={styles.noFavorites}>Nincsenek elmentve edzőtermek.</p>
         ) : (
-          <div className="row">
+          <div className={styles.favoritesGrid}>
             {favorites.map((gym) => (
-              <div key={gym._id} className="col-md-4 mb-4">
-                <div className="card">
-                  {/* <img src="https://via.placeholder.com/150" className="card-img-top" alt={gym.name} /> */}
-                  <div className="card-body">
-                    <h5 className="card-title">{gym.name}</h5>
-                    <p className="card-text">📍 Helyszín: {gym.location}</p>
-                    <p className="card-text">🤸‍♂️ Szolgáltatások: {gym.services.join(', ')}</p>
-                    <p className="card-text">🤷‍♀️ Értékelés: {gym.rating}</p>
-                    <p className="card-text">💲 Ár: {gym.price} HUF</p>
-                  </div>
+              <div key={gym._id} className={styles.card}>
+                <div className={styles.cardBody}>
+                  <h5 className={styles.cardTitle}>{gym.name}</h5>
+                  <p className={styles.cardText}>📍 Helyszín: {gym.location}</p>
+                  <p className={styles.cardText}>🤸‍♂️ Szolgáltatások: {gym.services.join(', ')}</p>
+                  <p className={styles.cardText}>🤷‍♀️ Értékelés: {gym.rating}</p>
+                  <p className={styles.cardText}>💲 Ár: {gym.price} HUF</p>
                 </div>
               </div>
             ))}

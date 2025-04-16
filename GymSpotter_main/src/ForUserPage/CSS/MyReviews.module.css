@@ -1,17 +1,64 @@
 .Komponens {
-    color: white;
-    background-image: url("../../../fadedforreviews.jpg");
-    background-size: 100%;
+  color: white;
+  background-image: url("../../../fadedforreviews.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  padding: 20px;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+.Komponens::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.2); /* Dark overlay */
+  z-index: -1;
 }
 
 .content {
-    margin-top: 60px;  
-  }
-  
-  .cim {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 30px;
-    color: #fafafa;
-    text-shadow: 2px 3px #030303;
+  margin-top: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.cim {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 30px;
+  color: #fafafa;
+  text-shadow: 2px 3px #030303;
+  text-align: center;
+}
+
+.reviewCard {
+  background: rgba(255, 255, 255, 0.1); /* Semi-transparent white */
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease-in-out;
+}
+
+.reviewCard:hover {
+  transform: translateY(-5px);
+}
+
+.cardTitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #fafafa;
+}
+
+.cardText {
+  color: #ffffff;
+  font-size: 1rem;
+  text-shadow: 1px 1px #030303;
 }

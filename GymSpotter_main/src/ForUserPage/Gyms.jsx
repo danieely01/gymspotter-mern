@@ -1,17 +1,19 @@
-import React, { useEffect, useState, useContext } from 'react';
-import styles from "./CSS/Gyms.module.css";
+import React, { useEffect, useRef, useState, useContext } from 'react';
+import styles from "./CSS/Gyms.module.css"; // Keep the existing CSS import
 import NavigationForUsers from './NavigationForUsers';
-import { AuthContext } from '../context/auth-context';  // Import the AuthContext
+import { AuthContext } from '../context/auth-context'; 
 
 export default function Gyms() {
-  const { isLoggedIn, userId } = useContext(AuthContext);  // Use the AuthContext to check login status
+  const { isLoggedIn, userId } = useContext(AuthContext);
   const [gyms, setGyms] = useState([]);
   const [filteredGyms, setFilteredGyms] = useState([]);
   const [favorites, setFavorites] = useState([]);
-  const [search, setSearch] = useState(""); 
-  const [sortOption, setSortOption] = useState(""); 
-  const [serviceSearch, setServiceSearch] = useState(""); 
-
+  const [search, setSearch] = useState("");
+  const [sortOption, setSortOption] = useState("");
+  const [serviceSearch, setServiceSearch] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedGym, setSelectedGym] = useState(null);
+  const scrollPositionRef = useRef(0);
 
   useEffect(() => {
     fetch('http://localhost:3000/konditermek')
@@ -82,11 +84,26 @@ export default function Gyms() {
     setFilteredGyms(sortedGyms);
   };
 
+  const openModal = (gym) => {
+    scrollPositionRef.current = window.scrollY;
+    setSelectedGym(gym);
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    const scrollPosition = window.scrollY;
+    setSelectedGym(null);
+    setModalOpen(false);
+    
+    window.scrollTo(0, scrollPositionRef.current);
+
+  };
+
   return (
-    <div className={`${styles.Komponens}`}>
+    <div className={styles.Komponens}>
       <NavigationForUsers />
-      <div className={`container justify-content-center align-items-center p-3 min-vh-100 ${styles.content}`}>
-        <h1 className={`${styles.cim} text-center mb-4`}>Edzőtermek 🥊</h1>
+      <div className={styles.content}>
+        <h1 className={styles.cim}>Edzőtermek 🥊</h1>
 
         <input
           type="text"
@@ -113,36 +130,77 @@ export default function Gyms() {
             <option value="price_desc">📉 Ár szerint csökkenő</option>
           </select>
         </div>
-        {filteredGyms.length === 0 ? ( <h3>Nincsenek elérhető edzőtermek.</h3>) : (
-        <div className="row">
-          {filteredGyms.map((gym) => (
-            <div key={gym._id} className="col-md-4 mb-4">
-              <div className="card">
-                {/* <img src="https://via.placeholder.com/150" className="card-img-top" alt={gym.name} /> */}
-                <div className="card-body">
-                  <h5 className="card-title">
+
+        {filteredGyms.length === 0 ? (
+          <h3>Nincsenek elérhető edzőtermek. 😢</h3>
+        ) : (
+          <div className={styles.gymGrid}>
+            {filteredGyms.map((gym) => (
+              <div key={gym._id} className={styles.card}>
+                <div className={styles.cardBody}>
+                  <h5 className={styles.cardTitle}>
                     {gym.name}
                     {isLoggedIn && (
-  <span
-    style={{ cursor: 'pointer', marginLeft: '10px', color: isFavorite(gym._id) ? 'red' : 'grey' }}
-    onClick={() => toggleFavorite(gym._id)}
-  >
-    ♥
-  </span>
-)}
+                      <span
+                        style={{ cursor: 'pointer', marginLeft: '10px', color: isFavorite(gym._id) ? 'red' : 'grey' }}
+                        onClick={() => toggleFavorite(gym._id)}
+                      >
+                        ♥
+                      </span>
+                    )}
                   </h5>
-                  <p className="card-text">📍 Helyszín: {gym.location}</p>
-                  <p className="card-text">🤸‍♂️ Szolgáltatások: {gym.services.join(', ')}</p>
-                  <p className="card-text">🤷‍♀️ Értékelés: {gym.rating}</p>
-                  <p className="card-text">💲 Ár: {gym.price} HUF</p>
-                  <a href="#" className="btn btn-primary">Tovább a részletekhez</a>
+                  <p className={styles.cardText}>📍 Helyszín: {gym.location}</p>
+                  <p className={styles.cardText}>🤸‍♂️ Szolgáltatások: {gym.services.join(', ')}</p>
+                  <p className={styles.cardText}>🤷‍♀️ Értékelés: {gym.rating}</p>
+                  <p className={styles.cardText}>💲 Ár: {gym.price} HUF</p>
+                  <a href="#" className={styles.cardButton} onClick={() => openModal(gym)}>Tovább a részletekhez</a>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
         )}
       </div>
+
+      {/* Modal */}
+      {modalOpen && selectedGym && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modal}>
+            <div className={styles.modalHeader}>Edzőterem részletei</div>
+            <div className={styles.modalContent}>
+              <p><strong>Név:</strong> {selectedGym.name}</p>
+              <p><strong>Helyszín:</strong> {selectedGym.location}</p>
+              <p><strong>Szolgáltatások:</strong> {selectedGym.services.join(', ')}</p>
+              <p><strong>Értékelés:</strong> {selectedGym.rating}</p>
+              <p><strong>Ár:</strong> {selectedGym.price} HUF</p>
+              <p><strong>E-mail:</strong> {selectedGym.email}</p>
+              <p><strong>Telefonszám:</strong> {selectedGym.phonenumber}</p>
+
+              <div>
+  <strong>Vélemények:</strong>
+  <table className={styles.reviewsTable}>
+    <thead>
+      <tr>
+        <th>Felhasználó</th>
+        <th>Vélemény</th>
+        <th>Értékelés</th>
+      </tr>
+    </thead>
+    <tbody>
+      {selectedGym.reviews.map((review, index) => (
+        <tr key={index}>
+          <td><strong>{review.user}</strong></td>
+          <td>{review.comment}</td>
+          <td>⭐ {review.rating}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+              <button className={styles.modalClose} onClick={closeModal}>Bezárás</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

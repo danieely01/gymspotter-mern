@@ -212,7 +212,24 @@ app.post('/login', async (req, res) => {
 
 app.get('/konditermek', (req, res) => {
     const approvedGyms = gyms.filter(gym => gym.status === 'approved');
-    res.json(approvedGyms);
+     // Vélemények hozzáadása a konditermekhez
+    // Vélemények hozzáadása a konditermekhez
+    const gymsWithReviews = approvedGyms.map(gym => {
+        // Szűrjük a véleményeket a konditerem alapján
+        gym.reviews = reviews
+            .filter(review => review.gym === gym._id)  // Vélemények szűrése konditerem alapján
+            .map(review => {
+                // A véleményekhez hozzáadjuk a felhasználó nevét
+                const user = users.find(u => u._id === review.user);
+                return {
+                    ...review,
+                    user: user ? user.username : 'Unknown'  // Ha nem találjuk, akkor 'Unknown' név
+                };
+            });
+        return gym;
+    });
+
+    res.json(gymsWithReviews);
 });
 
 app.get('/:userid/kedvencek', (req, res) => {

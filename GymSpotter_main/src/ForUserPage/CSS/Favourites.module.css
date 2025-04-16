@@ -1,32 +1,83 @@
 .Komponens {
-    color: white;
-    background-image: url("../../../fadedforfavourites.jpg");
-    background-size: 100%;
-    padding: 20px;
-    min-height: 100vh;
-    position: relative; /* ez kell */
-    z-index: 1; /*ez is */
+  color: white;
+  background-image: url("../../../fadedforfavourites.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  padding: 20px;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
 }
+
 .Komponens::before {
-    content: ""; /* pseudo elem  */
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.2); /* sötétítés mértéke */
-    z-index: -1;
-  }
-  
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  z-index: -1;
+}
 
 .content {
-    margin-top: 60px;  
-  }
-  
+  margin-top: 60px;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
 .cim {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 30px;
-    color: #fafafa;
-    text-shadow: 2px 3px #030303;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 30px;
+  color: #fafafa;
+  text-shadow: 2px 3px #030303;
+  text-align: center;
+}
+
+.noFavorites {
+  font-size: 1.2rem;
+  color: #ffffff;
+  text-align: center;
+}
+
+.favoritesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 1000px;
+}
+
+.card {
+  background: rgba(5, 5, 5, 0.336);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.cardBody {
+  text-align: center;
+}
+
+.cardTitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: white;
+  text-shadow: 2px 3px #030303;
+}
+
+.cardText {
+  font-size: 1rem;
+  color: #ffffff;
+  text-shadow: 2px 1px #030303;
 }

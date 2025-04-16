@@ -1,6 +1,8 @@
 .Komponens {
-    background-image: url("../../../ServiceProvider.jpg");
-    background-size: 100%;
+    background-image: url("../../../provider.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
     padding: 20px;
     min-height: 100vh;
     position: relative; /* ez kell */

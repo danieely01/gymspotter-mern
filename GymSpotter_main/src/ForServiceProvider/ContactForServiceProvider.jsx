@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "../Main Pages/CSS/ServiceProvider.module.css";
+import styles from "./CSS/ContactForServiceProvider.module.css"; // Moduloknál változót kell használni
 
 
 import NavigationForProviders from "./NavigationForProviders";
@@ -14,9 +14,9 @@ export default function ContactForServiceProvider() {
 
         {/* Tartalom */}
         <div className={`container justify-content-center align-items-center p-3 min-vh-100 ${styles.content}`}>
-            <div className={`mt-5 ml-5`}>
-               <h1>Elérhetőségek listázása!</h1>
-               <img src="/dumbbell.png" alt="Kézi súlyzó png" />
+            <div>
+               <h1 className={`${styles.cim}  text-center mb-4`}>Elérhetőségek listázása</h1>
+               
             </div>                    
         </div>
     </div>    
