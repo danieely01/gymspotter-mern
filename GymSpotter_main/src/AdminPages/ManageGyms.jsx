@@ -65,7 +65,7 @@ function ManageGyms() {
               <th scope="col">Konditerem</th>
               <th scope="col">Helyszín</th>
               <th scope="col">Szolgáltatások</th>
-              <th scope="col">Értékelés</th>
+              
               <th scope="col">Ár</th>
               <th scope="col">Státusz</th>
               <th scope="col">Művelet</th>
@@ -79,12 +79,13 @@ function ManageGyms() {
                 <td>{gym.gymName}</td>
                 <td>{gym.location}</td>
                 <td>{gym.services.join(", ")}</td>
-                <td>{gym.rating}</td>
+                
                 <td>{gym.price} HUF</td>
                 <td className={gym.status === 'pending' ? 'status-pending' : gym.status === 'approved' ? 'status-approved' : 'status-declined'}>
                   {gym.status}
                 </td>
                 <td>
+                  
   <div className={`${styles.buttonContainer}`}>
     {gym.status === 'pending' ? (
       <>

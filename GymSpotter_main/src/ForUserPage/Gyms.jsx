@@ -18,6 +18,7 @@ export default function Gyms() {
   const [reviewText, setReviewText] = useState("");
   const [reviewRating, setReviewRating] = useState(1);
   const scrollPositionRef = useRef(0);
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const navigate = useNavigate();
 
@@ -33,7 +34,7 @@ export default function Gyms() {
   }, [selectedGym]);
 
   useEffect(() => {
-    fetch('http://localhost:3000/konditermek')
+    fetch(`${apiUrl}/konditermek`)
       .then((response) => response.json())
       .then((data) => {
         console.log("Kapott konditermek:", data); // EZT ADD HOZZÁ
@@ -42,7 +43,7 @@ export default function Gyms() {
       })
       .catch((error) => console.error('Error fetching gyms:', error));
 
-    fetch(`http://localhost:3000/${userId}/kedvencek`)
+    fetch(`${apiUrl}/${userId}/kedvencek`)
       .then((response) => response.json())
       .then((data) => setFavorites(data.map(gym => gym._id)))
       .catch((error) => console.error('Error fetching favorites:', error));
@@ -55,11 +56,11 @@ export default function Gyms() {
     }
 
     if (favorites.includes(gymId)) {
-      fetch(`http://localhost:3000/${userId}/kedvenc/${gymId}`, { method: 'DELETE' })
+      fetch(`${apiUrl}/${userId}/kedvenc/${gymId}`, { method: 'DELETE' })
         .then(() => setFavorites(favorites.filter(id => id !== gymId)))
         .catch((error) => console.error('Error removing favorite:', error));
     } else {
-      fetch(`http://localhost:3000/${userId}/kedvenc/${gymId}`, { method: 'POST' })
+      fetch(`${apiUrl}/${userId}/kedvenc/${gymId}`, { method: 'POST' })
         .then(() => setFavorites([...favorites, gymId]))
         .catch((error) => console.error('Error adding favorite:', error));
     }
@@ -139,7 +140,7 @@ export default function Gyms() {
     };
     console.log('selectedGym id-ja:', selectedGym._id);
     console.log('User id-ja:', userId);
-    fetch(`http://localhost:3000/konditermek/${selectedGym._id}/ertekeles`, {
+    fetch(`${apiUrl}/konditermek/${selectedGym._id}/ertekeles`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newReview),
@@ -175,7 +176,7 @@ export default function Gyms() {
           type="text"
           value={serviceSearch}
           onChange={handleServiceSearch}
-          placeholder="🧘‍♂️ Szolgáltatás keresése (pl. HIIT, Yoga)"
+          placeholder="🧘‍♂️ Szolgáltatás keresése (pl. HIIT, Jóga)"
           className="form-control mb-3"
         />
 
@@ -209,8 +210,8 @@ export default function Gyms() {
                   </h5>
                   <p className={styles.cardText}>📍 Helyszín: {gym.location}</p>
                   <p className={styles.cardText}>🤸‍♂️ Szolgáltatások: {gym.services.join(', ')}</p>
-                  <p className={styles.cardText}>🤷‍♀️ Értékelés: {gym.rating}</p>
-                  <p className={styles.cardText}>💲 Ár: {gym.price} HUF</p>
+                  <p className={styles.cardText}>🤷‍♀️ Értékelés: {gym.rating == undefined || null || 0 ? "Nincs még vélemény" : gym.rating}</p>
+                  <p className={styles.cardText}>💲 Napi jegy ára: {gym.price} HUF </p>
                   <a href="#" className={styles.cardButton} onClick={() => openModal(gym)}>Tovább a részletekhez</a>
                   <a href="#" className={styles.cardButton} onClick={() => openReviewModal(gym)}>Írj értékelést!</a>
                 </div>
@@ -265,10 +266,11 @@ export default function Gyms() {
               <p><strong>Név:</strong> {selectedGym.gymName}</p>
               <p><strong>Helyszín:</strong> {selectedGym.location}</p>
               <p><strong>Szolgáltatások:</strong> {selectedGym.services.join(', ')}</p>
-              <p><strong>Értékelés:</strong> {selectedGym.rating}</p>
+              <p><strong>Értékelés:</strong> {selectedGym.rating == undefined || null || 0 ? "Nincs még vélemény" : selectedGym.rating}</p>
+              {console.log(selectedGym.rating)}
               <p><strong>Ár:</strong> {selectedGym.price} HUF</p>
               <p><strong>E-mail:</strong> {selectedGym.email}</p>
-              <p><strong>Telefonszám:</strong> {selectedGym.phonenumber}</p>
+              <p><strong>Telefonszám:</strong> {selectedGym.phoneNumber}</p>
 
               <div>
   <strong>Vélemények:</strong>

@@ -8,15 +8,15 @@ const cors = require('cors');
 const bcrypt = require("bcrypt");
 const { hash } = require('bcryptjs');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-
-
+const dotenv = require('dotenv');
+dotenv.config();
 
 // const connectToDB = require('./db');
 
 
 
 // Csatlakozás a MongoDD Atlas serverhez
-const uri = "mongodb+srv://user:GymSpotter-2025@gymspotter.mvpvvpz.mongodb.net/?retryWrites=true&w=majority&appName=GymSpotter";
+const uri = process.env.MONGODB_URI;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -128,10 +128,6 @@ async function connectToDB() {
 
 
 
-
-
-
-
 app.use(cors());
 // Middleware
 app.use(bodyParser.json());
@@ -193,9 +189,9 @@ forGymsCollection = [
       "email": "fitgym@example.com",
       "phoneNumber": "+36 1 234 5678",
       "location": "Budapest, XX. kerület",
-      "services": ["személyi edzés", "group fitness", "jóga"],
-      "rating": 4.5,
-      "price": "10000 HUF / hónap",
+      "services": ["Judo", "TRX", "Jóga"],
+      "rating": 0,
+      "price": "2200",
       "status": "approved"
     },
     {
@@ -205,9 +201,9 @@ forGymsCollection = [
       "email": "powergym@example.com",
       "phoneNumber": "+36 1 234 5679",
       "location": "Budapest, I. kerület",
-      "services": ["erőnléti edzés", "személyi edzés", "úszás"],
-      "rating": 4.8,
-      "price": "12000 HUF / hónap",
+      "services": ["MMA", "HIIT", "úszás"],
+      "rating": 0,
+      "price": "2400",
       "status": "pending"
     },
     {
@@ -217,9 +213,9 @@ forGymsCollection = [
       "email": "ultrafitness@example.com",
       "phoneNumber": "+36 1 234 5680",
       "location": "Budapest, V. kerület",
-      "services": ["crossfit", "jóga", "pilates"],
-      "rating": 4.7,
-      "price": "15000 HUF / hónap",
+      "services": ["Crossfit", "Jóga", "Pilates"],
+      "rating": 0,
+      "price": "1800",
       "status": "approved"
     },
     {
@@ -229,9 +225,9 @@ forGymsCollection = [
       "email": "supergym@example.com",
       "phoneNumber": "+36 1 234 5681",
       "location": "Budapest, II. kerület",
-      "services": ["erőnléti edzés", "súlyzós edzés", "csoportos órák"],
-      "rating": 3.9,
-      "price": "8000 HUF / hónap",
+      "services": ["Kickbox", "Kangoroo", "Spinning"],
+      "rating": 0,
+      "price": "2700",
       "status": "decline"
     }
   ];
@@ -308,10 +304,10 @@ forReviewsCollection = [
 //       await client.connect();
   
 //       // Felhasználók hozzáadása
-//       await usersCollection.insertMany(forUsersCollection);
+//       // await usersCollection.insertMany(forUsersCollection);
   
 //       // Edzőtermek hozzáadása
-//     //   await gymsCollection.insertMany(forGymsCollection);
+//       await gymsCollection.insertMany(forGymsCollection);
   
 //       // Vélemények hozzáadása
 //     //   await reviewsCollection.insertMany(forReviewsCollection);
@@ -324,7 +320,7 @@ forReviewsCollection = [
 //     }
 // }
 // run();
-//már hozzá lettek adva a tesztadatok
+// már hozzá lettek adva a tesztadatok
 
 
 
@@ -449,8 +445,10 @@ app.get('/konditermek', async (req, res) => {
         const enrichedReviews = await Promise.all(reviews.map(async (review) => {
 
             
-          const user = await usersCollection.findOne({ _id: review._id });
+          const user = await usersCollection.findOne({ _id: review.user_id });
+          console.log(review.user_id);
 
+          console.log(user);
           return {
             ...review,
             user: user ? user.username : 'Ismeretlen'
@@ -1078,7 +1076,7 @@ app.get('/:userId/check-gym', async (req, res) => {
 
 app.post('/:providerid/edzotermem', async (req, res) => {
     const provider_Id = new ObjectId(req.params.providerid);
-    const { name, services, price, email, phoneNumber, location } = req.body;
+    const { gymName, services, price, email, phoneNumber, location } = req.body;
     // console.log(provider_Id);
     try {
         // adatbázishoz kapcsolódás
@@ -1101,7 +1099,7 @@ app.post('/:providerid/edzotermem', async (req, res) => {
         // Új edzőterem hozzáadása 'pending' státusszal
         const newGym = {
             providerId: provider_Id,
-            name,
+            gymName,
             services: services.split(',').map(service => service.trim()),
             price,
             email,
@@ -1109,6 +1107,7 @@ app.post('/:providerid/edzotermem', async (req, res) => {
             location,
             status: 'pending',
         };
+        console.log(gymName);
         // Az új edzőterem mentése a MongoDB-be
         const result = await gymsCollection.insertOne(newGym);
 

@@ -34,7 +34,7 @@ export default function MyGym2() {
 
 
     const gymData = {
-      name: formData.get('gymName'),
+      gymName: formData.get('gymName'),
       services: formData.get('services'),
       price: formData.get('price'),
       email: formData.get('email'),
@@ -57,7 +57,6 @@ export default function MyGym2() {
       }
 
       const result = await response.json();
-      alert('Edzőterem sikeresen hozzáadva: ' + result.name);
       // Beállítjuk a formSubmitted állapotot, hogy elrejtsük a formot
       setFormSubmitted(true);
     } catch (error) {
@@ -89,7 +88,7 @@ export default function MyGym2() {
                 </div>
 
                 <div className={styles.inputGroup}>
-                  <label htmlFor="price">Ár</label>
+                  <label htmlFor="price">Napi jegy ára: </label>
                   <input type="number" id="price" name="price" placeholder="5000" className={styles.input} required />
                 </div>
 
