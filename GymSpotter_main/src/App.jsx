@@ -24,6 +24,7 @@ import ManageGyms from "./AdminPages/ManageGyms";
 import ManageReviews from "./AdminPages/ManageReviews";
 import Statisztika from "./AdminPages/Statisztika";
 const App = () => {
+
   useEffect(() => {
     const storedUserType = localStorage.getItem("userType");
     if (storedUserType) {
@@ -62,6 +63,8 @@ const App = () => {
             <Route path="/admin/konditermek_kezelese" element={<ManageGyms/>} exact/>
             <Route path="/admin/ertekelesek_kezelese" element={<ManageReviews/>} exact/>
             <Route path="/admin/statisztika" element={<Statisztika/>} exact/>
+            {/* <Route path="/" element={<UserPage/>} exact/> */}
+
        
           </>
 

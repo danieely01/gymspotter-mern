@@ -1,10 +1,60 @@
 .Komponens {
     color: white;
     background-image: url("../../../fadedforprofile.jpg");
-    background-size: 100%;
+    background-size: cover; /* Biztosítja a teljes háttér kitöltést */
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
 }
 
 .content {
-    margin-top: 60px;  
-  }
-  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.profileContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.profileCard {
+    width: 100%;
+    max-width: 500px;
+    background: rgb(59, 59, 59);
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+}
+
+.icon {
+    margin-right: 8px;
+    color: #007bff;
+}
+
+.formControlStatic {
+    font-size: 1.1rem;
+    padding: 8px 12px;
+    background: #f8f9fa;
+    border-radius: 5px;
+    display: inline-block;
+    width: 100%;
+    text-align: left;
+}
+
+.profilLabel {
+    color: white;
+}
+
+.felhasznalonev {
+    color: white;   
+}
+

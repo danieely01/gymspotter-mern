@@ -1,13 +1,14 @@
-import styles from "./CSS/RegisterPage.module.css"; // Moduloknál változót kell használni
+import styles from "./CSS/RegisterPage.module.css";
 import NavigationForUsers from "../ForUserPage/NavigationForUsers";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaUser, FaEnvelope, FaLock } from "react-icons/fa"; // Ikonok importálása
 
 const RegisterPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-  const [userType, setUserType] = useState("user"); // Új állapot a regisztrációs típus tárolására
+  const [userType, setUserType] = useState("user");
   const navigate = useNavigate();
 
   const handleRegister = async (event) => {
@@ -43,33 +44,29 @@ const RegisterPage = () => {
       <div className="container d-flex justify-content-center align-items-center min-vh-100">
         <div className="p-4 shadow-lg rounded bg-white">
           <form onSubmit={handleRegister}>
-            <h2>Regisztráció</h2>
+            <h2 className="text-center">Regisztráció</h2>
             <div id="inputMezok">
-              <div className="mb-3">
+              {/* Felhasználónév mező ikon */}
+              <div className="mb-3 input-group">
+                <span className="input-group-text">
+                  <FaUser />
+                </span>
                 <input
                   className="form-control"
                   type="text"
                   id="felhasznalonev"
-                  placeholder="Felhasználóneved"
+                  placeholder="Felhasználónév"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   required
                 />
               </div>
 
-              <div className="mb-3">
-                <input
-                  type="password"
-                  id="jelszo"
-                  className="form-control"
-                  placeholder="Jelszó"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className="mb-3">
+              {/* Email mező ikon */}
+              <div className="mb-3 input-group">
+                <span className="input-group-text">
+                  <FaEnvelope />
+                </span>
                 <input
                   type="email"
                   id="email"
@@ -81,29 +78,53 @@ const RegisterPage = () => {
                 />
               </div>
 
+              {/* Jelszó mező ikon */}
+              <div className="mb-3 input-group">
+                <span className="input-group-text">
+                  <FaLock />
+                </span>
+                <input
+                  type="password"
+                  id="jelszo"
+                  className="form-control"
+                  placeholder="Jelszó"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+
+              {/* Felhasználói típus választás */}
               <div className="mb-3">
-                <label>Válaszd ki a regisztráció típusát:</label><br />
-                <input
-                  type="radio"
-                  id="user"
-                  name="userType"
-                  value="user"
-                  checked={userType === "user"}
-                  onChange={(e) => setUserType(e.target.value)}
-                />
-                <label htmlFor="user">Felhasználó</label><br />
-                <input
-                  type="radio"
-                  id="provider"
-                  name="userType"
-                  value="provider"
-                  checked={userType === "provider"}
-                  onChange={(e) => setUserType(e.target.value)}
-                />
-                <label htmlFor="provider">Szolgáltató</label>
+                <label><strong>Válaszd ki a regisztráció típusát:</strong></label><br />
+                <div className="form-check">
+                  <input
+                    type="radio"
+                    id="user"
+                    name="userType"
+                    value="user"
+                    className="form-check-input"
+                    checked={userType === "user"}
+                    onChange={(e) => setUserType(e.target.value)}
+                  />
+                  <label htmlFor="user" className="form-check-label">Felhasználó</label>
+                </div>
+                <div className="form-check">
+                  <input
+                    type="radio"
+                    id="provider"
+                    name="userType"
+                    value="provider"
+                    className="form-check-input"
+                    checked={userType === "provider"}
+                    onChange={(e) => setUserType(e.target.value)}
+                  />
+                  <label htmlFor="provider" className="form-check-label">Szolgáltató</label>
+                </div>
               </div>
             </div>
 
+            {/* Regisztrációs gomb */}
             <div className="d-grid gap-2 mt-3">
               <button className="btn btn-dark" type="submit">
                 Regisztrálok

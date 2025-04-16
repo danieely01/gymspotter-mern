@@ -107,3 +107,9 @@ button {
         padding: 8px;
     }
 }
+
+@media (max-height: 350px) {
+    .content {
+      padding-top: 100px; /* Extra hely kis képernyőn */
+    }
+  }

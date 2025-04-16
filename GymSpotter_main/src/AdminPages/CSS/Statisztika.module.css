@@ -1,27 +1,82 @@
 .Komponens {
-    color: white;
+  color: white;
     background-image: url("../../../adminwp.jpg");
     background-size: 100%;
-    padding: 20px;
+   
     min-height: 100vh;
     position: relative; /* ez kell */
     z-index: 1; /*ez is */
-  }
-  
+}
 
   /* Jobb olvashatóság miatt, sötétebb háttért tükrözünk rá */
-  .Komponens::before {
-    content: ""; /* pseudo elem  */
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5); /* sötétítés mértéke */
-    z-index: -1;
-  }
-  
+.Komponens::before {
+  content: "";  /* pseudo elem  */
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: -1;
+}
+
+
+.cim {
+
+  color: lightsalmon;
+  letter-spacing: 5px;
+}
 .content {
-    margin-top: 60px;  
-  }
+  padding-top: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+ 
+ 
+    min-height: calc(100vh - 60px); /* A navigációs sáv levonásával */
   
+  
+}
+
+
+.statContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  max-width: 600px;
+}
+
+.statText {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  color: white;
+  font-size: 18px;
+}
+
+.chartContainer {
+  width: 300px;
+}
+
+
+
+@media (max-width: 768px) {
+  .statContainer {
+      flex-direction: column;
+      align-items: center;
+  }
+  .statText {
+      align-items: center;
+      text-align: center;
+  }
+}
+
+@media (max-height: 350px) {
+  .content {
+    padding-top: 100px; /* Extra hely kis képernyőn */
+  }
+}

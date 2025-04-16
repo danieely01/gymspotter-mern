@@ -188,15 +188,49 @@ app.get('/:userid/profilom', (req, res) => {
     }
 });
 
-app.put('/:userid/profilom', (req, res) => {
+app.put('/:userid/profilom', async (req, res) => {
+    console.log("Beérkező adatok:", req.body); // Kiírja a frontendről érkező adatokat
     const user = users.find(u => u._id === req.params.userid);
-    if (user) {
-        Object.assign(user, req.body); // Frissítjük a felhasználó adatokat
-        res.json(user);
-    } else {
-        res.status(404).send('User not found');
+    if (!user) {
+        return res.status(404).send('User not found');
     }
+
+    console.log("Felhasználó frissítés előtt:", user);
+
+    // Ha jelszót is frissít a felhasználó
+    if (req.body.newPassword && req.body.newPassword.trim() !== '') {
+        const hashedPassword = await bcrypt.hash(req.body.newPassword, 10);
+        user.password = hashedPassword;
+    }
+    
+    user.email = req.body.email || user.email;  // Ha az email változott, frissítjük
+    console.log("Felhasználó frissítés után:", user);
+
+    Object.assign(user, req.body); // Frissítjük a többi adatot
+
+    res.json({ message: 'Profil frissítve', user });
 });
+
+app.post('/:userid/profilom/ellenorzes', async (req, res) => {
+    const { userid } = req.params;
+    const { currentPassword } = req.body;
+
+    // Felhasználó keresése a mock tömbben
+    const user = users.find(u => u._id === userid);
+    if (!user) {
+        return res.status(404).json({ success: false, message: 'Felhasználó nem található!' });
+    }
+
+    // Jelszó ellenőrzése bcrypt-tel
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+        return res.status(401).json({ success: false, message: 'Hibás jelszó!' });
+    }
+
+    res.json({ success: true });
+});
+
+
 
 // Admin API-k
 app.get('/admin/konditermek_kezelese', (req, res) => {
