@@ -1,0 +1,53 @@
+.Komponens {
+  text-align: center;
+  font-family:Arial, Helvetica, sans-serif;
+  width: 100%;
+  max-width: 300px;
+  
+}
+
+
+
+#inputMezok {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+#inputMezok input {
+  height: 60px;
+  width: 250px;
+  padding: 5px;
+  border-radius: 10px;
+  border: 2px black solid;
+}
+#inputMezok .inputSor {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#gombok {
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+button {
+  height: 50px;
+}
+
+@media (max-width: 768px) {
+  .Komponens {
+    padding: 20px;
+    width: 90%; 
+  }
+}
+
+@media (max-width: 480px) {
+  .Komponens {
+    padding: 15px;
+    width: 100%;
+  }
+}

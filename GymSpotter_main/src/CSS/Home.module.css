@@ -1,0 +1,12 @@
+.Komponens {
+    color: whitesmoke;
+}
+
+.Komponens h1 {
+    font-weight:800;
+    font-size: 100px;
+}
+
+.Komponens p {
+    font-size: 20px;
+}
