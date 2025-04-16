@@ -796,6 +796,28 @@ app.get('/admin/konditermek_kezelese', async (req, res) => {
     }
 });
 
+// Edzőterem törlése gomb
+app.delete('/admin/edzoterem_torles/:id', async (req, res) => {
+    try {
+        // adatbázishoz kapcsolódás
+        const db = await connectToDB();
+        const gymsCollection = db.collection('Gyms');
+
+        // Az _id mező alapján történő keresés (MongoDB-ban az ObjectId-t kell használni)
+        const result = await gymsCollection.deleteOne({ Id: req.params.id });
+
+        // Ha nem található a konditerem, válaszolunk hibával
+        if (result.deletedCount === 0) {
+            return res.status(404).send('Konditerem nem található');
+        }
+
+        // Sikeres törlés esetén
+        res.send('Konditerem törölve');
+    } catch (err) {
+        console.error('Hiba történt a konditerem törlésekor:', err);
+        res.status(500).send('Hiba történt a konditerem törlésekor');
+    }
+});
 
 app.patch('/admin/konditermek_kezelese/:id', async (req, res) => {
     try {
@@ -829,28 +851,6 @@ app.patch('/admin/konditermek_kezelese/:id', async (req, res) => {
 
 
 
-// Edzőterem törlése gomb
-app.delete('/admin/edzoterem_torles/:id', async (req, res) => {
-    try {
-        // adatbázishoz kapcsolódás
-        const db = await connectToDB();
-        const gymsCollection = db.collection('Gyms');
-
-        // Az _id mező alapján történő keresés (MongoDB-ban az ObjectId-t kell használni)
-        const result = await gymsCollection.deleteOne({ Id: req.params.id });
-
-        // Ha nem található a konditerem, válaszolunk hibával
-        if (result.deletedCount === 0) {
-            return res.status(404).send('Konditerem nem található');
-        }
-
-        // Sikeres törlés esetén
-        res.send('Konditerem törölve');
-    } catch (err) {
-        console.error('Hiba történt a konditerem törlésekor:', err);
-        res.status(500).send('Hiba történt a konditerem törlésekor');
-    }
-});
 
 // Admin API - Felhasználók listázása
 app.get('/admin/felhasznalok_kezelese', async (req, res) => {
@@ -1053,7 +1053,7 @@ app.post('/:providerid/edzotermem', async (req, res) => {
 
 app.get('/:providerid/ertekelesek_attekintese', async (req, res) => {
     try {
-        console.log(req.params.providerid);  // Ellenőrizd, hogy megérkezik-e a providerId
+        console.log(req.params.providerid);  // Ellenőrizzük, hogy megérkezik e a proiderId
         const db = await connectToDB();
         const gymsCollection = db.collection('Gyms');
         const reviewsCollection = db.collection('Reviews');
