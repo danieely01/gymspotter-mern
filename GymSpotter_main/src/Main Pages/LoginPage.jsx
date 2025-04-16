@@ -1,5 +1,7 @@
+import NavigationForUsers from "../ForUserPage/NavigationForUsers";
 import styles from "./CSS/LoginPage.module.css"; // Moduloknál változót kell használni
 import { useNavigate } from 'react-router-dom';
+import { useState } from "react";
 
 function LoginPage() {
 
@@ -9,13 +11,29 @@ function LoginPage() {
       navigate('/registerpage');
   };
 
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+ 
+  const handleLogin = (event) => {
+    event.preventDefault();
+    if (username === "admin" && password === "admin") {
+      navigate("/admin");
+    } else if (username.includes("konditerem@gmail")) {
+      navigate("/szolgaltato");
+    } else {
+      alert("Hibás bejelentkezési adatok!");
+    }
+  };
+
 
 
 
   return (
-    <div className={`container d-flex justify-content-center align-items-center min-vh-100 ${styles.Komponens}`}>
+    <div className={`${styles.Komponens}`}>
+    <NavigationForUsers/>
+    <div className={`container d-flex justify-content-center align-items-center min-vh-100`}>
       <div className="p-4 shadow-lg rounded bg-white">
-        <form>
+        <form onSubmit={handleLogin}>
           <div id="inputMezok">
             <div className="mb-3">
               <input
@@ -23,6 +41,7 @@ function LoginPage() {
                 type="text"
                 id="felhasznalonev"
                 placeholder="Felhasználónév"
+                onChange={(e) => setUsername(e.target.value)}
               />
             </div>
 
@@ -32,6 +51,7 @@ function LoginPage() {
                 id="jelszo"
                 className="form-control"
                 placeholder="Jelszó"
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
           </div>
@@ -52,6 +72,7 @@ function LoginPage() {
             <button className="btn btn-success" onClick={GoToRegisterPage}>Regisztráció</button>
             </div>
       </div>
+    </div>
     </div>
   );
 }

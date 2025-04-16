@@ -1,0 +1,46 @@
+.Komponens {
+  background-image: url("../../../userpage_background.jpg");
+  background-size: 100%;
+}
+
+
+.content {
+  margin-top: 60px;  
+  text-align: center;
+  
+}
+
+.szoveg {
+  font-size: 25px;
+  color: white;
+  font-family: 'Times New Roman', Times, serif;
+  text-shadow: 2px 1px #030303;
+  
+}
+
+.cim {
+  font-weight: 900;
+  color: white;
+  text-shadow: 2px 3px #030303;
+
+}
+
+.gomb {
+  border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+        .Komponens {
+          padding: 20px;
+          
+        }
+      }
+@media (max-width: 480px) {
+        .Komponens {
+          padding: 15px;
+          min-width: 500px;
+        min-height: 500px;
+
+          
+        }
+      }

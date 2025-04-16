@@ -1,7 +1,10 @@
 import styles from "./CSS/RegisterPage.module.css"; // Moduloknál változót kell használni
+import NavigationForUsers from "../ForUserPage/NavigationForUsers";
 
 const RegisterPage = () => {
-    return <div className={`container d-flex justify-content-center align-items-center min-vh-100 ${styles.Komponens}`}>
+    return <div className={`${styles.Komponens}`}>
+    <NavigationForUsers/>
+    <div className={`container d-flex justify-content-center align-items-center min-vh-100`}>
         <div className="p-4 shadow-lg rounded bg-white">
         <form>
             <h2>Regisztráció</h2>
@@ -44,6 +47,7 @@ const RegisterPage = () => {
       </div>
 
 
+    </div>
     </div>
 }
 
