@@ -22,7 +22,7 @@ function ManageReviews() {
             .then(response => response.json())
             .then((data) => {
                 // Frissítjük a listát a törlés után
-                setReviews(reviews.filter(review => review.Id !== reviewId));
+                setReviews(reviews.filter(review => review._id !== reviewId));
             })
             .catch(error => console.error('Error deleting review:', error));
     };
@@ -40,7 +40,7 @@ function ManageReviews() {
                         <table className={`table table-striped table-hover ${styles.reviewtable}`}>
                             <thead>
                                 <tr>
-                                    <th>Edzőterem</th>
+                                   
                                     <th>Felhasználó</th>
                                     <th>Értékelés</th>
                                     <th>Megjegyzés</th>
@@ -51,14 +51,14 @@ function ManageReviews() {
                                 {reviews.sort((a, b) => a.rating - b.rating) // Növekvő sorrendbe redezzük
                                 .map((review) => (
                                     <tr key={review._id}>
-                                        <td>{review.gymName}</td>
+                                      
                                         <td>{review.userName}</td>
                                         <td>{review.rating}</td>
                                         <td>{review.comment}</td>
                                         <td>
                                             <button
                                                 className="btn btn-danger"
-                                                onClick={() => handleDelete(review.Id)}
+                                                onClick={() => handleDelete(review._id)}
                                                 >
                                                 Törlés
                                             </button>

@@ -57,7 +57,7 @@ export default function MyReviews() {
             <div className="row">
               {userReviews.map((review, index) => {
                 // Az edzőterem nevét a gym ID alapján keressük meg a gyms tömbben
-                const gym = gyms.find(g => g.Id === String(review.gym_id));
+                const gym = gyms.find(g => g._id === String(review.gym_id));
 
                  // Ha nincs ilyen konditerem, akkor ne renderáljuk azt a review-t
                    if (!gym) return null;

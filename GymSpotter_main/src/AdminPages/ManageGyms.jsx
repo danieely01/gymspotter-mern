@@ -22,7 +22,7 @@ function ManageGyms() {
         if (!res.ok) throw new Error("Error during deletion");
         return res.text();
       })
-      .then(() => setGyms(gyms.filter((gym) => gym.Id !== id))) // Update the list after deletion
+      .then(() => setGyms(gyms.filter((gym) => gym._id !== id))) // Update the list after deletion
       .catch((err) => console.error(err));
   };
 
@@ -42,7 +42,7 @@ function ManageGyms() {
         return res.text();
       })
       .then(() => {
-        setGyms(gyms.filter((gym) => gym.Id !== id)); // Remove the deleted gym
+        setGyms(gyms.filter((gym) => gym._id !== id)); // Remove the deleted gym
       })
       .catch((err) => console.error(err));
   };
@@ -75,8 +75,8 @@ function ManageGyms() {
             {/* Sort gyms by status: pending first */}
             {gyms.filter((gym) => gym.status !== 'declined') // Elutasított konditermeket ne listázzuk
             .sort((a, b) => (a.status === 'pending' ? -1 : 1)).map((gym) => (
-              <tr key={gym.Id}>
-                <td>{gym.name}</td>
+              <tr key={gym._id}>
+                <td>{gym.gymName}</td>
                 <td>{gym.location}</td>
                 <td>{gym.services.join(", ")}</td>
                 <td>{gym.rating}</td>
@@ -88,15 +88,15 @@ function ManageGyms() {
   <div className={`${styles.buttonContainer}`}>
     {gym.status === 'pending' ? (
       <>
-        <button onClick={() => handleStatusChange(gym.Id, "approved")} className="btn btn-success">
+        <button onClick={() => handleStatusChange(gym._id, "approved")} className="btn btn-success">
           Elfogadás
         </button>
-        <button onClick={() => handleStatusChange(gym.Id, "declined")} className="btn btn-danger">
+        <button onClick={() => handleStatusChange(gym._id, "declined")} className="btn btn-danger">
           Elutasítás
         </button>
       </>
     ) : (
-      <button onClick={() => handleDelete(gym.Id)} className="btn btn-danger">
+      <button onClick={() => handleDelete(gym._id)} className="btn btn-danger">
         Törlés
       </button>
     )}

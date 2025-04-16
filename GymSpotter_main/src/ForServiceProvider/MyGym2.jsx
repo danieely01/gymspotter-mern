@@ -76,7 +76,7 @@ export default function MyGym2() {
             <>
               {error && <div className={styles.error}>{error}</div>} {/* Hibák megjelenítése */}
               <form className={styles.form} onSubmit={handleSubmit}>
-                <h2 className={styles.formTitle}>Már van edzőtermed, amely jóváhagyásra vár vagy már jóváhagyásra került.</h2>
+                <h2 className={styles.formTitle}>Edzőterem hozzáadása</h2>
 
                 <div className={styles.inputGroup}>
                   <label htmlFor="gymName">Terem neve</label>

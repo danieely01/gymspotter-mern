@@ -33,9 +33,9 @@ export default function Favourites() {
         ) : (
           <div className={styles.favoritesGrid}>
             {favorites.map((gym) => (
-              <div key={gym.Id} className={styles.card}>
+              <div key={gym._id} className={styles.card}>
                 <div className={styles.cardBody}>
-                  <h5 className={styles.cardTitle}>{gym.name}</h5>
+                  <h5 className={styles.cardTitle}>{gym.gymName}</h5>
                   <p className={styles.cardText}>📍 Helyszín: {gym.location}</p>
                   <p className={styles.cardText}>🤸‍♂️ Szolgáltatások: {gym.services.join(', ')}</p>
                   <p className={styles.cardText}>🤷‍♀️ Értékelés: {gym.rating}</p>

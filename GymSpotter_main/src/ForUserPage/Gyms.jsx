@@ -36,7 +36,7 @@ export default function Gyms() {
 
     fetch(`http://localhost:3000/${userId}/kedvencek`)
       .then((response) => response.json())
-      .then((data) => setFavorites(data.map(gym => gym.Id)))
+      .then((data) => setFavorites(data.map(gym => gym._id)))
       .catch((error) => console.error('Error fetching favorites:', error));
   }, []);
 
@@ -129,9 +129,9 @@ export default function Gyms() {
       comment: reviewText,
       rating: reviewRating,
     };
-    console.log('selectedGym id-ja:', selectedGym.Id);
+    console.log('selectedGym id-ja:', selectedGym._id);
     console.log('User id-ja:', userId);
-    fetch(`http://localhost:3000/konditermek/${selectedGym.Id}/ertekeles`, {
+    fetch(`http://localhost:3000/konditermek/${selectedGym._id}/ertekeles`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newReview),
@@ -139,8 +139,8 @@ export default function Gyms() {
     .then(response => response.json())
     .then((updatedGym) => {
       console.log('Frissített edzőterem:', updatedGym);  // Debugging
-      setGyms(gyms.map(gym => gym.Id === updatedGym.Id ? updatedGym : gym));
-      setFilteredGyms(filteredGyms.map(gym => gym.Id === updatedGym.Id ? updatedGym : gym));
+      setGyms(gyms.map(gym => gym._id === updatedGym._id ? updatedGym : gym));
+      setFilteredGyms(filteredGyms.map(gym => gym._id === updatedGym._id ? updatedGym : gym));
       closeReviewModal();
       setSelectedGym(updatedGym);
     })
@@ -186,14 +186,14 @@ export default function Gyms() {
         ) : (
           <div className={styles.gymGrid}>
             {filteredGyms.map((gym) => (
-              <div key={gym.Id} className={styles.card}>
+              <div key={gym._id} className={styles.card}>
                 <div className={styles.cardBody}>
                   <h5 className={styles.cardTitle}>
-                    {gym.name}
+                    {gym.gymName}
                     {isLoggedIn && (
                       <span
-                        style={{ cursor: 'pointer', marginLeft: '10px', color: isFavorite(gym.Id) ? 'red' : 'grey' }}
-                        onClick={() => toggleFavorite(gym.Id)}
+                        style={{ cursor: 'pointer', marginLeft: '10px', color: isFavorite(gym._id) ? 'red' : 'grey' }}
+                        onClick={() => toggleFavorite(gym._id)}
                       >
                         ♥
                       </span>
@@ -254,7 +254,7 @@ export default function Gyms() {
           <div className={styles.modal}>
             <div className={styles.modalHeader}>Edzőterem részletei</div>
             <div className={styles.modalContent}>
-              <p><strong>Név:</strong> {selectedGym.name}</p>
+              <p><strong>Név:</strong> {selectedGym.gymName}</p>
               <p><strong>Helyszín:</strong> {selectedGym.location}</p>
               <p><strong>Szolgáltatások:</strong> {selectedGym.services.join(', ')}</p>
               <p><strong>Értékelés:</strong> {selectedGym.rating}</p>

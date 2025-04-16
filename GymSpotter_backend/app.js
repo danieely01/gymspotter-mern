@@ -7,7 +7,9 @@ const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const bcrypt = require("bcrypt");
 const { hash } = require('bcryptjs');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+
+
 
 // const connectToDB = require('./db');
 
@@ -54,7 +56,7 @@ async function connectToDB() {
       }
   }
     
-  // Kollekciók létrehozása
+//   // Kollekciók létrehozása
 //   async function createCollections() {
 //     const db = await connectToDB();  // Csatlakozás
 
@@ -122,9 +124,6 @@ async function connectToDB() {
 
 
 
-reviewIds = 1000;
-gymIds = 1000;
-userIds = 1000;
 
 
 
@@ -137,30 +136,185 @@ app.use(cors());
 // Middleware
 app.use(bodyParser.json());
 
+forUsersCollection = [
+    {
+      "_id": new ObjectId("60d21b4667d0d8992e610c85"),
+      "username": "kovacs_peter",
+      "email": "peter.kovacs@example.com",
+      "password": bcrypt.hashSync('password123', 10),
+      "type": "user",
+      "Favourites": [ new ObjectId("60d21b4667d0d8992e610c86")],
+      "Reviews": [ new ObjectId("60d21b4667d0d8992e610c87")]
+    },
+    {
+      "_id": new ObjectId("60d21b4667d0d8992e610c88"),
+      "username": "szabo_anna",
+      "email": "anna.szabo@example.com",
+      "password": bcrypt.hashSync('password456', 10),
+      "type": "provider",
+      "Favourites": [],
+      "Reviews": []
+    },
+    {
+      "_id": new ObjectId("60d21b4667d0d8992e610c89"),
+      "username": "kiss_gabor",
+      "email": "gabor.kiss@example.com",
+      "password": bcrypt.hashSync('password789', 10),
+      "type": "admin",
+      "Favourites": [],
+      "Reviews": []
+    },
+    {
+      "_id": new ObjectId("60d21b4667d0d8992e610c8a"),
+      "username": "nagy_zoltan",
+      "email": "zoltan.nagy@example.com",
+      "password": bcrypt.hashSync('password321', 10),
+      "type": "user",
+      "Favourites": [ new ObjectId("60d21b4667d0d8992e610c86")],
+      "Reviews": [ new ObjectId("60d21b4667d0d8992e610c88")]
+    },
+    {
+      "_id": new ObjectId("60d21b4667d0d8992e610c8b"),
+      "username": "toth_maria",
+      "email": "maria.toth@example.com",
+      "password": bcrypt.hashSync('password654', 10),
+      "type": "user",
+      "Favourites": [],
+      "Reviews": [ new ObjectId("60d21b4667d0d8992e610c89")]
+    }
+  ];
+  
 
+forGymsCollection = [
+    {
+      "_id": new ObjectId("60d21b4667d0d8992e610c86"),
+      "providerId": new ObjectId("60d21b4667d0d8992e610c88"),
+      "gymName": "Fit Gym",
+      "email": "fitgym@example.com",
+      "phoneNumber": "+36 1 234 5678",
+      "location": "Budapest, XX. kerület",
+      "services": ["személyi edzés", "group fitness", "jóga"],
+      "rating": 4.5,
+      "price": "10000 HUF / hónap",
+      "status": "approved"
+    },
+    {
+      "_id": new ObjectId("60d21b4667d0d8992e610c87"),
+      "providerId": new ObjectId("60d21b4667d0d8992e610c89"),
+      "gymName": "Power Gym",
+      "email": "powergym@example.com",
+      "phoneNumber": "+36 1 234 5679",
+      "location": "Budapest, I. kerület",
+      "services": ["erőnléti edzés", "személyi edzés", "úszás"],
+      "rating": 4.8,
+      "price": "12000 HUF / hónap",
+      "status": "pending"
+    },
+    {
+      "_id": new ObjectId("60d21b4667d0d8992e610c88"),
+      "providerId": new ObjectId("60d21b4667d0d8992e610c8a"),
+      "gymName": "Ultra Fitness",
+      "email": "ultrafitness@example.com",
+      "phoneNumber": "+36 1 234 5680",
+      "location": "Budapest, V. kerület",
+      "services": ["crossfit", "jóga", "pilates"],
+      "rating": 4.7,
+      "price": "15000 HUF / hónap",
+      "status": "approved"
+    },
+    {
+      "_id": new ObjectId("60d21b4667d0d8992e610c89"),
+      "providerId": new ObjectId("60d21b4667d0d8992e610c8b"),
+      "gymName": "Super Gym",
+      "email": "supergym@example.com",
+      "phoneNumber": "+36 1 234 5681",
+      "location": "Budapest, II. kerület",
+      "services": ["erőnléti edzés", "súlyzós edzés", "csoportos órák"],
+      "rating": 3.9,
+      "price": "8000 HUF / hónap",
+      "status": "decline"
+    }
+  ];
 
+forReviewsCollection = [
+    {
+      "_id": new ObjectId("60d21b4667d0d8992e610c87"),
+      "user_id": new ObjectId("60d21b4667d0d8992e610c85"),
+      "gym_id": new ObjectId("60d21b4667d0d8992e610c86"),
+      "comment": "Nagyon jó edzőterem, szeretem a személyi edzőket!",
+      "rating": 5
+    },
+    {
+      "_id": new ObjectId("60d21b4667d0d8992e610c88"),
+      "user_id": new ObjectId("60d21b4667d0d8992e610c8a"),
+      "gym_id": new ObjectId("60d21b4667d0d8992e610c87"),
+      "comment": "Tökéletes a hely, de a szolgáltatások ára magas.",
+      "rating": 4
+    },
+    {
+      "_id": new ObjectId("60d21b4667d0d8992e610c89"),
+      "user_id": new ObjectId("60d21b4667d0d8992e610c8b"),
+      "gym_id": new ObjectId("60d21b4667d0d8992e610c88"),
+      "comment": "Minden rendben volt, a légkör nagyon barátságos.",
+      "rating": 4
+    },
+    {
+      "_id": new ObjectId("60d21b4667d0d8992e610c8a"),
+      "user_id": new ObjectId("60d21b4667d0d8992e610c85"),
+      "gym_id": new ObjectId("60d21b4667d0d8992e610c86"),
+      "comment": "Tökéletes hely, de túl zsúfolt.",
+      "rating": 3
+    },
+    {
+      "_id": new ObjectId("60d21b4667d0d8992e610c8b"),
+      "user_id": new ObjectId("60d21b4667d0d8992e610c89"),
+      "gym_id": new ObjectId("60d21b4667d0d8992e610c87"),
+      "comment": "Jó edzőterem, de az árak magasak.",
+      "rating": 3
+    }
+  ];
+  
+// ujAdmin = {
+//     "_id": new ObjectId("60d21b4667d0d8992e610c99"),
+//     "username": "admin",
+//     "email": "admin@example.com",
+//     "password": bcrypt.hashSync('admin', 10),
+//     "type": "admin",
+//     "Favourites": [],
+//     "Reviews": []
+//   }
+// async function adminInsert(){
+//     const db = await connectToDB();
+//     const usersCollection = db.collection('Users');
+//     try {
+//         await client.connect();
+//         await usersCollection.insertOne(ujAdmin);
+//     }
+//     catch{
+//         console.log("Nem sikerült....");
+//     }
+// }
+// adminInsert();
 // Tesztadatok feltöltése
 // Fő futtatási funkció
 // async function run() {
-//     const client = await connectToDB();  // Csatlakozás
   
-//     const db = client.db("GymSpotter"); // Adatbázis kiválasztása
-//     const usersCollection = db.collection("Users");
-//     const gymsCollection = db.collection("Gyms");
-//     const reviewsCollection = db.collection("Reviews");
+//     const db = await connectToDB(); // Adatbázis kiválasztása
+//     const usersCollection = db.collection('Users');
+//     const gymsCollection = db.collection('Gyms');
+//     const reviewsCollection = db.collection('Reviews');
   
 //     try {
 //       await client.connect();
-//       const db = client.db('GymSpotter'); // Cseréld ki az adatbázis nevére
   
 //       // Felhasználók hozzáadása
-//       await usersCollection.insertMany(users);
+//       await usersCollection.insertMany(forUsersCollection);
   
 //       // Edzőtermek hozzáadása
-//       await gymsCollection.insertMany(gyms);
+//     //   await gymsCollection.insertMany(forGymsCollection);
   
 //       // Vélemények hozzáadása
-//       await reviewsCollection.insertMany(reviews);
+//     //   await reviewsCollection.insertMany(forReviewsCollection);
   
 //       console.log('Adatok sikeresen hozzáadva!');
 //     } catch (error) {
@@ -175,235 +329,239 @@ app.use(bodyParser.json());
 
 
 
+
 // Felhasználói API-k
 
-
 app.post('/login', async (req, res) => {
-    const { username, password } = req.body;
-    const db = await connectToDB();  // MongoDB kapcsolat létrehozása
-    const usersCollection = db.collection('Users');  // A "Users" gyűjteményhez való hozzáférés
+  const { username, password } = req.body;
 
-    try {
-      // Felhasználó keresése
-      const user = await usersCollection.findOne({ username });
-      if (!user) {
-        return res.status(401).send('Hibás felhasználónév vagy jelszó');
-      }
-  
-      // Jelszó ellenőrzése
-      const match = await bcrypt.compare(password, user.password);
-      if (!match) {
-        return res.status(400).send('Hibás bejelentkezési adatok');
-      }
-  
-      // Token generálása
-      const token = jwt.sign({ Id: user.Id, type: user.type }, 'SECRET_KEY', { expiresIn: '1h' });
-  
-      // Válasz visszaküldése
-      res.json({ token, userId: user.Id, userType: user.type, userName: user.username });
-      
-      // Az ügyfél kapcsolatot zárjuk be
-      await client.close();
-    } catch (error) {
-      console.error("Bejelentkezési hiba:", error);
-      res.status(500).send('Hiba történt a bejelentkezés során');
-    }
-  });
-
-
-
- // Regisztrációs végpont
- app.post("/register", async (req, res) => {
-    const { username, email, password, type } = req.body;
-    
+  try {
     const db = await connectToDB();
     const usersCollection = db.collection('Users');
-    
-    try {
-      // Ellenőrizzük, hogy létezik-e már a felhasználónév vagy e-mail
-      const existingUserByUsername = await usersCollection.findOne({ username });
-      const existingUserByEmail = await usersCollection.findOne({ email });
-  
-      if (existingUserByUsername) {
-        return res.status(400).json({ error: "Felhasználónév már létezik" });
-      }
-      
-      if (existingUserByEmail) {
-        return res.status(400).json({ error: "Email már regisztrálva van" });
-      }
-  
-      // Jelszó hash-elése
-      const hashedPassword = await bcrypt.hash(password, 10);
-  
-      // Új felhasználó létrehozása
-      const newUser = {
-        Id: `${userIds + 1}`,
-        username,
-        email,
-        password: hashedPassword,
-        favorites: [],
-        reviews: [],
-        type
-      };
-      userIds++;
 
-      // Felhasználó hozzáadása a Users kollekcióhoz
-      const result = await usersCollection.insertOne(newUser);
-  
-      // Visszajelzés a sikeres regisztrációról
-      res.status(201).json({ message: "Sikeres regisztráció!", userId: result.insertedId });
-      console.log("Új felhasználó sikeresen regisztrálva!");
-  
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "Belső hiba történt" });
+    // Felhasználó keresése
+    const user = await usersCollection.findOne({ username: username });
+    console.log("admin: "+ user)
+    if (!user) {
+      return res.status(401).send('Hibás felhasználónév vagy jelszó');
     }
-  });
-  
 
-// User oldal konditermek kilistázása
-app.get('/konditermek', async (req, res) => {
-    // adatbázishoz kapcsolódás
-    const db = await connectToDB();
-
-    try {
-        // kollekciók tárolása
-        const gymsCollection = db.collection('Gyms');
-        const reviewsCollection = db.collection('Reviews');
-        const usersCollection = db.collection('Users');
-
-        // Konditermek lekérése, ahol a státusz 'approved'
-        const approvedGyms = await gymsCollection.find({ status: 'approved' }).toArray();
-
-        // Vélemények hozzáadása a konditermekhez
-        const gymsWithReviews = await Promise.all(approvedGyms.map(async (gym) => {
-            // Vélemények lekérése konditerem alapján
-            const reviews = await reviewsCollection.find({ gym: gym.Id }).toArray();
-
-            // Véleményekhez hozzáadjuk a felhasználó nevét
-            const gymsWithUserReviews = await Promise.all(reviews.map(async (review) => {
-                const user = await usersCollection.findOne({ Id: review.user });
-                return {
-                    ...review,
-                    user: user ? user.username : 'Ismeretlen'
-                };
-            }));
-
-            // átlag számítás véleményekhez
-            if (gymsWithUserReviews.length > 0) {
-                const avgRating = gymsWithUserReviews.reduce((acc, review) => acc + review.rating, 0) / gymsWithUserReviews.length;
-                gym.rating = parseFloat(avgRating.toFixed(1));  // átlagolt értékelés
-            }
-
-            gym.reviews = gymsWithUserReviews;
-            return gym;
-        }));
-
-        res.json(gymsWithReviews);
-    } catch (error) {
-        console.error("Hiba történt a konditermek lekérése során:", error);
-        res.status(500).send('Hiba történt az adatbázis lekérése során');
+    // Jelszó ellenőrzése
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) {
+      return res.status(400).send('Hibás bejelentkezési adatok');
     }
+
+    // Token generálása
+    const token = jwt.sign(
+      { id: user._id.toString(), type: user.type },
+      'SECRET_KEY', // Ne feledd, ezt rakd környezetváltozóba production-ben
+      { expiresIn: '1h' }
+    );
+
+    // Válasz visszaküldése
+    res.json({
+      token,
+      userId: user._id,
+      userType: user.type,
+      userName: user.username
+    });
+
+  } catch (error) {
+    console.error('Bejelentkezési hiba:', error);
+    res.status(500).send('Hiba történt a bejelentkezés során');
+  }
 });
 
 
+// Regisztrációs végpont
+app.post('/register', async (req, res) => {
+  const { username, email, password, type } = req.body;
 
-// User oldal értékelés  írása
+  try {
+    const db = await connectToDB();
+    const usersCollection = db.collection('Users');
+
+    // Felhasználónév vagy email ellenőrzés
+    const existingUser = await usersCollection.findOne({
+      $or: [{ username }, { email }]
+    });
+
+    if (existingUser) {
+      if (existingUser.username === username) {
+        return res.status(400).json({ error: 'Felhasználónév már létezik' });
+      }
+      if (existingUser.email === email) {
+        return res.status(400).json({ error: 'Email már regisztrálva van' });
+      }
+    }
+
+    // Jelszó hash-elése
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Új felhasználó létrehozása
+    const newUser = {
+      username,
+      email,
+      password: hashedPassword,
+      favorites: [],
+      reviews: [],
+      type,
+    };
+
+    const result = await usersCollection.insertOne(newUser);
+
+    res.status(201).json({
+      message: 'Sikeres regisztráció!',
+      userId: result.insertedId
+    });
+
+    console.log('Új felhasználó regisztrálva:', result.insertedId);
+
+  } catch (error) {
+    console.error('Regisztrációs hiba:', error);
+    res.status(500).json({ error: 'Belső hiba történt' });
+  }
+});
+  
+
+app.get('/konditermek', async (req, res) => {
+    try {
+      const db = await connectToDB();
+  
+      const gymsCollection = db.collection('Gyms');
+      const reviewsCollection = db.collection('Reviews');
+      const usersCollection = db.collection('Users');
+        
+      // Csak az 'approved' konditermek lekérése
+      const approvedGyms = await gymsCollection.find({ status: 'approved' }).toArray();
+  
+      // Konditermekhez kapcsolódó vélemények és értékelések hozzáadása
+      const gymsWithReviews = await Promise.all(approvedGyms.map(async (gym) => {
+        // Vélemények lekérése ehhez a kondihoz (feltételezve hogy gym._id-t használunk)
+        const reviews = await reviewsCollection.find({ gymId: gym._id.toString() }).toArray();
+  
+        // Véleményekhez felhasználónevek hozzácsatolása
+        const enrichedReviews = await Promise.all(reviews.map(async (review) => {
+
+            
+          const user = await usersCollection.findOne({ _id: new ObjectId(review.userId) });
+          return {
+            ...review,
+            user: user ? user.username : 'Ismeretlen'
+          };
+        }));
+  
+        // Átlag értékelés számítás
+        if (enrichedReviews.length > 0) {
+          const avgRating = enrichedReviews.reduce((acc, review) => acc + review.rating, 0) / enrichedReviews.length;
+          gym.rating = parseFloat(avgRating.toFixed(1));
+        }
+  
+        gym.reviews = enrichedReviews;
+        return gym;
+      }));
+  
+      res.json(gymsWithReviews);
+    } catch (error) {
+      console.error("Hiba történt a konditermek lekérése során:", error);
+      res.status(500).send('Hiba történt az adatbázis lekérése során');
+    }
+  });
+
+
+
+// User oldal értékelés  írása --> JAVÍTÁSRA VÁR
 app.post('/konditermek/:gymId/ertekeles', async (req, res) => {
     const { userId, rating, comment } = req.body;
-    const { gymId } = req.params;
-    
-    // adatbázishoz kapcsolódás
-    const db = await connectToDB();
+    const gymId  = new ObjectId(req.params.gymId);
+    const objectified_userID = ObjectId.createFromHexString(userId);
+
+
+    console.log('user_id' + objectified_userID);
 
     try {
-        // kollekciók tárolása
-        const gymsCollection = db.collection('Gyms');
-        const reviewsCollection = db.collection('Reviews');
-        const usersCollection = db.collection('Users');
-
-        // Ellenőrizzük, hogy a felhasználó létezik-e
-        const user = await usersCollection.findOne({ Id: userId });
-        if (!user) {
-            return res.status(404).json({ error: 'Felhasználó nem található' });
-        }
-
-        // Ellenőrizzük, hogy az edzőterem létezik-e
-        const gym = await gymsCollection.findOne({ Id: gymId });
-        if (!gym) {
-            return res.status(404).json({ error: 'Edzőterem nem található' });
-        }
-
-        // Új vélemény létrehozása
-        // console.log("Új Id: " + Object.keys(reviewsCollection).length + 1)
-        const newReview = {
-            Id: `${reviewIds + 1}`,
-            gym_id: gymId,
-            user_id: userId,
-            rating: parseFloat(rating),
-            comment
-        };
-        reviewIds++;
-
-        // Vélemény hozzáadása az adatbázishoz
-        const result = await reviewsCollection.insertOne(newReview);
-
-        // Frissítjük a felhasználó véleményeit
-        await usersCollection.updateOne(
-            { Id: userId },
-            { $push: { reviews: result.Id } }
-        );
-
-        // Frissítjük az edzőterem véleményeit
-        const gymReviews = await reviewsCollection.find({ gym: gymId }).toArray();
-        const avgRating = gymReviews.reduce((acc, review) => acc + review.rating, 0) / gymReviews.length;
-
-        // Frissítjük az edzőterem átlagos értékelését
-        await gymsCollection.updateOne(
-            { Id: gymId },
-            { $set: { rating: parseFloat(avgRating.toFixed(1)) } }
-        );
-
-        // Válasz visszaadása
-        const updatedGym = await gymsCollection.findOne({ Id: gymId });
-        res.json(updatedGym);
+      const db = await connectToDB();
+      const gymsCollection = db.collection('Gyms');
+      const reviewsCollection = db.collection('Reviews');
+      const usersCollection = db.collection('Users');
+  
+      // Ellenőrizzük, hogy a felhasználó létezik-e
+      const user = await usersCollection.findOne({ _id: objectified_userID });
+      if (!user) {
+        return res.status(404).json({ error: 'Felhasználó nem található' });
+      }
+  
+      // Ellenőrizzük, hogy az edzőterem létezik-e
+      const gym = await gymsCollection.findOne({ _id: gymId });
+      if (!gym) {
+        return res.status(404).json({ error: 'Edzőterem nem található' });
+      }
+  
+      // Új vélemény létrehozása
+      const newReview = {
+        gym_id: gymId,
+        user_id: objectified_userID,
+        rating: parseFloat(rating),
+        comment,
+      };
+  
+      // Vélemény hozzáadása az adatbázishoz
+      const result = await reviewsCollection.insertOne(newReview);
+  
+      // Felhasználó véleményeinek frissítése
+      await usersCollection.updateOne(
+        { _id: objectified_userID },
+        { $push: { reviews: result.insertedId } }
+      );
+  
+      // Átlagértékelés újraszámítása az adott konditeremhez
+      const gymReviews = await reviewsCollection.find({ gymId: gymId }).toArray();
+      const avgRating = gymReviews.reduce((acc, review) => acc + review.rating, 0) / gymReviews.length;
+  
+      // Konditerem értékelésének frissítése
+      await gymsCollection.updateOne(
+        { _id: gymId },
+        { $set: { rating: parseFloat(avgRating.toFixed(1)) } }
+      );
+  
+      // Frissített konditerem adat visszaküldése
+      const updatedGym = await gymsCollection.findOne({ _id: gymId });
+      res.json(updatedGym);
+  
     } catch (error) {
-        console.error("Hiba történt a vélemény hozzáadása során:", error);
-        res.status(500).json({ error: 'Hiba történt a vélemény hozzáadása során' });
+      console.error("Hiba történt a vélemény hozzáadása során:", error);
+      res.status(500).json({ error: 'Hiba történt a vélemény hozzáadása során' });
     }
-}); 
+  }); 
 
 
 // User oldal kedvencek fül
 app.get('/:userid/kedvencek', async (req, res) => {
     try {
-        // adatbázishoz kapcsolódás
         const db = await connectToDB();
         const usersCollection = db.collection('Users');
         const gymsCollection = db.collection('Gyms');
-        
-        // Felhasználó keresése Id alapján
-        const user = await usersCollection.findOne({ Id: req.params.userid });
+
+        const userId = req.params.userid;
+
+        const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
 
         if (!user) {
             return res.status(404).send('Nem található a felhasználó!');
         }
 
-        // Ha a favorites nem tömb, akkor hibát dobunk
         if (!Array.isArray(user.favorites)) {
             return res.status(400).send('A kedvencek adat nem megfelelő formátumban van!');
         }
 
-        // Approved állapottal rendelkező termek a felhasználó kedvencei között
         const userGymsCursor = gymsCollection.find({
-            Id: { $in: user.favorites },  
-            status: 'approved',       
+            _id: { $in: user.favorites },
+            status: 'approved',
         });
 
-        // Kurzor átalakítása tömbbé
         const userGyms = await userGymsCursor.toArray();
 
-        // Válasz visszaadása
         res.json(userGyms);
 
     } catch (error) {
@@ -420,25 +578,30 @@ Vissza az edzőtermek fülre --> Nem piros a szív
 */
 // User kedvencekhez adás
 app.post('/:userid/kedvenc/:edzotermekid', async (req, res) => {
+    try {
+        const db = await connectToDB();
+        const usersCollection = db.collection('Users');
+        const gymsCollection = db.collection('Gyms');
 
-    // adatbázishoz kapcsolódás
-    const db = await connectToDB();
-    const usersCollection = db.collection('Users');
-    const gymsCollection = db.collection('Gyms');
+        const userId = req.params.userid;
+        const gymId = req.params.edzotermekid;
 
-    // Felhasználó keresése Id alapján
-    const user = await usersCollection.findOne({ Id: req.params.userid });
+        const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
+        const gym = await gymsCollection.findOne({ _id: new ObjectId(gymId) });
 
-    // Konditerem keresése Id alapján
-    const gym = await gymsCollection.findOne({ Id: req.params.edzotermekid });
+        console.log("user:" + user);
+        console.log("gym:" + gym);
 
-    try { 
         if (user && gym) {
-            // Ha még nem szerepel a kedvencek között, akkor hozzáadjuk
-            if (!user.favorites.includes(gym.Id)) {
+            // Ha nincs favorites mező, inicializáljuk
+            if (!Array.isArray(user.favorites)) {
+                user.favorites = [];
+            }
+
+            if (!user.favorites.includes(gym._id)) {
                 await usersCollection.updateOne(
-                    { Id: req.params.userid },
-                    { $push: { favorites: gym.Id } }
+                    { _id: new ObjectId(userId) },
+                    { $push: { favorites: new ObjectId(gym._id) } }
                 );
                 res.status(201).send('Konditerem hozzáadva a kedvencekhez!');
             } else {
@@ -447,6 +610,7 @@ app.post('/:userid/kedvenc/:edzotermekid', async (req, res) => {
         } else {
             res.status(404).send('Felhasználó vagy konditerem nem található!');
         }
+
     } catch (error) {
         console.error('Error adding gym to favorites:', error);
         res.status(500).send('Internal server error');
@@ -455,32 +619,32 @@ app.post('/:userid/kedvenc/:edzotermekid', async (req, res) => {
 
 app.delete('/:userid/kedvenc/:edzotermekid', async (req, res) => {
     try {
-        // Kapcsolódunk az adatbázishoz
         const db = await connectToDB();
-        const usersCollection = db.collection('Users'); // 'Users' kollekció
+        const usersCollection = db.collection('Users');
 
-        // Felhasználó keresése az ID alapján
-        const user = await usersCollection.findOne({ Id: req.params.userid });
-        
+        const userId = req.params.userid;
+        const gymId = req.params.edzotermekid;
+
+        const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
+
         if (!user) {
             return res.status(404).send('Felhasználó nem található!');
         }
 
-        // Kedvenc konditermek listájának frissítése (konditerem eltávolítása)
-        const updatedUser = await usersCollection.updateOne(
-            { Id: req.params.userid }, // Felhasználó keresése az ID alapján
-            { $pull: { favorites: req.params.edzotermekid } } // 'favorites' mezőből eltávolítjuk az edzőtermet
+        // Kedvenc konditerem eltávolítása
+        const result = await usersCollection.updateOne(
+            { _id: new ObjectId(userId) },
+            { $pull: { favorites: new ObjectId(gymId) } }
         );
 
-        // Ha a frissítés sikeres, visszaküldjük a választ
-        if (updatedUser.modifiedCount > 0) {
+        if (result.modifiedCount > 0) {
             res.status(200).send('Konditerem eltávolítva a kedvencekből');
         } else {
-            res.status(400).send('Nem történt változás');
+            res.status(400).send('A konditerem nem szerepelt a kedvencek között');
         }
     } catch (err) {
         console.error('Hiba történt a kedvenc konditerem törlésénél:', err);
-        res.status(500).send('Hiba történt a kedvenc konditerem törlésénél');
+        res.status(500).send('Belső szerverhiba történt');
     }
 });
 
@@ -493,16 +657,18 @@ app.get('/:userid/ertekeleseim', async (req, res) => {
         const usersCollection = db.collection('Users');  // Felhasználók kollekciója
         const reviewsCollection = db.collection('Reviews');  // Vélemények kollekciója
         
+        const userId = req.params.userid;
+
         // Felhasználó keresése az ID alapján
-        const user = await usersCollection.findOne({ Id: req.params.userid });
-        console.log('felh id:'+user.Id);
+        const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
+        console.log('felh id:'+user._id);
         if (!user) {
             return res.status(404).send('Felhasználó nem található');
         }
 
         // A felhasználó értékeléseinek keresése a user_id alapján
         const userReviews = await reviewsCollection.find({
-            user_id: user.Id  // Feltételezzük, hogy az értékelések `user_id` mezője tartalmazza a felhasználó Id-ját
+            user_id: new ObjectId(user._id)  // Feltételezzük, hogy az értékelések `user_id` mezője tartalmazza a felhasználó Id-ját
         }).toArray();
         console.log('userreviews hossz:'+userReviews.length);
         if (userReviews.length === 0) {
@@ -527,8 +693,12 @@ app.get('/:userid/profilom', async (req, res) => {
     const db = await connectToDB();
     const usersCollection = db.collection('Users');
 
+    
+    
     try {
-        const user = await usersCollection.findOne({ Id: req.params.userid });
+        
+        const userId = req.params.userid;
+        const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
         if (user) {
             res.json(user);
         } else {
@@ -541,15 +711,17 @@ app.get('/:userid/profilom', async (req, res) => {
 
 // PUT: Profil frissítése
 app.put('/:userid/profilom', async (req, res) => {
-    // adatbázishoz kapcsolódás
+    // Adatbázishoz kapcsolódás
     const db = await connectToDB();
     const usersCollection = db.collection('Users');
 
     try {
+        const userId = req.params.userid;
+
         console.log("Beérkező adatok:", req.body); // Kiírja a frontendről érkező adatokat
 
         // Felhasználó keresése ID alapján
-        const user = await usersCollection.findOne({ Id: req.params.userid });
+        const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
 
         if (!user) {
             return res.status(404).send('User not found');
@@ -557,24 +729,42 @@ app.put('/:userid/profilom', async (req, res) => {
 
         console.log("Felhasználó frissítés előtt:", user);
 
+        // Készítünk egy objektumot az új adatokkal
+        const updatedUserData = {};
+
         // Ha jelszót is frissít a felhasználó
         if (req.body.newPassword && req.body.newPassword.trim() !== '') {
             const hashedPassword = await bcrypt.hash(req.body.newPassword, 10);
-            user.password = hashedPassword;
+            updatedUserData.password = hashedPassword;  // Csak akkor állítjuk be a jelszót, ha új jelszót adtak meg
         }
 
         // Frissítjük az emailt, ha változott
-        user.email = req.body.email || user.email;
+        if (req.body.email) {
+            updatedUserData.email = req.body.email;
+        }
 
-        // Frissítjük a többi adatot
-        Object.assign(user, req.body);
+        // Frissítjük a többi adatot (pl. név, cím, stb.)
+        Object.assign(updatedUserData, req.body);
 
-        // Mentjük a frissített felhasználót az adatbázisba
-        await user.save();
+        // Ha nem adtak meg új adatokat, nem kell frissíteni
+        if (Object.keys(updatedUserData).length === 0) {
+            return res.status(400).send('No data to update');
+        }
 
-        console.log("Felhasználó frissítés után:", user);
+        // A frissített adatokat beállítjuk az adatbázisban
+        const result = await usersCollection.updateOne(
+            { _id: new ObjectId(userId) },  // A felhasználó ID alapján keresünk
+            { $set: updatedUserData }       // Az új adatokat frissítjük
+        );
 
-        res.json({ message: 'Profil frissítve', user });
+        if (result.matchedCount === 0) {
+            return res.status(404).send('User not found');
+        }
+
+        console.log("Felhasználó frissítés után:", updatedUserData);
+
+        // Válasz küldése
+        res.json({ message: 'Profil frissítve', user: updatedUserData });
     } catch (err) {
         console.error('Hiba a felhasználó frissítésekor:', err);
         res.status(500).send('Error updating user');
@@ -588,18 +778,24 @@ app.post('/:userid/profilom/ellenorzes', async (req, res) => {
     const db = await connectToDB();
     const usersCollection = db.collection('Users');
 
-    const { userid } = req.params;
-    const { currentPassword } = req.body;
+    const userId = req.params.userid;
+    const currentPassword  = req.body.currentPassword;
+
+
+
+
 
     try {
         // Felhasználó keresése ID alapján
-        const user = await usersCollection.findOne({ Id: userid });
+        const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
 
         if (!user) {
             return res.status(404).json({ success: false, message: 'Felhasználó nem található!' });
         }
 
         // Jelszó ellenőrzése bcrypt-tel
+        console.log('current password: ' + currentPassword);
+        console.log('hashelt jelszó: ' + user.password);
         const isMatch = await bcrypt.compare(currentPassword, user.password);
         if (!isMatch) {
             return res.status(401).json({ success: false, message: 'Hibás jelszó!' });
@@ -666,8 +862,10 @@ app.delete('/admin/edzoterem_torles/:id', async (req, res) => {
         const db = await connectToDB();
         const gymsCollection = db.collection('Gyms');
 
+        const gymId = req.params.id;
+
         // Az _id mező alapján történő keresés (MongoDB-ban az ObjectId-t kell használni)
-        const result = await gymsCollection.deleteOne({ Id: req.params.id });
+        const result = await gymsCollection.deleteOne({ _id: new ObjectId(gymId) });
 
         // Ha nem található a konditerem, válaszolunk hibával
         if (result.deletedCount === 0) {
@@ -688,8 +886,10 @@ app.patch('/admin/konditermek_kezelese/:id', async (req, res) => {
         const db = await connectToDB();
         const gymsCollection = db.collection('Gyms');
 
+        const gymId = req.params.id;
+
         // Konditerem keresése az ID alapján
-        const gym = await gymsCollection.findOne({ Id: req.params.id });  // Ha 'Id' mezőt használsz
+        const gym = await gymsCollection.findOne({ _id: new ObjectId(gymId) });  // Ha 'Id' mezőt használsz
 
         if (!gym) {
             return res.status(404).send('Konditerem nem található');
@@ -697,7 +897,7 @@ app.patch('/admin/konditermek_kezelese/:id', async (req, res) => {
 
         // Státusz frissítése
         const updatedGym = await gymsCollection.updateOne(
-            { Id: req.params.id }, // Keresés az 'Id' mező alapján
+            { _id: new ObjectId(gymId) }, // Keresés az 'Id' mező alapján
             { $set: { status: req.body.status } } // Státusz frissítése
         );
 
@@ -741,7 +941,7 @@ app.delete('/admin/felhasznalo_torles/:id', async (req, res) => {
         const userId = req.params.id; // A frontend által küldött userId
 
         // Felhasználó törlése az 'Id' mező alapján
-        const result = await usersCollection.deleteOne({ Id: userId });
+        const result = await usersCollection.deleteOne({ _id: new ObjectId(userId) });
 
         if (result.deletedCount === 0) {
             return res.status(404).send('Felhasználó nem található');
@@ -770,9 +970,9 @@ app.get('/admin/ertekelesek_kezelese', async (req, res) => {
         // Az értékelések részletezése (felhasználó és konditerem információ)
         const reviewsWithDetails = await Promise.all(reviews.map(async (review) => {
             // Megkeressük a konditermet az Id alapján
-            const gym = await gymsCollection.findOne({ Id: review.gym_id }); // MongoDB natív keresés
+            const gym = await gymsCollection.findOne({ _id: new ObjectId(review.gym_id) }); // MongoDB natív keresés
             // Megkeressük a felhasználót az Id alapján
-            const user = await usersCollection.findOne({ Id: review.user_id }); // MongoDB natív keresés
+            const user = await usersCollection.findOne({ _id: new ObjectId(review.user_id) }); // MongoDB natív keresés
 
             return {
                 ...review,
@@ -795,13 +995,17 @@ app.delete('/admin/ertekeles_torles/:id', async (req, res) => {
     const db = await connectToDB();
     const reviewsCollection = db.collection('Reviews');
 
+    const UserId = req.params.id;
+
+
     try {
         // Az értékelés törlése az Id alapján 
-        const result = await reviewsCollection.findOneAndDelete({ _id: new ObjectId(req.params.id) });
+        const result = await reviewsCollection.findOneAndDelete({ _id: new ObjectId(UserId) });
+        console.log(result);
 
-        if (!result || !result.value) {  // Ha a result null vagy nincs benne value
-            return res.status(404).send('Értékelés nem található');
-        }
+        // if (!result || !result.value) {  // Ha a result null vagy nincs benne value
+        //     return res.status(404).send('Értékelés nem található');
+        // }
 
         // Ha sikeres volt a törlés, válasz visszaküldése
         res.json({ message: 'Értékelés törölve' });
@@ -821,7 +1025,7 @@ app.get('/admin/statisztika', async (req, res) => {
         const gymsCollection = db.collection('Gyms');
 
         // Összes konditerem
-        const gymsCount = await gymsCollection.countDocuments();
+        const gymsCount = await gymsCollection.countDocuments({status: "approved" });
 
         // Összes felhasználó, akik nem adminok
         const usersCount = await usersCollection.countDocuments({ type: "user" });
@@ -837,7 +1041,8 @@ app.get('/admin/statisztika', async (req, res) => {
 
 // Szolgáltató API-k
 app.get('/:userId/check-gym', async (req, res) => {
-    const userId  = req.params.id;
+    const userId  = new ObjectId(req.params.userId);
+    
 
     try {
         // adatbázishoz kapcsolódás
@@ -866,7 +1071,7 @@ app.get('/:userId/check-gym', async (req, res) => {
 
 
 app.post('/:providerid/edzotermem', async (req, res) => {
-    const provider_Id = req.params.id;
+    const provider_Id = new ObjectId(req.params.providerid);
     const { name, services, price, email, phoneNumber, location } = req.body;
     // console.log(provider_Id);
     try {
@@ -876,7 +1081,7 @@ app.post('/:providerid/edzotermem', async (req, res) => {
 
         // Ellenőrizzük, hogy a felhasználóhoz tartozó edzőterem státusza 'approved' vagy 'pending'
         const existingGym = await gymsCollection.findOne({
-            providerId: provider_Id,
+            providerId: new ObjectId(provider_Id),
             $or: [
                 { status: 'approved' },
                 { status: 'pending' }
@@ -889,8 +1094,7 @@ app.post('/:providerid/edzotermem', async (req, res) => {
 
         // Új edzőterem hozzáadása 'pending' státusszal
         const newGym = {
-            Id: `${gymIds + 1}`,
-            providerId: `${provider_Id}`,
+            providerId: provider_Id,
             name,
             services: services.split(',').map(service => service.trim()),
             price,
@@ -899,13 +1103,12 @@ app.post('/:providerid/edzotermem', async (req, res) => {
             location,
             status: 'pending',
         };
-        gymIds++;
         // Az új edzőterem mentése a MongoDB-be
         const result = await gymsCollection.insertOne(newGym);
 
         // Válasz visszaküldése
         res.status(201).json({
-            Id: result.Id,
+            _id: result._id,
             ...newGym
         });
     } catch (err) {
@@ -915,19 +1118,21 @@ app.post('/:providerid/edzotermem', async (req, res) => {
 });
 
 app.get('/:providerid/ertekelesek_attekintese', async (req, res) => {
+
+    const providerId = new ObjectId(req.params.providerid);
     try {
         console.log(req.params.providerid);  // Ellenőrizzük, hogy megérkezik e a proiderId
         const db = await connectToDB();
         const gymsCollection = db.collection('Gyms');
         const reviewsCollection = db.collection('Reviews');
         
-        const providerGyms = await gymsCollection.find({ providerId: req.params.providerid }).toArray();
+        const providerGyms = await gymsCollection.find({ providerId: providerId}).toArray();
         // console.log(providerGyms.length)
         if (providerGyms.length === 0) {
             return res.status(404).send('Nincs olyan konditerem, amelyhez tartozik ez a providerId.');
         }
 
-        const gym_Ids = providerGyms.map(gym => gym.Id);
+        const gym_Ids = providerGyms.map(gym => gym._id);
         // console.log(gym_Ids)
         const providerReviews = await reviewsCollection.find({
             gym_id: { $in: gym_Ids }
