@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState, useContext } from 'react';
+import React, { useEffect, useRef, useState, useContext} from 'react';
+import { useNavigate } from "react-router-dom";
 import styles from "./CSS/Gyms.module.css"; // Keep the existing CSS import
 import NavigationForUsers from './NavigationForUsers';
 import { AuthContext } from '../context/auth-context'; 
@@ -13,7 +14,16 @@ export default function Gyms() {
   const [serviceSearch, setServiceSearch] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedGym, setSelectedGym] = useState(null);
+  const [reviewModalOpen, setReviewModalOpen] = useState(false);
+  const [reviewText, setReviewText] = useState("");
+  const [reviewRating, setReviewRating] = useState(1);
   const scrollPositionRef = useRef(0);
+
+  const navigate = useNavigate();
+
+  const GoToLoginPage = () => {
+    navigate("/loginpage");
+  };
 
   useEffect(() => {
     fetch('http://localhost:3000/konditermek')
@@ -99,6 +109,46 @@ export default function Gyms() {
 
   };
 
+  const openReviewModal = (gym) => {
+    if (!isLoggedIn) {
+      GoToLoginPage(); }
+    setSelectedGym(gym);
+    setReviewModalOpen(true);
+  };
+
+  const closeReviewModal = () => {
+    setReviewText("");
+    setReviewRating(1);
+    setReviewModalOpen(false);
+  };
+
+  const submitReview = () => {
+    
+    const newReview = {
+      userId: userId,
+      comment: reviewText,
+      rating: reviewRating,
+    };
+    console.log('selectedGym id-ja:', selectedGym._id);
+    console.log('User id-ja:', userId);
+    fetch(`http://localhost:3000/konditermek/${selectedGym._id}/ertekeles`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newReview),
+    })
+    .then(response => response.json())
+    .then((updatedGym) => {
+      console.log('Frissített edzőterem:', updatedGym);  // Debugging
+      setGyms(gyms.map(gym => gym._id === updatedGym._id ? updatedGym : gym));
+      setFilteredGyms(filteredGyms.map(gym => gym._id === updatedGym._id ? updatedGym : gym));
+      closeReviewModal();
+      setSelectedGym(updatedGym);
+    })
+    .catch((error) => console.error('Error submitting review:', error));
+  };
+
+
+
   return (
     <div className={styles.Komponens}>
       <NavigationForUsers />
@@ -154,12 +204,38 @@ export default function Gyms() {
                   <p className={styles.cardText}>🤷‍♀️ Értékelés: {gym.rating}</p>
                   <p className={styles.cardText}>💲 Ár: {gym.price} HUF</p>
                   <a href="#" className={styles.cardButton} onClick={() => openModal(gym)}>Tovább a részletekhez</a>
+                  <a href="#" className={styles.cardButton} onClick={() => openReviewModal(gym)}>Írj értékelést!</a>
                 </div>
               </div>
             ))}
           </div>
         )}
       </div>
+
+      {reviewModalOpen && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modal}>
+            <div className={styles.modalHeader}>Írj egy értékelést</div>
+            <div className={styles.modalContent}>
+              <label>Értékelés (1-5):</label>
+              <input
+                type="number"
+                min="1"
+                max="5"
+                value={reviewRating}
+                onChange={(e) => setReviewRating(Number(e.target.value))}
+              />
+              <label>Vélemény:</label>
+              <textarea
+                value={reviewText}
+                onChange={(e) => setReviewText(e.target.value)}
+              ></textarea>
+              <button onClick={submitReview}>Beküldés</button>
+              <button onClick={closeReviewModal}>Mégse</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Modal */}
       {modalOpen && selectedGym && (

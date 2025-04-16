@@ -175,7 +175,7 @@ app.post('/login', async (req, res) => {
      // Token generálása
      const token = jwt.sign({ id: user._id, type: user.type }, 'SECRET_KEY', { expiresIn: '1h' });
     
-     res.json({ token, userId: user._id, userType: user.type });
+     res.json({ token, userId: user._id, userType: user.type, userName: user.username });
  });
 
  // Regisztrációs végpont 
@@ -226,11 +226,54 @@ app.get('/konditermek', (req, res) => {
                     user: user ? user.username : 'Unknown'  // Ha nem találjuk, akkor 'Unknown' név
                 };
             });
+
+             // Ha vannak vélemények, számoljuk ki az átlagot
+        if (gym.reviews.length > 0) {
+            const avgRating = gym.reviews.reduce((acc, review) => acc + review.rating, 0) / gym.reviews.length;
+            gym.rating = parseFloat(avgRating.toFixed(1));  // Az átlagolt értékelés
+        }
         return gym;
     });
 
     res.json(gymsWithReviews);
 });
+
+app.post('/konditermek/:gymId/ertekeles', (req, res) => {
+    const { userId, rating, comment } = req.body;
+    const { gymId } = req.params;
+
+    // Ellenőrizzük, hogy a felhasználó létezik-e
+    const user = users.find(u => u._id === userId);
+    console.log(userId)
+    if (!user) {
+        return res.status(404).json({ error: 'Felhasználó nem található' });
+    }
+
+    // Ellenőrizzük, hogy az edzőterem létezik-e
+    const gym = gyms.find(g => g._id === gymId);
+    if (!gym) {
+        return res.status(404).json({ error: 'Edzőterem nem található' });
+    }
+
+    // Új vélemény létrehozása
+    const newReview = {
+        _id: (reviews.length + 201).toString(), // Új ID generálása
+        gym: gymId,
+        user: userId,
+        rating: parseFloat(rating),
+        comment
+    };
+    reviews.push(newReview);
+    user.reviews.push(newReview._id);
+
+    // Frissítjük az edzőterem átlagos értékelését
+    const gymReviews = reviews.filter(r => r.gym === gymId);
+    const avgRating = gymReviews.reduce((acc, r) => acc + r.rating, 0) / gymReviews.length;
+    gym.rating = parseFloat(avgRating.toFixed(1));
+
+    res.json(gym);
+});
+
 
 app.get('/:userid/kedvencek', (req, res) => {
     const user = users.find(u => u._id === req.params.userid);
@@ -409,24 +452,52 @@ app.get('/admin/statisztika', (req, res) => {
 });
 
 // Szolgáltató API-k
-app.post('/:providerid/edzotermem', (req, res) => {
-    // { _id: '101', providerId: '8', name: 'Power Gym', location: 'Szeged', services: ['Yoga', 'Cardio'], rating: 4.5, price: 17000, status: 'approved' },
-    const { providerId, name, email, phonenumber, location, services, price} = req.body;
+app.get('/:userId/check-gym', (req, res) => {
+    const { userId } = req.params;
+  
+    // Keresd meg azokat az edzőtermeket, amelyek tartalmazzák a megadott providerId-t (felhasználó ID-ja)
+    const userGyms = gyms.filter(gym => gym.providerId === userId);
+  
+    // Ellenőrizzük, hogy a felhasználónak van-e olyan edzőterme, amely "approved" vagy "pending" státuszt kapott
+    const hasApprovedOrPendingGym = userGyms.some(gym => gym.status === 'approved' || gym.status === 'pending');
+  
+    if (hasApprovedOrPendingGym) {
+      // Ha van már regisztrált edzőterme, nem engedjük új form megjelenítését
+      return res.status(200).json({ canAddGym: false });
+    } else {
+      // Ha nincs, engedjük a formot
+      return res.status(200).json({ canAddGym: true });
+    }
+  });
 
-    const newGym = { 
-        _id: (gyms.length + 1).toString(), 
+
+app.post('/:providerid/edzotermem', (req, res) => {
+    const providerId = req.params.providerid;
+    const { name, services, price, email, phoneNumber, location } = req.body;
+
+    // Ellenőrizzük, hogy a felhasználóhoz tartozó edzőterem státusza approved vagy pending
+    const existingGym = gyms.find(gym => gym.providerId === providerId && (gym.status === 'approved' || gym.status === 'pending'));
+
+    if (existingGym) {
+        return res.status(400).json({ message: 'Már van edzőtermed!' });
+    }
+
+    // Új edzőterem hozzáadása pending státusszal
+    const newGym = {
+        _id: (gyms.length + 1).toString(),
         providerId,
         name,
-        email,
-        phonenumber,
-        location,
-        services,
-        rating,
+        services: services.split(',').map(service => service.trim()),
         price,
-        status: 'pending' // Kezdetben minden edzőterem státusza "pending"
+        email,
+        phoneNumber,
+        location,
+        status: 'pending',
     };
+
     gyms.push(newGym);
-    res.status(201).send('Konditerem hozzáadva, várakozik az admin jóváhagyására');
+
+    res.status(201).json(newGym);
 });
 
 app.get('/:providerid/ertekelesek_attekintese', (req, res) => {

@@ -83,3 +83,18 @@
     color: #ffffff;
     text-shadow: 2px 2px #030303;
 }
+
+
+.NoReview {
+    font-size: 30px;
+    color: rgb(0, 248, 62);
+    border-radius: 12px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px #030303;
+    text-align: center;
+
+    /* Halvány szürke háttér */
+    background-color: rgba(44, 43, 43, 0.5); /* Halvány szürke háttér */
+    padding: 15px; /* A háttér ne érjen közvetlenül a szöveghez */
+}

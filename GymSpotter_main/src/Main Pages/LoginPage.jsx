@@ -39,15 +39,16 @@ function LoginPage() {
 
       const data = await response.json();
       console.log("Backend válasz:", data); // Ellenőrzéshez
-      const { token, userId, userType } = data;
+      const { token, userId, userType, userName } = data;
       console.log("Bejelentkezett userId:", userId);
+      console.log("Bejelentkezett felhasználó neve:", userName); // Ellenőrzéshez
 
-      console.log("Bejelentkezett userId:", userId); // Ellenőrzéshez
+
 
       localStorage.setItem("token", token);
       localStorage.setItem("userType", userType);
 
-      auth.login(userId, userType); // userId és userType mentése a contextbe
+      auth.login(userId, userType, userName); // userId és userType mentése a contextbe
 
 
       if (userType === "admin") {

@@ -8,17 +8,45 @@ import NavigationForProviders from "./NavigationForProviders";
 export default function ContactForServiceProvider() {
   
   return (
-    <div className={`${styles.Komponens}`}>
-        {/* Navigációs sáv */}
-        <NavigationForProviders/>
+    <div className={styles.Komponens}>
+      <NavigationForProviders />
+      <div className={styles.content}>
+        <h1 className={styles.cim}>Kapcsolat ☎</h1>
+        <p className="text-center mb-4">
+          Ha kérdése van, vagy segítségre van szüksége, kérjük, vegye fel velünk a kapcsolatot az alábbi módokon:
+        </p>
 
-        {/* Tartalom */}
-        <div className={`container justify-content-center align-items-center p-3 min-vh-100 ${styles.content}`}>
-            <div>
-               <h1 className={`${styles.cim}  text-center mb-4`}>Elérhetőségek listázása</h1>
-               
-            </div>                    
+        {/* Kapcsolatfelvételi információk */}
+        <div className={styles.contactGrid}>
+          {/* Email szekció */}
+          <div className={styles.contactCard}>
+            <div className="d-flex align-items-center p-4  rounded shadow-sm h-100">
+              <div className="me-4">
+                <i className="fas fa-envelope fa-3x text-primary"></i>
+              </div>
+              <div className={styles.kartyak}>
+                <h5>📭 Email</h5>
+                <p className="mb-1"><strong>Adminisztrátor:</strong> admin@weboldal.hu</p>
+                <p className="mb-1"><strong>Szolgáltatói támogatás:</strong> szolgaltato@weboldal.hu</p>
+                <p><strong>Ügyfélszolgálat:</strong> ugyfelszolgalat@weboldal.hu</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Telefon szekció */}
+          <div className={styles.contactCard}>
+            <div className="d-flex align-items-center p-4 rounded shadow-sm h-100">
+              <div className="me-4">
+                <i className="fas fa-phone-alt fa-3x text-success"></i>
+              </div>
+              <div className={styles.kartyak}>
+                <h5>📞 Telefon</h5>
+                <p><strong>Kapcsolat telefonon:</strong> +36 30 123 4567</p>
+              </div>
+            </div>
+          </div>
         </div>
-    </div>    
-  )
+      </div>
+    </div>
+  );
 }

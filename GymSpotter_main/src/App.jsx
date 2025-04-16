@@ -27,96 +27,46 @@ const App = () => {
   
     
       const [isLoggedIn, setIsLoggedIn] = useState(false);
-      const [userType, setUserType] = useState(null);  // userType tárolása
+      const [userType, setUserType] = useState(null);  
       const [userId, setUserId] = useState(localStorage.getItem("userId"));
+      const [userName, setUserName] = useState(null); 
 
   useEffect(() => {
     const storedUserType = localStorage.getItem("userType");
+    const storedUserName = localStorage.getItem("userName");
     if (storedUserType) {
       setIsLoggedIn(true);
       setUserType(storedUserType);
+      setUserName(storedUserName);
     }
   }, []);
 
-    const login = useCallback((userId, userType) => {
-      console.log("🔹 Bejelentkezés: userId:", userId, "userType:", userType);
-      setIsLoggedIn(true);
-      setUserType(userType);
-      setUserId(userId); // 🆕 Frissítjük a `userId`-t a state-ben!
-      localStorage.setItem("userId", userId);  
-      localStorage.setItem("userType", userType);
-      
-    }, []);
+  const login = useCallback((userId, userType, userName) => {
+    console.log("🔹 Bejelentkezés: userId:", userId, "userType:", userType, "userName:", userName); // debug
+    setIsLoggedIn(true);
+    setUserType(userType);
+    setUserId(userId);
+    setUserName(userName); 
+    localStorage.setItem("userId", userId);  
+    localStorage.setItem("userType", userType);
+    localStorage.setItem("userName", userName); 
+  }, []);
 
     const logout = useCallback(() => {
-      console.log("🚪 Kijelentkezés");
+      console.log("🚪 Kijelentkezés"); // debug
       setIsLoggedIn(false);
       setUserType(null);
+      setUserName(null); // userName nullázása
       localStorage.removeItem("userId");  
       localStorage.removeItem("userType");
+      localStorage.removeItem("userName"); 
     }, []);
 
-    // let routes;
-
-    // if (isLoggedIn) {
-    //   console.log(userType);
-    //   routes = (
-    //     <>
-    //     {userType === "admin" ? (
-    //       <>
-    //         <Route path="/admin" element={<AdminPage />} />
-    //         <Route path="/admin/felhasznalok_kezelese" element={<ManageUsers/>} exact/>
-    //         <Route path="/admin/konditermek_kezelese" element={<ManageGyms/>} exact/>
-    //         <Route path="/admin/ertekelesek_kezelese" element={<ManageReviews/>} exact/>
-    //         <Route path="/admin/statisztika" element={<Statisztika/>} exact/>
-    //         {/* <Route path="/" element={<UserPage/>} exact/> */}
-
-       
-    //       </>
-
-    //     ) : userType === "provider" ? (
-    //       <>
-    //       <Route path="/serviceprovider" element={<ServiceProvider/>} exact/>
-    //       <Route path="/serviceprovider/edzotermem" element={<MyGym2/>} exact/>
-    //       <Route path="/:providerid/ertekelesek_attekintese" element={<ReviewsForProvider/>} exact/>
-    //       <Route path="/serviceprovider/kapcsolat" element={<ContactForServiceProvider/>} exact/>
-       
-
-    //       </>
-    //     ) : (
-    //       <>
-    //       <Route path="/userpage" element={<UserPage/>} exact/>
-    //       <Route path="/edzotermek" element={<Gyms/>} exact/>
-    //       <Route path="/kedvencek" element={<Favourites/>} exact/>
-    //       <Route path="/kapcsolat" element={<Contact/>} exact/>
-    //       <Route path="/ertekeleseim" element={<MyReviews/>} exact/>
-    //       <Route path="/profilom" element={<MyProfile/>} exact/>
-    //       </>
-    //     )}
     
-
-    //       </>
-
-    //   );
-    // } else {
-    //   routes = (
-    //     <>
-    //     <Route path="/" element={<UserPage/>} exact/>
-    //     <Route path="/loginpage" element={<LoginPage/>} exact/>
-    //     <Route path="registerpage" element={<RegisterPage/>} exact/>
-    //     <Route path="userpage" element={<UserPage/>} exact/>
-    //     <Route path="edzotermek" element={<Gyms/>} exact/>
-    //     <Route path="kapcsolat" element={<Contact/>} exact/>
-    //     <Route path="/*" element={<UserPage/>} exact/>
-    //     </>
-
-    //   );
-    // }
-
-    console.log("isLoggedIn:", isLoggedIn);
-console.log("userType:", userType);
+    console.log("isLoggedIn:", isLoggedIn); // debug
+console.log("userType:", userType); // debug
     return   (
-    <AuthContext.Provider value={{isLoggedIn: isLoggedIn, userId,  userType: userType,  login: login, logout: logout}}>
+    <AuthContext.Provider value={{isLoggedIn: isLoggedIn, userId,  userType: userType, userName: userName,  login: login, logout: logout}}>
       <Router>
       <Routes>
   {isLoggedIn && userType === "admin" && (
@@ -138,6 +88,8 @@ console.log("userType:", userType);
       <Route path="/serviceprovider/edzotermem" element={<MyGym2 />} />
       <Route path="/:providerid/ertekelesek_attekintese" element={<ReviewsForProvider />} />
       <Route path="/serviceprovider/kapcsolat" element={<ContactForServiceProvider />} />
+      <Route path="/*" element={<Navigate to="/serviceprovider" />} />
+
       
     </>
   )}

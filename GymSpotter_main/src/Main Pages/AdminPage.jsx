@@ -6,7 +6,7 @@ import NavigationForAdmin from "../AdminPages/NavigationForAdmin"
 
 
 export default function AdminPage() {
-  const location = useLocation(); 
+ 
   return (
    
      <div className={`${styles.Komponens}`}>

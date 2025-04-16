@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import styles from "./CSS/MyProfile.module.css";
 import NavigationForUsers from "./NavigationForUsers";
 import { FaUser, FaEnvelope, FaLock, FaKey } from "react-icons/fa";
+import { AuthContext } from "../context/auth-context";
+
 
 export default function MyProfile() {
   const [user, setUser] = useState(null);
@@ -10,8 +12,8 @@ export default function MyProfile() {
   const [newPassword, setNewPassword] = useState("");
   const [formErrors, setFormErrors] = useState({});
   const [errorMessage, setErrorMessage] = useState(""); // Hibaüzenet dobozhoz
-  const userId = "1"; // Cseréld ki a bejelentkezett felhasználó ID-jára
-
+  const { userId } = useContext(AuthContext); // userId lekérése a contextből
+    
   useEffect(() => {
     fetch(`http://localhost:3000/${userId}/profilom`)
       .then((response) => response.json())

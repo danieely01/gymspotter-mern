@@ -71,3 +71,19 @@
 .submitButton:hover {
     background-color: #0056b3;
 }
+
+
+    .NoGym {
+        font-size: 30px;
+        color: rgb(0, 248, 62);
+        border-radius: 12px;
+        font-weight: 700;
+        margin-bottom: 30px;
+        text-shadow: 2px 3px #030303;
+        text-align: center;
+    
+       
+        background-color: rgba(44, 43, 43, 0.5); 
+        padding: 15px; 
+    }
+    

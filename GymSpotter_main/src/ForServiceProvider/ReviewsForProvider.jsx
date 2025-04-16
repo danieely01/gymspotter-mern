@@ -21,7 +21,7 @@ export default function ReviewReviews() {
       <div className={styles.content}>
         <h1 className={styles.cim}>Értékelések az edzőtermemről 🥰</h1>
         {reviews.length === 0 ? (
-          <p className={styles.noReviews}>Még nem érkeztek értékelések!</p>
+          <p className={styles.NoReview}>Még nem érkeztek értékelések!</p>
         ) : (
           <div className={styles.reviewGrid}>
             {reviews.map((review) => (
