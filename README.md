@@ -1,3 +1,5 @@
+https://gymspotter.onrender.com // Hostolt link
+
 # GymSpotter
 !! NODE.JS TELEPÍTÉS SZÜKSÉGES !!
 
