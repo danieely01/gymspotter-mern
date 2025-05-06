@@ -51,7 +51,6 @@ button {
 @media (max-width: 480px) {
   .Komponens {
     padding: 15px;
-    min-width: 500px;
     min-height: 500px;
   }
 }

@@ -18,7 +18,7 @@ import MyGym2 from "./ForServiceProvider/MyGym2";
 import ReviewsForProvider from "./ForServiceProvider/ReviewsForProvider";
 import ContactForServiceProvider from "./ForServiceProvider/ContactForServiceProvider";
 import { AuthContext } from "./context/auth-context";
-import { useState, useCallback, React } from "react";
+import { useState, useCallback} from "react";
 import ManageUsers from "./AdminPages/ManageUsers";
 import ManageGyms from "./AdminPages/ManageGyms";
 import ManageReviews from "./AdminPages/ManageReviews";

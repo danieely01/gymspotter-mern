@@ -4,10 +4,12 @@ import styles from "./CSS/ManageGyms.module.css";
 
 function ManageGyms() {
   const [gyms, setGyms] = useState([]);
+  const apiUrl = import.meta.env.VITE_API_URL;
+
 
   // Fetching all gyms
   useEffect(() => {
-    fetch("http://localhost:3000/admin/osszes_edzoterem")
+    fetch(`${apiUrl}/admin/osszes_edzoterem`)
       .then((res) => res.json())
       .then((data) => setGyms(data))
       .catch((err) => console.error("Error fetching gyms:", err));
@@ -15,7 +17,7 @@ function ManageGyms() {
 
   // Deleting a gym
   const handleDelete = (id) => {
-    fetch(`http://localhost:3000/admin/edzoterem_torles/${id}`, {
+    fetch(`${apiUrl}/admin/edzoterem_torles/${id}`, {
       method: "DELETE",
     })
       .then((res) => {
@@ -28,7 +30,7 @@ function ManageGyms() {
 
   // Updating the status of the gym
   const handleStatusChange = (id, status) => {
-    fetch(`http://localhost:3000/admin/konditermek_kezelese/${id}`, {
+    fetch(`${apiUrl}/admin/konditermek_kezelese/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

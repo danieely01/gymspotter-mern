@@ -8,9 +8,11 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 function Statisztika() {
   const [stats, setStats] = useState({ gyms: 0, users: 0 });
+  const apiUrl = import.meta.env.VITE_API_URL;
+
 
   useEffect(() => {
-    fetch("http://localhost:3000/admin/statisztika")
+    fetch(`${apiUrl}/admin/statisztika`)
       .then((res) => res.json())
       .then((data) => setStats(data))
       .catch((error) => console.error("Hiba a statisztika lekérésekor:", error));

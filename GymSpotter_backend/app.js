@@ -5,11 +5,12 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const { hash } = require('bcryptjs');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const dotenv = require('dotenv');
 dotenv.config();
+const port = process.env.PORT || 3000;  // Ha nincs beállítva, akkor 3000
 
 // const connectToDB = require('./db');
 
@@ -122,16 +123,12 @@ async function connectToDB() {
 // };
 // addUserIfNotExists(newUser);
 
-
-
-
-
-
-
 app.use(cors());
 // Middleware
 app.use(bodyParser.json());
 
+
+//Mock adatbázis
 forUsersCollection = [
     {
       "_id": new ObjectId("60d21b4667d0d8992e610c85"),
@@ -474,7 +471,7 @@ app.get('/konditermek', async (req, res) => {
 
 
 
-// User oldal értékelés  írása --> JAVÍTÁSRA VÁR
+// User oldal értékelés  írása --> JAVÍTÁSRA VÁR JAVITVA
 app.post('/konditermek/:gymId/ertekeles', async (req, res) => {
     const { userId, rating, comment } = req.body;
     const gymId  = new ObjectId(req.params.gymId);
@@ -578,7 +575,7 @@ app.get('/:userid/kedvencek', async (req, res) => {
 /*
 Kedvencekhez adom a termet
 Kedvencek fül megnyitása
-Vissza az edzőtermek fülre --> Nem piros a szív
+Vissza az edzőtermek fülre --> Nem piros a szív MEGOLDVA
 */
 // User kedvencekhez adás
 app.post('/:userid/kedvenc/:edzotermekid', async (req, res) => {
@@ -1151,6 +1148,6 @@ app.get('/:providerid/ertekelesek_attekintese', async (req, res) => {
 });
 
 // Server elindítása
-app.listen(3000, () => {
+app.listen(port, () => {
     console.log('Server running on http://localhost:3000');
 });

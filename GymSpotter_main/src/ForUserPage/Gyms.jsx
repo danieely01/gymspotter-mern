@@ -19,75 +19,76 @@ export default function Gyms() {
   const [reviewRating, setReviewRating] = useState(1);
   const scrollPositionRef = useRef(0);
   const apiUrl = import.meta.env.VITE_API_URL;
-
+  
   const navigate = useNavigate();
-
+  
   const GoToLoginPage = () => {
     navigate("/loginpage");
   };
-
-
+  
+  
   useEffect(() => {
     if (selectedGym) {
       console.log("Selected gym (modal):", selectedGym);
     }
   }, [selectedGym]);
-
+  
   useEffect(() => {
+    console.log("API URL: " + apiUrl);
     fetch(`${apiUrl}/konditermek`)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Kapott konditermek:", data); // EZT ADD HOZZÁ
-        setGyms(data);
-        setFilteredGyms(data);
-      })
-      .catch((error) => console.error('Error fetching gyms:', error));
-
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Kapott konditermek:", data); // EZT ADD HOZZÁ
+      setGyms(data);
+      setFilteredGyms(data);
+    })
+    .catch((error) => console.error('Error fetching gyms:', error));
+    
     fetch(`${apiUrl}/${userId}/kedvencek`)
-      .then((response) => response.json())
-      .then((data) => setFavorites(data.map(gym => gym._id)))
-      .catch((error) => console.error('Error fetching favorites:', error));
+    .then((response) => response.json())
+    .then((data) => setFavorites(data.map(gym => gym._id)))
+    .catch((error) => console.error('Error fetching favorites:', error));
   }, []);
-
+  
   const toggleFavorite = (gymId) => {
     if (!isLoggedIn) {
       alert("Be kell jelentkezned, hogy kedvencet adhass hozzá!");
       return;
     }
-
+    
     if (favorites.includes(gymId)) {
       fetch(`${apiUrl}/${userId}/kedvenc/${gymId}`, { method: 'DELETE' })
-        .then(() => setFavorites(favorites.filter(id => id !== gymId)))
-        .catch((error) => console.error('Error removing favorite:', error));
+      .then(() => setFavorites(favorites.filter(id => id !== gymId)))
+      .catch((error) => console.error('Error removing favorite:', error));
     } else {
       fetch(`${apiUrl}/${userId}/kedvenc/${gymId}`, { method: 'POST' })
-        .then(() => setFavorites([...favorites, gymId]))
-        .catch((error) => console.error('Error adding favorite:', error));
+      .then(() => setFavorites([...favorites, gymId]))
+      .catch((error) => console.error('Error adding favorite:', error));
     }
   };
-
+  
   const isFavorite = (gymId) => favorites.includes(gymId);
-
+  
   const handleSearch = (e) => {
     setSearch(e.target.value);
     filterGyms(e.target.value, serviceSearch);
   };
-
+  
   const handleServiceSearch = (e) => {
     setServiceSearch(e.target.value);
     filterGyms(search, e.target.value);
   };
-
+  
   const filterGyms = (city, service) => {
     let filtered = gyms.filter(gym => gym.location.toLowerCase().includes(city.toLowerCase()));
-
+    
     if (service) {
       filtered = filtered.filter(gym => gym.services.some(s => s.toLowerCase().includes(service.toLowerCase())));
     }
-
+    
     setFilteredGyms(filtered);
   };
-
+  
   const handleSortChange = (e) => {
     setSortOption(e.target.value);
     let sortedGyms;
@@ -99,57 +100,59 @@ export default function Gyms() {
       sortedGyms = [...filteredGyms].sort((a, b) => a.price - b.price);
     } else if (e.target.value === "price_desc") {
       sortedGyms = [...filteredGyms].sort((a, b) => b.price - a.price);
+    } else if (e.target.value === "null") {
+      sortedGyms = [...filteredGyms].sort((a, b) => b.gymName - a.gymName);
     }
     setFilteredGyms(sortedGyms);
   };
-
+  
   const openModal = (gym) => {
     scrollPositionRef.current = window.scrollY;
     setSelectedGym(gym);
     setModalOpen(true);
   };
-
+  
   const closeModal = () => {
     const scrollPosition = window.scrollY;
     setSelectedGym(null);
     setModalOpen(false);
     
     window.scrollTo(0, scrollPositionRef.current);
-
+    
   };
-
+  
   const openReviewModal = (gym) => {
     if (!isLoggedIn) {
       GoToLoginPage(); }
-    setSelectedGym(gym);
-    setReviewModalOpen(true);
-  };
-
-  const closeReviewModal = () => {
-    setReviewText("");
-    setReviewRating(1);
-    setReviewModalOpen(false);
-  };
-
-  const submitReview = () => {
-    
-    const newReview = {
-      userId: userId,
-      comment: reviewText,
-      rating: reviewRating,
+      setSelectedGym(gym);
+      setReviewModalOpen(true);
     };
-    console.log('selectedGym id-ja:', selectedGym._id);
-    console.log('User id-ja:', userId);
-    fetch(`${apiUrl}/konditermek/${selectedGym._id}/ertekeles`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newReview),
-    })
-    .then(response => response.json())
-    .then((updatedGym) => {
-      console.log('Frissített edzőterem:', updatedGym);  // Debugging
-      setGyms(gyms.map(gym => gym._id === updatedGym._id ? updatedGym : gym));
-      setFilteredGyms(filteredGyms.map(gym => gym._id === updatedGym._id ? updatedGym : gym));
+    
+    const closeReviewModal = () => {
+      setReviewText("");
+      setReviewRating(1);
+      setReviewModalOpen(false);
+    };
+    
+    const submitReview = () => {
+      
+      const newReview = {
+        userId: userId,
+        comment: reviewText,
+        rating: reviewRating,
+      };
+      console.log('selectedGym id-ja:', selectedGym._id);
+      console.log('User id-ja:', userId);
+      fetch(`${apiUrl}/konditermek/${selectedGym._id}/ertekeles`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newReview),
+      })
+      .then(response => response.json())
+      .then((updatedGym) => {
+        console.log('Frissített edzőterem:', updatedGym);  // Debugging
+        setGyms(gyms.map(gym => gym._id === updatedGym._id ? updatedGym : gym));
+        setFilteredGyms(filteredGyms.map(gym => gym._id === updatedGym._id ? updatedGym : gym));
       closeReviewModal();
       setSelectedGym(updatedGym);
     })
@@ -182,7 +185,7 @@ export default function Gyms() {
 
         <div className="mb-3">
           <select className="form-select" value={sortOption} onChange={handleSortChange}>
-            <option value="">📊 Rendezés</option>
+            <option value="null">📊 Rendezés</option>
             <option value="rating_asc">📈 Értékelés szerint növekvő</option>
             <option value="rating_desc">📉 Értékelés szerint csökkenő</option>
             <option value="price_asc">📈 Ár szerint növekvő</option>
