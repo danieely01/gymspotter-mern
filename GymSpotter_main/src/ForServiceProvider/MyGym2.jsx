@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import  { useState, useContext, useEffect } from 'react';
 import styles from "./CSS/MyGym2.module.css";
 import NavigationForProviders from './NavigationForProviders.jsx';
 import { AuthContext } from "../context/auth-context";
@@ -8,10 +8,11 @@ export default function MyGym2() {
   const [canAddGym, setCanAddGym] = useState(true); // Kezdetben feltételezzük, hogy hozzáadhat edzőtermet
   const [error, setError] = useState(null); // Hibakezelés
   const [formSubmitted, setFormSubmitted] = useState(false); // Form beküldése állapot
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   // Ellenőrizzük, hogy a felhasználónak van-e már edzőterme
   useEffect(() => {
-    fetch(`http://localhost:3000/${userId}/check-gym`)
+    fetch(`${apiUrl}/${userId}/check-gym`)
       .then(response => response.json())
       .then(data => {
         setCanAddGym(data.canAddGym); // Ha nem tud új edzőtermet hozzáadni, akkor letiltjuk a formot
@@ -43,7 +44,7 @@ export default function MyGym2() {
     };
 
     try {
-      const response = await fetch(`http://localhost:3000/${userId}/edzotermem`, {
+      const response = await fetch(`${apiUrl}/${userId}/edzotermem`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

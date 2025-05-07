@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import  { useState, useEffect, useContext } from "react";
 import styles from "./CSS/MyProfile.module.css";
 import NavigationForUsers from "./NavigationForUsers";
 import { FaUser, FaEnvelope, FaLock, FaKey } from "react-icons/fa";
@@ -13,9 +13,11 @@ export default function MyProfile() {
   const [formErrors, setFormErrors] = useState({});
   const [errorMessage, setErrorMessage] = useState(""); // Hibaüzenet dobozhoz
   const { userId } = useContext(AuthContext); // userId lekérése a contextből
+  const apiUrl = import.meta.env.VITE_API_URL;
+
     
   useEffect(() => {
-    fetch(`http://localhost:3000/${userId}/profilom`)
+    fetch(`${apiUrl}/${userId}/profilom`)
       .then((response) => response.json())
       .then((data) => {
         setUser(data);
@@ -46,7 +48,7 @@ export default function MyProfile() {
       return;
     }
 
-    fetch(`http://localhost:3000/${userId}/profilom/ellenorzes`, {
+    fetch(`${apiUrl}/${userId}/profilom/ellenorzes`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ currentPassword }),
@@ -54,7 +56,7 @@ export default function MyProfile() {
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
-          fetch(`http://localhost:3000/${userId}/profilom`, {
+          fetch(`${apiUrl}/${userId}/profilom`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, newPassword }),

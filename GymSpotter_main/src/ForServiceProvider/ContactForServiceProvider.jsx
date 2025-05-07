@@ -20,7 +20,7 @@ export default function ContactForServiceProvider() {
         <div className={styles.contactGrid}>
           {/* Email szekció */}
           <div className={styles.contactCard}>
-            <div className="d-flex align-items-center p-4  rounded shadow-sm h-100">
+            <div className="d-flex flex-column flex-md-row align-items-center p-4  rounded shadow-sm h-100">
               <div className="me-4">
                 <i className="fas fa-envelope fa-3x text-primary"></i>
               </div>

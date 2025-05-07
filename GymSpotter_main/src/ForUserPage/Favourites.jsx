@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import  { useEffect, useState, useContext } from 'react';
 import styles from "./CSS/Favourites.module.css";
 import NavigationForUsers from './NavigationForUsers';
 import { AuthContext } from "../context/auth-context";
@@ -7,6 +7,8 @@ export default function Favourites() {
   const { userId } = useContext(AuthContext); // userId lekérése a contextből
   console.log("📌 Favourites - userId a contextből:", userId); 
   const [favorites, setFavorites] = useState([]);
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   
   useEffect(() => {
     console.log(userId);
@@ -14,7 +16,7 @@ export default function Favourites() {
 
     console.log("Lekérjük a kedvenceket a userId-vel:", userId); // Debug log
 
-    fetch(`http://localhost:3000/${userId}/kedvencek`)
+    fetch(`${apiUrl}/${userId}/kedvencek`)
       .then(response => response.json())
       .then(data => {
         console.log("📌 Kedvencek sikeresen betöltve:", data);
