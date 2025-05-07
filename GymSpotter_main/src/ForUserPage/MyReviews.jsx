@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import  { useEffect, useState, useContext } from 'react';
 import styles from "./CSS/MyReviews.module.css"; // Moduloknál változót kell használni
 import NavigationForUsers from './NavigationForUsers';
 import { AuthContext } from "../context/auth-context";
@@ -8,6 +8,7 @@ export default function MyReviews() {
   console.log("📌 MyReviews - userId a contextből:", userId); 
   const [userReviews, setReviews] = useState([]);
   const [gyms, setGyms] = useState([]);
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     console.log(userId);
@@ -16,7 +17,7 @@ export default function MyReviews() {
     console.log("Lekérjük az értékeléseket a userId-vel:", userId); // Debug log
 
     // API hívás az értékelések lekéréséhez
-    fetch(`http://localhost:3000/${userId}/ertekeleseim`)
+    fetch(`${apiUrl}/${userId}/ertekeleseim`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Hiba történt az értékelések lekérésekor');
@@ -32,7 +33,7 @@ export default function MyReviews() {
       });
 
     // API hívás az edzőtermek lekéréséhez
-    fetch('http://localhost:3000/konditermek')
+    fetch(`${apiUrl}/konditermek`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Hiba történt az edzőtermek adatainak lekérésekor');

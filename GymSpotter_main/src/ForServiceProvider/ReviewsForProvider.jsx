@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import  { useEffect, useState, useContext } from 'react';
 import styles from "./CSS/ReviewsForProvider.module.css";
 import NavigationForProviders from "./NavigationForProviders";
 import { AuthContext } from "../context/auth-context";
@@ -6,10 +6,12 @@ import { AuthContext } from "../context/auth-context";
 export default function ReviewReviews() {
   const { userId } = useContext(AuthContext);
   const [reviews, setReviews] = useState([]);
+  const apiUrl = import.meta.env.VITE_API_URL;
+
 
   useEffect(() => {
     if (!userId) return;
-    fetch(`http://localhost:3000/${userId}/ertekelesek_attekintese`)
+    fetch(`${apiUrl}/${userId}/ertekelesek_attekintese`)
       .then(response => response.json())
       .then(data => setReviews(data))
       .catch(error => console.error('Hiba történt az értékelések lekérésekor:', error));

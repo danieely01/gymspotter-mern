@@ -25,7 +25,7 @@ export default function ServiceProvider() {
                   <h1 className={`${styles.cim}`}>🎉Üdvözöllek a GymSpotter főoldalán!🎉</h1> //nem bejeltnekzetekl
                 )}
                <p className={`${styles.szoveg}`}>Ha bármivel kapcsolatban probléma merülne fel kérjük vegye fel velünk a kapcsolatot!</p>
-               <img src="./dumbbell.png" alt="Kézi súlyzó png" />
+              
               </div>
               
     </div>    

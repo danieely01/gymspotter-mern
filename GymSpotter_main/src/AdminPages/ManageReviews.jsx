@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import NavigationForAdmin from "./NavigationForAdmin";
 import styles from "./CSS/ManageReviews.module.css";
 
 function ManageReviews() {
     const [reviews, setReviews] = useState([]);
+    const apiUrl = import.meta.env.VITE_API_URL;
+
 
     useEffect(() => {
         // API hívás, hogy lekérjük az összes értékelést
-        fetch('http://localhost:3000/admin/ertekelesek_kezelese')
+        fetch(`${apiUrl}/admin/ertekelesek_kezelese`)
             .then(response => response.json())
             .then(data => setReviews(data))
             .catch(error => console.error('Error fetching reviews:', error));
@@ -16,7 +18,7 @@ function ManageReviews() {
     const handleDelete = (reviewId) => {
         console.log('Törlés előtt:', reviewId);  // Az ID naplózása
         // API hívás az értékelés törlésére
-        fetch(`http://localhost:3000/admin/ertekeles_torles/${reviewId}`, {
+        fetch(`${apiUrl}/admin/ertekeles_torles/${reviewId}`, {
             method: 'DELETE',
         })
             .then(response => response.json())

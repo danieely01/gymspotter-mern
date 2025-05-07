@@ -4,16 +4,18 @@ import { useEffect, useState } from "react";
 
 function ManageUsers() {
     const [users, setUsers] = useState([]);
+    const apiUrl = import.meta.env.VITE_API_URL;
+
 
     useEffect(() => {
-        fetch("http://localhost:3000/admin/felhasznalok_kezelese")
+        fetch(`${apiUrl}/admin/felhasznalok_kezelese`)
             .then(response => response.json())
             .then(data => setUsers(data.filter(user => user.type !== 'admin')))
             .catch(error => console.error("Hiba a felhasználók lekérdezése során:", error));
     }, []);
 
     const deleteUser = (userId) => {
-        fetch(`http://localhost:3000/admin/felhasznalo_torles/${userId}`, { method: 'DELETE' })
+        fetch(`${apiUrl}/admin/felhasznalo_torles/${userId}`, { method: 'DELETE' })
             .then(response => {
                 if (response.ok) {
                     setUsers(users.filter(user => user._id !== userId));

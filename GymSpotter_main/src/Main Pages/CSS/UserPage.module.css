@@ -32,7 +32,7 @@
 }
 
 .szoveg {
-  font-size: 25px;
+  font-size: clamp(1rem, 2.5vw, 25px);
   color: white;
   font-family: 'Times New Roman', Times, serif;
   text-shadow: 2px 1px #030303;
@@ -59,7 +59,7 @@
 @media (max-width: 480px) {
         .Komponens {
           padding: 15px;
-          min-width: 500px;
+          
         min-height: 500px;
 
           
