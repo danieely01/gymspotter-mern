@@ -22,23 +22,25 @@ A rendszer fejlett szerepkör-alapú (Role-Based) jogosultságkezeléssel rendel
 
 ## 🛠 Alkalmazott Technológiák
 
-A projekt modern JavaScript/TypeScript ökoszisztémára épül.
+A projekt a modern MERN (MongoDB, Express, React, Node.js) stacket és TypeScript/JavaScript ökoszisztémát használja.
 
-**Frontend:**
+**Frontend (Kliensoldal):**
 * **Keretrendszer:** React 18 (Vite build tool segítségével a maximális sebességért).
 * **Routing:** React Router v7 a kliensoldali navigációhoz.
-* **Állapotkezelés & API Kommunikáció:** Axios a backend hívásokhoz.
-* **Autentikáció:** `jwt-decode` a JSON Web Tokenek kliensoldali feldolgozásához.
-* **UI & Dizájn:** Bootstrap 5, React-Bootstrap és React Icons a reszponzív, tiszta felületért.
+* **Állapotkezelés & API Kommunikáció:** Axios a backend REST API hívásokhoz.
+* **UI & Dizájn:** Bootstrap 5, React-Bootstrap és React Icons a reszponzív, modern felületért.
 * **Adatvizualizáció:** Chart.js (`react-chartjs-2`) a statisztikák és értékelések vizuális megjelenítéséhez.
 
-**Backend:**
-* Node.js alapú kiszolgáló (Express.js).
-* JWT (JSON Web Token) alapú, biztonságos hitelesítés.
+**Backend (Szerveroldal & Adatbázis):**
+* **Kiszolgáló:** Node.js és Express.js alapú REST API.
+* **Adatbázis:** MongoDB (NoSQL), a Mongoose ODM (Object Data Modeling) könyvtárral a szigorúbb adatsémák és a strukturált adatkezelés érdekében.
+* **Biztonság & Autentikáció:** * Jelszavak biztonságos tárolása (hashelése) `bcryptjs` segítségével.
+  * `jsonwebtoken` és `jwt-decode` alapú hitelesítés és útvonal-védelem (Protected Routes).
+* **Környezet & Middleware-ek:** `dotenv` a biztonságos konfigurációért, valamint `cors` és `body-parser` a zavartalan kliens-szerver kommunikációhoz.
 
 ## 💻 Helyi futtatás (Local Development)
 
-A projekt futtatásához Node.js környezet telepítése szükséges.
+A projekt futtatásához Node.js környezet és MongoDB kapcsolat szükséges.
 
 **1. A Backend elindítása:**
 Nyiss egy terminált a `GymSpotter_backend` mappában, és futtasd az alábbi parancsokat:
@@ -60,3 +62,6 @@ Nyiss egy új terminált a `Gymspotter_main` mappában, és futtasd ezeket:
 A rendszer adminisztrátori funkcióinak teszteléséhez az alábbi hitelesítő adatok használhatók:
 * **Felhasználónév:** `admin`
 * **Jelszó:** `admin`
+
+---
+*Készült a PPKE ITK mérnökinformatikus képzése keretében.*
