@@ -63,5 +63,4 @@ A rendszer adminisztrátori funkcióinak teszteléséhez az alábbi hitelesítő
 * **Felhasználónév:** `admin`
 * **Jelszó:** `admin`
 
----
-*Készült a PPKE ITK mérnökinformatikus képzése keretében.*
+
